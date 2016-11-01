@@ -1,0 +1,145 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock %}
+
+{% block titlename %}
+  修改登录密码--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn" type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock %}
+
+{% block container %}
+<div class="account_menu">
+    <ul class="menu_f">
+        <li><div id="iconDd" class="icon"></div><div class="menu_title">订单中心</div>
+            <ul class="second_ul">
+                <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=quote">报价单</a></li>
+                <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=order">当前订单</a></li>
+                <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+            </ul>
+        </li>
+        <li><div id="iconWl" class="icon"></div><div class="menu_title">物流中心</div>
+          <ul>
+            <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+            <li><a href="{% url 'accounts:user_goodsarriveport'%}">货已到港</a></li>
+            <li><a href="{% url 'accounts:user_customer_finish'%}">报关完成</a></li>
+            <li><a href="{% url 'accounts:user_already_instorage' %}">已入库</a></li>
+            <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+            <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+            <!--<li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>-->
+          </ul>
+        </li>
+    </ul>
+</div>
+<div class="accounts">
+    <div class="login_left">
+        <h6>
+            <span>修改密码</span>
+        </h6>
+            <ul>
+                <li>
+                    <span>旧密码：</span>
+                    <input class="old_pass" type="password" name="oldpswd">
+                </li>
+                <li>
+                    <span>设置新密码：</span>
+                    <input class="new_pass" type="password" name="firstNewPwd">
+                </li>
+                <li>
+                    <span>确认新密码：</span>
+                    <input class="new_pass" type="password" name="secondNewPwd">
+                </li>
+            </ul>
+            <div class="login_btn">
+                <input type="submit" class="sub_btn" onclick="changePwd()" name="reset" value="修改">
+            </div>
+    </div>
+    <div class="base_right login_right">
+        <div class="banner">
+            <ul id="big" class="big">
+                <li index='1' class="active">
+                    <a href="">
+                        <img src="../../statics/img/banner/small/rad1.png" alt="" />
+                    </a>
+                </li>
+                <li index='2' >
+                    <a href="">
+                        <img src="../../statics/img/banner/small/rad2.png" alt="" />
+                    </a>
+                </li>
+            </ul>
+            <div id="icon" class="icon">
+                <a index='1' href="javascript:void(0)" class="active"></a>
+                <a index='2' href="javascript:void(0)" ></a>
+            </div>
+
+        </div>
+    </div>
+    <div class="clear"></div>
+</div>
+<div id="prompt"></div>
+{% endblock %}
+{% block footerjs%}
+<script>
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings){
+          var csrftoken = $.cookie('csrftoken');
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    });
+    $(function(){
+      var $prompt = $('#prompt');
+      $("#prompt").css({"left":($(window).width()-$prompt.width())/2+'px','top':($(window).height()-$prompt.height())/2+'px'});
+    });
+    function changePwd(){
+      var $oldPwd = $("input[name='oldpswd']").val(),
+          $firstNewPwd = $("input[name='firstNewPwd']").val(),
+          $secondNewPwd = $("input[name='secondNewPwd']").val();
+      if($firstNewPwd == $secondNewPwd)
+      {
+        if($firstNewPwd.length >= 6)
+        {
+          $.ajax({
+              url:'{% url 'accounts:user_resetpassword' %}',
+              type:'POST',
+              data:{
+                'oldPwd':$oldPwd,'newPwd':$firstNewPwd
+              },
+              success:function(res){
+                if(res == 0)
+                {
+                  prompt('密码不正确！')
+                }
+                else{
+                  prompt('修改密码成功！')
+                }
+              }
+          })
+        }
+        else{
+          prompt('密码长度不能小于6位！')
+        }
+      }
+      else{
+        prompt('两次输入的新密码不一致！')
+      }
+    }
+    function prompt(des){
+      $('#prompt').text(des)
+                  .show()
+                  .setTimeout($('#prompt').fadeOut(2000),2000);
+    }
+</script>
+{% endblock %}

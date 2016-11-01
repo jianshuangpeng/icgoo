@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/help.css" %}">
+{% endblock %}
+
+
+{% block container %}
+
+{% endblock%}
+
+{#% block nav %#}
+  <div class="DivBar182"><h2>会员中心</h2></div>
+  <div class="BarTitle182"><label>购物指南</label><em>收起</em></div>
+  <div class="Divinfo">
+    <div class="DivSort">
+      <ul class="liIcon">
+        <li><a href="/help/howto-register/" id="">如何注册</a></li>
+        <!--<li><a href="/help/" id="">怎样询价</a></li>
+        <li><a href="/help/" id="">怎样下订单</a></li>-->
+        <li><a href="/help/howto-faq/" id="">常见问题</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="BarTitle182"><label>付款方式</label><em>收起</em></div>
+  <div class="Divinfo">
+    <div class="DivSort">
+      <ul class="liIcon">
+        <li><a href="/help/pay-method/" id="">支付方式</a></li>
+        <li><a href="/help/invoice-system/" id="">发票制度</a></li>
+        <li><a href="/help/refund-system/" id="">退款制度</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="BarTitle182"><label>配送方式</label><em>收起</em></div>
+  <div class="Divinfo">
+    <div class="DivSort">
+      <ul class="liIcon">
+        <li><a href="/help/shipping-charges/" id="">运费收取标准</a></li>
+        <li><a href="/help/deliver-time-station/" id="">配送时间和配送范围</a></li>
+        <li><a href="/help/cargo-tracking/" id="">货物跟踪</a></li>
+        <li><a href="/help/get-by-yourself/" id="">上门自提</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="BarTitle182"><label>售后服务</label><em>收起</em></div>
+  <div class="Divinfo">
+    <div class="DivSort">
+      <ul class="liIcon">
+        <li><a href="/help/service-promise/" id="">服务及质量保证承诺</a></li>
+        <li><a href="/help/exchange-help/" id="">退换货政策</a></li>
+        <li><a href="/help/help_solve/" id="">售后常见问题解答</a></li>
+        <li><a href="/help/exchange-process/" id="">退换货流程</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="BarTitle182"><label>帮助中心</label><em>收起</em></div>
+  <div class="Divinfo">
+    <div class="DivSort">
+      <ul class="liIcon">
+        <li><a href="/accounts/password_reset/" id="">找回密码</a></li>
+      </ul>
+    </div>
+  </div>
+{#% endblock %#}

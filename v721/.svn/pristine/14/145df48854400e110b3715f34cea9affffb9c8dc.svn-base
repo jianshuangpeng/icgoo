@@ -1,0 +1,33 @@
+{% load account_tags %}
+
+<div class="detail_state">
+    <ul>
+        {% if data %}
+            {% for one in data.route %}
+            {% if not forloop.last %}
+              <li style="position:relative">
+                  <span class="span_f">{{one.accept_time}}</span>
+                  <div class="state_radius"></div>
+                  <div class="state_b"></div>
+                  <span class="span_t">{{one.remark }}</span>
+                  <div class="clear"></div>
+              </li>
+            {% else %}
+            <li style="position:relative">
+                <span class="span_f c_D63031">{{one.accept_time}}</span>
+                <div class="state_radius" style="background:#CC0001"></div>
+                <span class="span_t">{{one.remark }}</span>
+                <div class="clear"></div>
+            </li>
+            {% endif %}
+            {% endfor %}
+        {% else %}
+        <li>
+            暂无信息，请稍后查询
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<script type="text/javascript">
+
+</script>

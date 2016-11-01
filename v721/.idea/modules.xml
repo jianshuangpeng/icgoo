@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$USER_HOME$/angular-1.3.0-beta.14/.idea/angular-1.3.0-beta.14.iml" filepath="$USER_HOME$/angular-1.3.0-beta.14/.idea/angular-1.3.0-beta.14.iml" />
+      <module fileurl="file://$USER_HOME$/angularRoute/.idea/angularRoute.iml" filepath="$USER_HOME$/angularRoute/.idea/angularRoute.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/v721.iml" filepath="$PROJECT_DIR$/.idea/v721.iml" />
+      <module fileurl="file://$USER_HOME$/vueCart/.idea/vueCart.iml" filepath="$USER_HOME$/vueCart/.idea/vueCart.iml" />
+      <module fileurl="file://$USER_HOME$/vue插件/.idea/vue插件.iml" filepath="$USER_HOME$/vue插件/.idea/vue插件.iml" />
+    </modules>
+  </component>
+</project>

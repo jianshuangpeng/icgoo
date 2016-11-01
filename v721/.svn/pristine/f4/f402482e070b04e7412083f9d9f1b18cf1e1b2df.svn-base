@@ -1,0 +1,86 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+<link rel="stylesheet" href="{% static "css/invoice_info.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    开票资料--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+<div class="account_menu">
+    <ul class="menu_f">
+        <li><div id="iconDd" class="icon"></div><div class="menu_title">订单中心</div>
+            <ul class="second_ul">
+                <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=quote">报价单</a></li>
+                <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=order">当前订单</a></li>
+                <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+            </ul>
+        </li>
+        <li><div id="iconWl" class="icon"></div><div class="menu_title">物流中心</div>
+          <ul>
+            <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+            <li><a href="{% url 'accounts:user_goodsarriveport'%}">货已到港</a></li>
+            <li><a href="{% url 'accounts:user_customer_finish'%}">报关完成</a></li>
+            <li><a href="{% url 'accounts:user_already_instorage' %}">已入库</a></li>
+            <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+            <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+            <!--<li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>-->
+          </ul>
+        </li>
+    </ul>
+</div>
+    <div class="account_con">
+        <div class="left">
+            <div class="title">
+                <h6>开票资料</h6>
+                <div class="line_gray"><div class="line_red"></div></div>
+            </div>
+            <div class="main">
+              <div><label>公&nbsp;&nbsp;司&nbsp;&nbsp;名&nbsp;:&nbsp;</label><!--<input type="text" name="company" value="{{data.zp_company_name}}"/>-->{{data.zp_company_name|default:"暂无此信息"}}</div>
+              <div><label>税&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号&nbsp;:&nbsp;</label><!--<input type="text" name="tax_NO" value="{{data.zp_tax_number}}"/>-->{{data.zp_tax_number|default:"暂无此信息"}}</div>
+              <div><label>电&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;话&nbsp;:&nbsp;</label><!--<input type="text" name="phone" value="{{data.zp_mobile}}"/>-->{{data.zp_mobile|default:"暂无此信息"}}</div>
+              <div><label>银行名称&nbsp;:&nbsp;</label><!--<input type="text" name="bank" value="{{data.zp_bank}}"/>-->{{data.zp_bank|default:"暂无此信息"}}</div>
+              <!--暂时去掉textarea，所以重新设置height为30--><div id="owner_name" style="height:30px"><label>开户地址&nbsp;:&nbsp;</label><!--<textarea name="owner_name"/>{{data.zp_owner_name}}</textarea>-->{{data.zp_owner_name|default:"暂无此信息"}}</div>
+              <div><label>银行账号&nbsp;:&nbsp;</label><!--<input type="text" name="account_NO" value="{{data.zp_account_number}}"/>-->{{data.zp_account_number|default:"暂无此信息"}}</div>
+              <div><label>抬&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;头&nbsp;:&nbsp;</label><!--<input type="text" name="pup_title" value="{{data.pup_title}}"/>-->{{data.pup_title|default:"暂无此信息"}}</div>
+              <!--<div><input type="button" value="提交"/></div>-->
+            </div>
+        </div>
+        <div class="right">
+            <div class="banner">
+                <ul id="big" class="big">
+                    <li index='1' class="active">
+                        <a href="">
+                            <img src="../../statics/img/banner/small/rad1.png" alt="" />
+                        </a>
+                    </li>
+                    <li index='2' >
+                        <a href="">
+                            <img src="../../statics/img/banner/small/rad2.png" alt="" />
+                        </a>
+                    </li>
+                </ul>
+                <div id="icon" class="icon">
+                    <a index='1' href="javascript:void(0)" class="active"></a>
+                    <a index='2' href="javascript:void(0)" ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'js/home.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/help.css" %}">
+{% endblock %}
+
+{% block menu %}
+<ul class="nav_menu">
+    <li class="active"><a href="/">首页</a></li>
+    <li class="batch_query link"><a href="{% url 'search:mult_index' %}">批量查询</a></li>
+</ul>
+{% endblock %}
+
+{% block container %}
+  <div class="breadlink">
+    <p>
+        <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+        <a href="javascript:void(0)">关于我们</a> <span class="line">></span>
+        <span>
+            {% block breadlink %}
+
+            {% endblock%}
+        </span>
+    </p>
+  </div>
+  <div class="clear"></div>
+  <div class="left">
+    <h3>
+      <span>关于我们</span>
+    </h3>
+    <ul class="last">
+      <li><a href="{% url "help:about-us"%}">关于ICGOO</a></li>
+      <li><a href="{% url "help:contact-us"%}">联系我们</a></li>
+    </ul>
+  </div>
+  <div class="right">
+    {% block aboutcontent %}
+
+    {% endblock %}
+  </div>
+{% endblock%}

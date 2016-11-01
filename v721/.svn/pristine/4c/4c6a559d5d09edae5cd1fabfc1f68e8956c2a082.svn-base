@@ -1,0 +1,140 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/search.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    搜索--{{partno}}
+{% endblock %}
+
+{% block searchfloat %}
+  <div id="search_float">
+    <h3 class="logo">
+        <a href="{% url 'mainpage' %}" title="回到首页">
+            <img src="{% static "img/logo.png" %}" alt="电子原件">
+        </a>
+    </h3>
+    <div class="search_box">
+        <form action="{% url 'search:search_grid' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno %}{{partno}}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{ qty }}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <input type="checkbox" name="for_all" id="for_all" onclick="grid_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配</label>&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="grid_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+    <div class="server">
+        <ul>
+            <li>全国销售热线：<span>400-660-6568</span></li>
+            <li>售后服务电话：<span>{{service_phone.content}}</span></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search_grid' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno %}{{partno}}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <input type="checkbox" name="for_all" id="for_all_box" onclick="grid_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all_box">精确匹配</label>&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="for_stock" id="for_stock_box" onclick="grid_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock_box">满足库存</label>
+        </p>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="breadlink">
+        <p>
+            <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+            <a href="javascript:void(0)">搜索</a> <span class="line">></span>
+            <span>{{partno_view|upper}}</span>
+        </p>
+        <p class="tip">
+            ICGOO为您找到
+            <span id="total_count">0</span>
+            家供应商关于<span id="partno" alt="{{partno_view|upper}}" title="{{partno_view|upper}}">{{partno_view|upper}}</span> 的供应信息
+        </p>
+        <p style="float:right">
+            <a href="{% url 'search:search_grid'%}?partno={{partno}}&qty={{qty}}">
+                <img src="{% static 'img/grid_a.jpg' %}" alt="网格">
+            </a>
+            <a href="{% url 'search:search'%}?partno={{partno}}&qty={{qty}}">
+                <img src="{% static 'img/list.jpg' %}" alt="列表">
+            </a>
+        </p>
+    </div>
+    <div class="filter">
+        <h3>供应商筛选：</h3>
+        <p id="a_sups">
+            <a href="javascript:void(0)" onclick="grid_all(this)" class="active">
+                全部
+                <!--<SUP>X</SUP>-->
+            </a>
+        </p>
+    </div>
+    <div class="results" id="topcontainer">
+        <div class="loading" id="loading">
+            <!--<div style="height:20px;color:#666">查询中</div>-->
+            <img src="{% static 'img/loading1.gif' %}" alt="数据加载中...">
+            <!-- 暂无信息 -->
+        </div>
+    </div>  <!--results end-->
+    <input type="hidden" name="sup_num" value="0">
+
+{% endblock %}
+{% block other %}
+<div class="left_filter">
+    <ul id="left_sup">
+
+    </ul>
+</div>
+{% endblock %}
+{% block footerjs%}
+<script type="text/javascript" src="{% static "js/server.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/search.js" %}"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        var partno = '{{ partno }}';
+        var qty = parseInt({{ qty }});
+        var supps = '{{ sups }}';
+        var part_no = $("#partno").text();
+        //如果搜索型号长度大于10，则截取型号的前20个字符并加上'...'
+        if(part_no.length>10)
+        {
+          part_no = part_no.substr(0,10);
+          part_no+='...';
+        }
+        $("#partno").text(part_no);
+        if (supps != ''){
+            var sups = supps.split(',');
+            for (var i in sups) {
+                url = "/search/getdata/?sup="
+                      + sups[i] + "&partno="
+                      + partno + '&qty=' + qty + '&type=grid';
+                getdata_grid(url);
+            }
+        }
+        setTimeout(noinfo, 10000);
+        function noinfo(){
+            var flag = $("#loading").is(':hidden');
+            if(!flag){
+                $("#loading").append('<p>暂无信息</p>').find('img').hide();
+            }
+        }
+        $("input[name='sup_num']").val(0)
+    });
+</script>
+{% endblock %}

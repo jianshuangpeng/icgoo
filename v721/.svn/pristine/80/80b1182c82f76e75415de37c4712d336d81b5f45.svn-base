@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+  ICGOO商城--忘记密码
+{% endblock %}
+
+
+{% block container %}
+<div class="accounts" type="forgetpwd">
+    <div class="login">
+        <h3><span class="sign sign_pwd"></span>密码找回{% if msg %}<div id="error" style="left:164px;"><span>!</span>{{ msg|safe }}</div>{% endif %}<p><span>或</span><a href="{% url 'accounts:user_login' %}">登录已有账号</a></p></h3>
+        <form action="" method="post" name='forgetpwd'>
+            {%csrf_token%}
+            <ul class="forgetpwd">
+                <li>
+                    <span class="item" style="margin-left:53px">账号</span>
+                    <input class="" type="text" name="phone" placeholder="手机号码"><i></i>
+                </li>
+                <li>
+                    <span class="item" style="margin-left:53px">验证码</span>
+                    <div id="validate_border"><input class="" type="text" name="code"><span id="btn_get">获取验证码</span></div><div id="des"><b>60</b>秒后可再获取</div><i></i>
+                </li>
+                <li>
+                    <span class="item" style="margin-left:53px">新密码</span>
+                    <input class="" type="password" name="password"><i></i>
+                </li>
+                <li>
+                    <span class="item" style="margin-left:53px">确认密码</span>
+                    <input class="" type="password" name="password_again"><i></i>
+                </li>
+            </ul>
+            <div class="login_btn">
+                <input type="button" class="sub_btn" value="确认">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block footerjs%}
+<script src="{% static 'js/validate.js' %}"></script>
+<script>
+  $(function(){
+      /* 当文本框获得/失去焦点时，验证信息的动作 */
+      $(".forgetpwd").find("input[type='text'],input[type='password']").each(function(){
+          $(this).on('focus',function(){
+              check_status($(this),'forgetpwd')
+          });
+          $(this).on('blur',function(){
+              validate($(this),'forgetpwd')
+          });
+      });
+      /*　点击提交时验证用户输入的信息　*/
+      $("input[type='button']").on('click',function(){
+          var $phone = validate("input[name='phone']",'forgetpwd'),
+              $password = validate("input[name='password']",'forgetpwd'),
+              $password_again = validate("input[name='password_again']",'forgetpwd');
+          if($phone && $password && $password_again)
+          {
+              forgetpwd.submit();
+          }
+      })
+      /* 在提示验证码错误的时候，当验证码输入框获得焦点，隐藏提示　*/
+      $("input[name='code']").on('focus',function(){
+          if($("#error").is(':visible'))
+          {
+            $("#error").hide();
+          }
+      })
+  })
+</script>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% if result = "success" %}
+<meta http-equiv="refresh" content="3;url={% url 'accounts:user_login' %}">
+{% else %}
+<meta http-equiv="refresh" content="3;url={% url 'accounts:user_register' %}">
+{% endif %}
+{% endblock %}
+
+{% block titlename %}
+  ICGOO商城--注册结果
+{% endblock %}
+
+{% block container %}
+<div class="accounts">
+    <h3 class="register_result" style=" text-align:center;">
+        {% if result = "success" %}
+            注册成功，3秒后跳转到登录页面。
+        {% else %}
+            注册失败，3秒后跳转到注册页面。
+        {% endif %}
+    </h3>
+</div>
+{% endblock %}

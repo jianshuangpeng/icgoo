@@ -1,0 +1,118 @@
+.left {
+  width: 65%;
+  float: left;
+}
+.left .title {
+  color: #c00;
+  font-size: 14px;
+  text-indent: 1em;
+}
+.left .title h6 {
+  margin-bottom: 5px;
+}
+.left .title .line_gray {
+  width: 100%;
+  height: 1px;
+  background-color: #cbcbcb;
+}
+.left .title .line_red {
+  width: 12.7%;
+  height: 1px;
+  background-color: #c00;
+}
+.left .main {
+  margin-top: 40px;
+}
+.left .main div {
+  height: 30px;
+  margin-top: 20px;
+  line-height: 30px;
+  text-indent: 1em;
+  *line-height: 20px;
+}
+.left .main div label {
+  font-size: 14px;
+  font-weight: bold;
+  *vertical-align: super;
+}
+.left .main div input {
+  width: 353px;
+  height: 28px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  padding: 0;
+  text-indent: 1em;
+  font-family: Microsoft YaHei;
+  line-height: 28px;
+}
+.left .main div input[type="button"] {
+  width: 80px;
+  height: 30px;
+  line-height: 30px;
+  background-color: #c00;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  text-align: center;
+  text-indent: 0;
+  cursor: pointer;
+  margin-top: 30px;
+}
+.left .main #owner_name {
+  height: 62px;
+}
+.left .main #owner_name label {
+  vertical-align: top;
+}
+.left .main #owner_name textarea {
+  width: 339px;
+  height: 60px;
+  border: 1px solid #ccc;
+  font-family: Microsoft YaHei;
+  resize: none;
+  line-height: 30px;
+  border-radius: 3px;
+  padding-left: 1em;
+  overflow: hidden;
+}
+.right {
+  float: right;
+  width: 23%;
+}
+.right .banner {
+  width: 100%;
+  height: 166px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 24px;
+}
+.right .banner ul {
+  float: left;
+}
+.right .banner .big li {
+  width: 250px;
+  height: 166px;
+  overflow: hidden;
+}
+.right .banner .big img {
+  width: 250px;
+  height: 166px;
+}
+.right .banner .icon {
+  position: absolute;
+  bottom: 10px;
+  left: 188px;
+}
+.right .banner .icon a {
+  width: 9px;
+  height: 9px;
+  display: inline;
+  float: left;
+  margin: 0 3px;
+  overflow: hidden;
+  background: url("../img/icon_1.png") no-repeat;
+  background-position: top right;
+}
+.right .banner .icon a.active {
+  background: url("../img/icon_1.png") no-repeat top left;
+}

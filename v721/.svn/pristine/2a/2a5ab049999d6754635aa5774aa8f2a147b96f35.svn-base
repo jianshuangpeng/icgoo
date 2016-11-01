@@ -1,0 +1,1835 @@
+@charset "utf-8";
+/**
+ * Global Reset of all HTML Elements
+ *
+ * Resetting all of our HTML Elements ensures a smoother
+ * visual transition between browsers. If you don't believe me,
+ * try temporarily commenting out this block of code, then go
+ * and look at Mozilla versus Safari, both good browsers with
+ * a good implementation of CSS. The thing is, all browser CSS
+ * defaults are different and at the end of the day if visual
+ * consistency is what we're shooting for, then we need to
+ * make sure we're resetting all spacing elements.
+ *
+ */
+html,
+body {
+  border: 0;
+  font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+div,
+span,
+object,
+iframe,
+img,
+table,
+caption,
+thead,
+tbody,
+tfoot,
+tr,
+tr,
+td,
+article,
+aside,
+canvas,
+details,
+figure,
+hgroup,
+menu,
+nav,
+footer,
+header,
+section,
+summary,
+mark,
+audio,
+video {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+a,
+abbr,
+address,
+cit,
+code,
+del,
+dfn,
+em,
+ins,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+b,
+i,
+hr,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+legend,
+label {
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  margin: 0;
+  padding: 0;
+}
+article,
+aside,
+canvas,
+figure,
+figure img,
+figcaption,
+hgroup,
+footer,
+header,
+nav,
+section,
+audio,
+video {
+  display: block;
+}
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+table caption,
+table th,
+table td {
+  text-align: left;
+  vertical-align: middle;
+}
+a img {
+  border: 0;
+}
+:focus {
+  outline: 0;
+}
+a {
+  text-decoration: none;
+  color: #333;
+}
+ul,
+ul li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 50px white inset !important;
+  background-color: #fff !important;
+}
+table {
+  border-collapse: collapse;
+}
+.clear {
+  clear: both;
+  line-height: 0;
+}
+.bgf8 {
+  background: #f8f8f8;
+}
+.rc {
+  color: #CC0000;
+}
+.bc {
+  color: #8EB0DD !important;
+}
+.bold {
+  font-weight: bold;
+}
+.textl {
+  text-align: left !important;
+}
+.acenter {
+  text-align: center;
+}
+body {
+  position: relative;
+}
+.topmenu {
+  width: 100%;
+  height: 29px;
+  line-height: 29px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #f2f2f2;
+  z-index: 99;
+}
+.topmenu .menu {
+  width: 1190px;
+  margin: 0 auto;
+}
+.topmenu .menu p {
+  float: left;
+  font-size: 12px;
+  font-family: simsun;
+  color: #333;
+}
+.topmenu .menu ul {
+  float: right;
+}
+.topmenu .menu ul li {
+  float: left;
+}
+.topmenu .menu ul li a {
+  font-size: 12px;
+  font-family: simsun;
+  color: #333;
+  padding-left: 25px;
+}
+.topmenu .menu ul li a #triangle {
+  position: relative;
+  left: 3px;
+  bottom: 5px;
+}
+.topmenu .menu ul li a #star {
+  position: relative;
+  top: 5px;
+}
+.topmenu .menu:before,
+.topmenu .menu:after {
+  content: " ";
+  display: table;
+}
+.topmenu .menu:after {
+  clear: both;
+}
+.header {
+  width: 1190px;
+  margin: 0 auto;
+  min-height: 146px;
+}
+.header .logo {
+  float: left;
+  height: 86px;
+  padding-top: 20px;
+}
+.header .logo .mainlogo {
+  position: absolute;
+  left: 190px;
+  top: -20px;
+}
+.header .server {
+  float: right;
+  height: 78px;
+  padding-top: 28px;
+}
+.header .server ul {
+  height: 50px;
+  padding-left: 60px;
+  float: left;
+  background: url(../img/u178.png) left center no-repeat;
+  /*background: url(../img/tel.jpg) left center no-repeat;*/
+}
+.header .server ul li {
+  font-size: 14px;
+  line-height: 25px;
+  color: #666;
+}
+.header .server ul span {
+  font-weight: 800;
+  color: #f72522;
+}
+.header .nav {
+  width: 100%;
+  border-bottom: 2px solid #CC0000;
+  /*a:hover, li.active{
+      background: url(../img/hover.jpg) left top repeat-x;
+      background:#cc0000;
+      color: #fff;
+    }*/
+  /*.myicgoo:hover, .dropmenu:hover{
+      ul {
+        display: block;
+      }
+    }*/
+}
+.header .nav #homemarket {
+  position: relative;
+}
+.header .nav .icon {
+  width: 22px;
+  height: 15px;
+  position: absolute;
+  top: -5px;
+  right: 16px;
+  background: url(../img/new.gif);
+}
+.header .nav .link a:hover {
+  color: #c00;
+}
+.header .nav .home_icgoo li a {
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  padding: 0 9px;
+}
+.header .nav ul li {
+  float: left;
+  display: block;
+  height: 38px;
+  line-height: 38px;
+}
+.header .nav a {
+  font-size: 16px;
+  font-family: "微软雅黑";
+  font-weight: bold;
+  display: block;
+  padding: 0 25px;
+  margin: 0 5px;
+}
+.header .nav li.active {
+  background: url(../img/hover.jpg) left top repeat-x;
+  color: #fff;
+}
+.header .nav li.active a {
+  color: #fff;
+}
+.header .nav .myicgoo {
+  float: right;
+  display: block;
+  height: 37px;
+  line-height: 37px;
+  background: #f4f4f4;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  position: relative;
+}
+.header .nav .myicgoo a {
+  font-weight: 400;
+}
+.header .nav .dropmenu {
+  display: block;
+  height: 37px;
+  line-height: 37px;
+  /*background: #f0f0f0;
+      border: 1px solid #e3e3e3;*/
+  border-bottom: none;
+  position: relative;
+  margin: 0 5px;
+  /*background: url(../img/jiao1_u8.png) 100px 15px no-repeat;*/
+  *z-index: 1;
+  *background-position: 100px 15px;
+}
+.header .nav .dropmenu a:hover {
+  background: none;
+  color: #c00;
+}
+.header .nav .dropmenu:hover {
+  background-image: none;
+}
+.header .nav .myicgoo ul,
+.header .nav .dropmenu ul {
+  display: none;
+  width: 270px;
+  position: absolute;
+  background: #fff;
+  /*border: 1px solid #e3e3e3;
+        border-top: 2px solid #CC0000;*/
+  border: 2px solid #fc9;
+  left: 7px;
+  top: 37px;
+  z-index: 10;
+  padding: 5px;
+}
+.header .nav .myicgoo ul span,
+.header .nav .dropmenu ul span {
+  width: 15px;
+  height: 7px;
+  position: absolute;
+  display: block;
+  top: -7px;
+  left: 35px;
+  background: url(../img/u248.png);
+  z-index: 100;
+}
+.header .nav .myicgoo ul li,
+.header .nav .dropmenu ul li {
+  width: 120px;
+  height: 28px;
+  line-height: 26px;
+  text-indent: 2px;
+}
+.header .nav .myicgoo ul .main_option,
+.header .nav .dropmenu ul .main_option {
+  color: #f60;
+  font-weight: bold;
+  text-indent: 1em;
+  font-size: 14px;
+}
+.header .nav .myicgoo ul .login_li,
+.header .nav .dropmenu ul .login_li {
+  background: #CC0000;
+  width: 83px;
+  margin-left: 16px;
+}
+.header .nav .myicgoo ul .login_li a,
+.header .nav .dropmenu ul .login_li a {
+  color: #fff;
+}
+.header .nav .myicgoo ul .login_li a:hover,
+.header .nav .dropmenu ul .login_li a:hover {
+  background: none;
+  color: #fff;
+}
+.header .nav .myicgoo ul a,
+.header .nav .dropmenu ul a {
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  padding: 0 10px;
+}
+.header .nav .myicgoo ul a:hover,
+.header .nav .dropmenu ul a:hover {
+  /*background: none;
+          background: #f0f0f0;
+          color: #333;*/
+  text-decoration: underline;
+  color: #c00;
+}
+/*首页的下拉菜单*/
+.header .nav .nav_menu {
+  height: 38px;
+}
+.header .nav ul .home_icgoo {
+  float: right;
+  display: block;
+  height: 37px;
+  line-height: 37px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  position: relative;
+  background-color: #f4f4f4;
+  *z-index: 1;
+}
+.header .nav ul .home_icgoo a {
+  font-weight: normal;
+}
+.header .nav ul .home_icgoo a span {
+  display: inline-block;
+  width: 14px;
+  height: 8px;
+  background: url(../img/jiao1_u8.png) no-repeat;
+  *vertical-align: middle;
+}
+.header .nav ul .home_icgoo ul {
+  display: none;
+  width: 200px;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #e3e3e3;
+  border-top: 2px solid #CC0000;
+  right: -1px;
+  top: 37px;
+  z-index: 10;
+  padding: 5px;
+  overflow: hidden;
+}
+.header .nav ul .home_icgoo ul li {
+  width: 100px;
+  height: 26px;
+  line-height: 26px;
+}
+.header .nav ul .home_icgoo ul a:hover {
+  background: #f2f2f2;
+}
+.header .nav ul .home_icgoo ul .login_li {
+  background: #CC0000;
+  width: 83px;
+  margin-left: 16px;
+}
+.header .nav ul .home_icgoo ul .login_li a {
+  color: #fff;
+}
+.header .nav ul .home_icgoo ul .login_li a:hover {
+  background: none;
+  color: #fff;
+}
+p,
+form {
+  margin: 0;
+  padding: 0;
+}
+.search_box {
+  display: inline;
+  float: left;
+  margin: 29px auto auto 107px;
+  width: 445px;
+  overflow: hidden;
+}
+.search_box form {
+  border: 2px solid #CC0000;
+  overflow: hidden;
+  height: 26px;
+  width: 445px;
+  /*margin-bottom:5px;*/
+}
+.search_box input {
+  background: none;
+  border: none;
+  border-radius: 0;
+  font-family: '微软雅黑';
+  font-size: 16px;
+  color: #999;
+  float: left;
+  display: inline;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+.search_box .partno {
+  width: 221px;
+  height: 18px;
+  line-height: 18px;
+  padding-left: 34px;
+  border-right: 1px solid #ccc;
+  margin-top: 4px;
+  background: url(../img/search_bg.jpg) left center no-repeat;
+}
+.search_box .qty {
+  width: 78px;
+  height: 18px;
+  line-height: 18px;
+  padding-left: 15px;
+  margin-top: 4px;
+}
+.search_box .submit_btn {
+  background: #CC0000;
+  color: #fff;
+  height: 26px;
+  width: 94px;
+  vertical-align: top;
+  -webkit-appearance: none;
+}
+.search_box p {
+  margin-top: 2px;
+  color: #333;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  /*display: table-row;*/
+}
+.search_box p a {
+  font-size: 13px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  color: #666;
+  letter-spacing: 1px;
+  height: 22px;
+  line-height: 22px;
+  padding-right: 7px;
+}
+.search_box p input {
+  float: none;
+  /*vertical-align: middle;*/
+}
+.search_box p label {
+  /*vertical-align: middle;
+      color:#666;*/
+}
+.container {
+  width: 1190px;
+  margin: 0 auto;
+  margin-top: 24px;
+  min-height: 500px;
+}
+.container .breadlink {
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+  height: 34px;
+  line-height: 34px;
+}
+.container .breadlink p {
+  float: left;
+  display: inline;
+}
+.container .breadlink p a {
+  font-size: 16px;
+  font-family: "微软雅黑";
+  font-weight: bold;
+  color: #333;
+}
+.container .breadlink p span {
+  color: #f72522;
+  letter-spacing: 1px;
+  font-size: 16px;
+  font-family: "微软雅黑";
+  font-weight: bold;
+  /* font-family: arial;*/
+}
+.container .breadlink p .line {
+  padding: 0 6px;
+  /*为兼容型号过长*/
+  color: #ccc;
+}
+.container .breadlink .tip {
+  margin-left: 60px;
+  /*为兼容型号过长*/
+  font-size: 13px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  letter-spacing: 1px;
+}
+.container .breadlink .tip span {
+  font-size: 13px;
+  font-weight: bold;
+}
+.container:before,
+.container:after {
+  content: " ";
+  display: table;
+}
+.container:after {
+  clear: both;
+}
+.footer {
+  width: 1190px;
+  margin: 0 auto;
+  margin-top: 20px;
+  padding-bottom: 105px;
+}
+.footer p {
+  text-align: center;
+  border-bottom: 1px solid #ccc;
+  height: 36px;
+  line-height: 36px;
+}
+.footer p a {
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  padding: 0 13px;
+  border-right: 1px solid #ccc;
+}
+.footer p a.last {
+  border-right: none;
+}
+.footer p a:hover {
+  color: #f72522;
+}
+.footer ul {
+  text-align: center;
+  width: 680px;
+  margin: 0 auto;
+}
+.footer ul li {
+  float: left;
+  padding-top: 15px;
+  margin-right: 14px;
+  display: inline;
+}
+.footer ul li span {
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  padding: 0;
+  height: 23px;
+  line-height: 23px;
+}
+.footer ul li.last {
+  margin-right: 0;
+}
+.tbox {
+  width: 47px;
+  position: fixed;
+  bottom: 150px;
+  right: 0;
+}
+.tbox a {
+  display: block;
+  width: 38px;
+  height: 38px;
+  background: #f2f2f2;
+  margin: 5px 0;
+  padding: 1px;
+  border: 1px solid #eee;
+}
+.tbox a:hover {
+  background: #f2f2f2;
+}
+.tbox ul {
+  position: relative;
+}
+.tbox ul li ul {
+  position: absolute;
+  top: 0px;
+  right: 47px;
+  display: none;
+  border: 1px solid #e1e1e1;
+  background: #fff;
+  width: 160px;
+}
+.tbox ul li ul li {
+  padding: 8px 10px;
+  margin: 2px 0;
+  color: #666;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+}
+.tbox ul li ul li span {
+  color: #333;
+  padding-left: 20px;
+}
+.tbox ul li ul a {
+  width: 30px;
+  height: 30px;
+  background: none;
+  display: inline;
+  border: none;
+}
+.tbox ul li:hover ul {
+  display: block;
+}
+@media screen and (max-width: 1190px) {
+  .container .breadlink p span {
+    font-size: 12px;
+  }
+  .container .breadlink .tip {
+    margin-left: 20px;
+  }
+}
+.topAdv {
+  width: 1160px;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  margin: 0 auto;
+  background: #fee4a7;
+  position: relative;
+  color: #000;
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  padding-left: 30px;
+}
+.topAdv span {
+  position: absolute;
+  top: -3px;
+  left: -33px;
+}
+.topAdv a {
+  color: #b60000;
+  /*background: url(../img/close.png) 28px 5px no-repeat;*/
+  width: 55px;
+  height: 30px;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+}
+.left {
+  float: left;
+  width: 210px;
+  padding: 10px 20px 0 20px;
+  position: relative;
+  border: 1px solid #CCC;
+  overflow: hidden;
+}
+.left h3 {
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: bold;
+  color: #333;
+  height: 32px;
+  line-height: 32px;
+  border-bottom: 1px solid #ccc;
+}
+.left h3 span {
+  height: 32px;
+  line-height: 32px;
+  display: inline-block;
+  border-bottom: 1px solid #f72522;
+}
+.left ul {
+  width: 100%;
+  overflow: hidden;
+}
+.left ul li {
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 18px;
+  border-bottom: 1px dotted #ccc;
+  position: relative;
+}
+.left ul li.last {
+  border: none;
+}
+.left ul img {
+  width: 140px;
+  height: 52px;
+}
+.left ul span {
+  background: #ff9231;
+  color: #fff;
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  padding: 1px 10px;
+  position: absolute;
+  top: 27px;
+  right: 0px;
+}
+.left ul .fz16 {
+  font-size: 16px;
+  padding: 0px 2px;
+}
+.right {
+  width: 920px;
+  float: right;
+  position: relative;
+  overflow: hidden;
+}
+.right .search {
+  width: 100%;
+  height: 154px;
+  overflow: hidden;
+}
+.right .search .con {
+  margin-top: 40px;
+  margin-left: 88px;
+  height: 42px;
+  overflow: hidden;
+}
+.right .search .con .srcform {
+  height: 38px;
+  border: 2px solid #CC0000;
+  float: left;
+  overflow: hidden;
+}
+.right .search .con input {
+  background: none;
+  border: none;
+  float: left;
+  font-size: 16px;
+  font-family: "Helvetica-Neue", "Helvetica", Arial, sans-serif;
+  height: 38px;
+  line-height: 38px;
+  margin: 0px;
+  padding: 0px;
+  border-radius: 0;
+}
+.right .search .con .partno {
+  width: 284px;
+  padding-left: 34px;
+  border-right: 1px solid #ccc;
+  text-transform: uppercase;
+  background: url(../img/search_bg.jpg) left center no-repeat;
+}
+.right .search .con .qty {
+  width: 93px;
+  padding-left: 30px;
+}
+.right .search .con .submit_btn {
+  width: 138px;
+  height: 38px;
+  cursor: pointer;
+  background: #CC0000;
+  color: #fff;
+  -webkit-appearance: none;
+}
+.right .search .con .bom_btn {
+  float: left;
+  font-size: 16px;
+  background-color: #ff7700;
+  color: #fff;
+  height: 42px;
+  margin-left: 20px;
+  line-height: 42px;
+  padding: 0 24px 0 26px;
+  display: block;
+  border-radius: 0;
+  -webkit-appearance: none;
+}
+.right .search .con:before,
+.right .search .con:after {
+  content: " ";
+  display: table;
+}
+.right .search .con:after {
+  clear: both;
+}
+.right .search p {
+  margin-left: 88px;
+  margin-top: 5px;
+}
+.right .search p a {
+  font-family: '微软雅黑';
+  font-size: 13px;
+  color: #666;
+  letter-spacing: 1px;
+  height: 22px;
+  line-height: 22px;
+  padding: 0 7px;
+}
+.right .banner {
+  width: 100%;
+  height: 260px;
+  position: relative;
+  overflow: hidden;
+}
+.right .banner ul {
+  float: left;
+}
+.right .banner .small li {
+  width: 240px;
+  height: 130px;
+  overflow: hidden;
+}
+.right .banner .small img {
+  width: 240px;
+  height: 130px;
+}
+.right .banner .big li {
+  width: 680px;
+  height: 260px;
+  overflow: hidden;
+}
+.right .banner .big img {
+  width: 680px;
+  height: 260px;
+}
+.right .banner .icon {
+  position: absolute;
+  bottom: 10px;
+  left: 330px;
+}
+.right .banner .icon a {
+  width: 9px;
+  height: 9px;
+  display: inline;
+  float: left;
+  margin: 0 3px;
+  overflow: hidden;
+  background: url("../img/icon_1.png") no-repeat;
+  background-position: top right;
+}
+.right .banner .icon a.active {
+  background: url("../img/icon_1.png") no-repeat top left;
+}
+.right .link {
+  margin-top: 22px;
+  vertical-align: baseline;
+  padding: 0 20px;
+}
+.right .link dl {
+  width: 175px;
+  float: left;
+  margin-right: 60px;
+  display: inline;
+}
+.right .link dl dt {
+  height: 30px;
+  line-height: 30px;
+  border-bottom: 1px solid #CCC;
+}
+.right .link dl span {
+  height: 30px;
+  line-height: 30px;
+  display: inline-block;
+  border-bottom: 1px solid #f72522;
+  color: #333;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+}
+.right .link dl dd {
+  margin-top: 15px;
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  color: #333;
+}
+.right .link dl a:hover {
+  color: #f72522;
+}
+.right .link dl.last {
+  margin: 0;
+}
+.accounts {
+  width: 100%;
+  float: left;
+  margin-left: 12px;
+}
+.login {
+  width: 449px;
+  margin: 0 auto;
+  padding: 0 30px 40px 30px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+.login h3 {
+  color: #cc0000;
+  font-size: 14px;
+  font-family: simsun;
+  height: 54px;
+  line-height: 54px;
+  border-bottom: 1px dotted #ccc;
+  position: relative;
+  z-index: 2;
+}
+.login h3 .sign {
+  display: inline-block;
+  width: 24px;
+  height: 23px;
+  position: relative;
+  top: 7px;
+  margin-right: 7px;
+  background-image: url(../img/login_sign.png);
+  *top: 3px;
+}
+.login h3 .sign_pwd {
+  width: 18px;
+  background-image: url(../img/lock.png);
+}
+.login h3 p {
+  display: inline-block;
+  width: 120px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  text-align: right;
+  font-weight: normal;
+}
+.login h3 p a {
+  font-size: 14px;
+}
+.login h3 p span {
+  color: #838383;
+}
+.login h3 #error {
+  display: inline-block;
+  position: absolute;
+  background: #fff1f1;
+  top: 11px;
+  z-index: 8;
+  padding: 0 15px;
+  height: 32px;
+  border: 1px solid #ee9799;
+  line-height: 32px;
+  color: #333;
+  font-size: 12px;
+}
+.login h3 #error span {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  color: #fff;
+  text-align: center;
+  line-height: 18px;
+  background: #cc0000;
+  margin-right: 10px;
+  font-family: arial;
+  position: relative;
+}
+.login h3 #error a {
+  color: #cc0000;
+  font-size: 12px;
+}
+.login ul {
+  padding: 20px;
+}
+.login ul input {
+  text-indent: 5px;
+}
+.login .forgetpwd {
+  padding: 20px 5px;
+}
+.login .forgetpwd input[type='text'] {
+  font-size: 12px;
+  font-family: simsun;
+}
+.login .forgetpwd input[type='text']:focus,
+.login .forgetpwd input[type='password']:focus {
+  border-color: #ccc;
+  box-shadow: none;
+}
+.login .forgetpwd .correct {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  *position: relative;
+  *top: -10px;
+  background-image: url(../img/register_validate.jpg);
+  background-position: 0px 12px;
+  margin-left: 10px;
+}
+.login .forgetpwd .error {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  *position: relative;
+  *top: -10px;
+  background-image: url(../img/register_validate.jpg);
+  background-position: 0px 0px;
+  margin-left: 10px;
+}
+.login .forgetpwd p {
+  display: inline;
+  color: #c00;
+  margin-left: 5px;
+  position: relative;
+  top: -2px;
+  *top: -10px;
+  font-size: 12px;
+  font-family: simsun;
+}
+.login .forgetpwd #validate_border {
+  width: 200px;
+  height: 30px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  vertical-align: middle;
+  *float: left;
+}
+.login .forgetpwd #validate_border input {
+  width: 97px;
+  height: 28px;
+  border: none;
+  line-height: 28px;
+  padding: 0;
+  *float: left;
+}
+.login .forgetpwd #validate_border span {
+  display: inline-block;
+  width: 102px;
+  height: 30px;
+  background: #f2f2f2;
+  text-align: center;
+  line-height: 30px;
+  border-left: 1px solid #ccc;
+  font-size: 12px;
+  font-family: simsun;
+  cursor: pointer;
+}
+.login .forgetpwd #des {
+  width: 105px;
+  height: 28px;
+  display: none;
+  background-color: #f2f2f2;
+  line-height: 28px;
+  text-align: center;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+  color: #838383;
+  font-size: 12px;
+  font-family: simsun;
+}
+.login .forgetpwd #des b {
+  font-weight: normal;
+}
+.login li {
+  margin: 10px 0;
+  text-align: left;
+  line-height: 32px;
+  height: 32px;
+}
+.login .item {
+  color: #333;
+  font-size: 12px;
+  font-family: simsun;
+  width: 52px;
+  text-align: right;
+  padding-right: 10px;
+  display: inline-block;
+  margin-left: 46px;
+  *vertical-align: top;
+  *float: left;
+  *margin-right: 8px;
+}
+.login #captcha_img {
+  margin-bottom: -8px;
+}
+.login input {
+  height: 28px;
+  line-height: 28px;
+  width: 198px;
+  border: 1px solid #ccc;
+}
+.login input[type='text']:focus,
+.login input[type='password']:focus {
+  border: 1px solid #ee9799;
+  box-shadow: 0 0 2px #c00;
+  -webkit-box-shadow: 0 0 0px 50px white inset !important;
+}
+.login #js-captcha-refresh {
+  cursor: pointer;
+  position: relative;
+  top: 4px;
+}
+.login .sub_btn {
+  height: 37px;
+  width: 110px;
+  background: #cc0000;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-family: simsun;
+  font-weight: bold;
+  cursor: pointer;
+}
+.login a {
+  font-size: 12px;
+  font-family: simsun;
+  color: #666;
+  padding: 0 5px;
+}
+.login .re_span {
+  width: 80px;
+  padding-right: 5px;
+  text-align: right;
+}
+.login .re_input {
+  width: 180px;
+}
+.login .re_code {
+  border: none;
+  background: #fee4a7;
+  width: 70px;
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  color: #333;
+}
+.login .login_btn {
+  margin-bottom: 20px;
+}
+.register {
+  width: 790px;
+  height: 710px;
+  border: 1px solid #ccc;
+  margin: auto;
+  padding: 16px 30px;
+}
+.register .top {
+  width: 100%;
+  height: 23px;
+  line-height: 23px;
+  font-family: simsun;
+  font-size: 14px;
+}
+.register .top i {
+  display: inline-block;
+  width: 24px;
+  height: 23px;
+  vertical-align: top;
+  background-image: url(../img/login_sign.png);
+}
+.register .top #title {
+  color: #c00;
+  font-weight: bold;
+  clear: both;
+  margin: 0 20px 0 10px;
+}
+.register .top span {
+  color: #838383;
+}
+.register .top a {
+  color: #333;
+  margin-left: 10px;
+}
+.register .top span,
+.register .top a {
+  display: inline-block;
+  height: 23px;
+  line-height: 23px;
+}
+.register .content {
+  width: 100%;
+  margin-top: 16px;
+  border-top: 1px #ccc dotted;
+  font-family: simsun;
+  font-size: 12px;
+  padding-top: 35px;
+}
+.register .content ul li {
+  list-style: none;
+  width: 100%;
+  height: 30px;
+  margin-bottom: 20px;
+  line-height: 30px;
+}
+.register .content ul li .item {
+  width: 108px;
+  text-align: right;
+  display: inline-block;
+  margin-right: 8px;
+  *float: left;
+}
+.register .content ul li .item span {
+  color: #c00;
+  margin: 0 5px 0 0;
+  display: inline;
+}
+.register .content ul li a {
+  color: #cc0000;
+}
+.register .content ul li span {
+  color: #838383;
+  margin-left: 10px;
+  display: none;
+  *position: relative;
+  top: -9px;
+}
+.register .content ul li span:first-child {
+  *position: relative;
+  top: 0px;
+}
+.register .content ul li label {
+  margin: 0 60px 0 5px;
+}
+.register .content ul li input[type='radio'],
+.register .content ul li input[type='checkbox'] {
+  vertical-align: -3px;
+}
+.register .content ul li input[type='text'] {
+  font-family: simsun;
+  font-size: 12px;
+}
+.register .content ul li input[type='text'],
+.register .content ul li input[type='password'] {
+  width: 218px;
+  height: 28px;
+  border: 1px solid #ccc;
+  text-indent: 4px;
+  line-height: 28px;
+  padding: 0;
+}
+.register .content ul li input[name='file'] {
+  width: 149px;
+  border: none;
+  height: 27px;
+  *float: left;
+}
+.register .content ul li input[name='upload'] {
+  display: none;
+}
+.register .content ul li input[name='email'] {
+  *float: left;
+}
+.register .content ul li p {
+  display: inline;
+  color: #c00;
+  margin-left: 5px;
+  position: relative;
+  top: -2px;
+  *top: -9px;
+}
+.register .content ul li #border {
+  width: 218px;
+  height: 28px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  *float: left;
+}
+.register .content ul li #ver_code {
+  width: 114px;
+  border: none;
+  height: 27px;
+  line-height: 28px;
+  padding: 0;
+  *float: left;
+}
+.register .content ul li #btn_get {
+  width: 103px;
+  height: 28px;
+  line-height: 28px;
+  display: inline-block;
+  text-align: center;
+  border-left: 1px solid #ccc;
+  cursor: pointer;
+  background-color: #f2f2f2;
+}
+.register .content ul li #btn_file {
+  display: inline-block;
+  width: 68px;
+  height: 28px;
+  border-left: 1px solid #ccc;
+  background: #f2f2f2;
+  text-align: center;
+  line-height: 28px;
+  cursor: pointer;
+}
+.register .content ul li #file {
+  width: 218px;
+  height: 28px;
+  border: 1px solid #ccc;
+  display: inline-block;
+  line-height: 30px;
+  *float: left;
+}
+.register .content ul li #tel {
+  width: 74px;
+  text-align: center;
+}
+.register .content ul li #des {
+  width: 105px;
+  height: 28px;
+  display: none;
+  background-color: #f2f2f2;
+  line-height: 28px;
+  text-align: center;
+  border: 1px solid #ccc;
+  margin-left: 10px;
+  color: #838383;
+  *float: left;
+}
+.register .content ul li #des b {
+  font-weight: normal;
+}
+.register .content ul li #code {
+  float: left;
+}
+.register .content ul li #validate_sec {
+  display: inline-block;
+}
+.register .content ul li #validate_sec #id_captcha_1,
+.register .content ul li #validate_sec img,
+.register .content ul li #validate_sec #js-captcha-refresh {
+  float: left;
+}
+.register .content ul li #validate_sec #captcha_img {
+  margin-left: 2px;
+}
+.register .content ul li #validate_sec #js-captcha-refresh {
+  margin: 3px 0 0 2px;
+  cursor: pointer;
+}
+.register .content ul li #email_border {
+  display: inline-block;
+  position: relative;
+  *float: left;
+}
+.register .content ul li #email_border ul {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 218px;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-bottom: none;
+  overflow: hidden;
+  *display: none;
+}
+.register .content ul li #email_border ul li {
+  list-style: none;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+  height: 20px;
+  line-height: 20px;
+  text-indent: 3px;
+  cursor: pointer;
+}
+.register .content ul li #email_border li:hover {
+  background: #c00;
+  color: #ffffff;
+}
+.register .content ul li #email_border li:last-child {
+  border-bottom: 1px solid #cccccc;
+}
+.register .content ul li #email_border + i,
+.register .content ul li #email_border + i + p,
+.register .content ul li #file + i,
+.register .content ul li #file + i + p {
+  *top: 0;
+}
+.register .content ul li .word {
+  margin: 0 4px;
+  display: inline;
+}
+.register .content ul li .correct {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  *position: relative;
+  *top: -9px;
+  background-image: url(../img/register_validate.jpg);
+  background-position: 0px 12px;
+  margin-left: 10px;
+}
+.register .content ul li .error {
+  display: inline-block;
+  *position: relative;
+  *top: -9px;
+  width: 12px;
+  height: 12px;
+  background-image: url(../img/register_validate.jpg);
+  background-position: 0px 0px;
+  margin-left: 10px;
+}
+.register .content #small_text input {
+  width: 50px;
+  text-align: center;
+}
+.register .content input[type='button'] {
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  background-color: #c00;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  margin-left: 120px;
+}
+.register .content #contacts input {
+  width: 75px;
+  text-align: center;
+}
+.register .content #contacts #name {
+  width: 115px;
+  margin-left: 26px;
+}
+/* 注册成功 */
+.reg_success {
+  width: 508px;
+  height: 368px;
+  border: 1px solid #ccc;
+  font-family: simsun;
+  margin: auto;
+}
+.reg_success .title {
+  height: 55px;
+  line-height: 55px;
+  text-align: center;
+  font-size: 14px;
+  color: #c00;
+  font-weight: bold;
+}
+.reg_success .title i {
+  display: inline-block;
+  width: 24px;
+  height: 23px;
+  background-image: url(../img/login_sign.png);
+  margin-right: 5px;
+  vertical-align: middle;
+}
+.reg_success .des {
+  width: 447px;
+  height: 72px;
+  line-height: 72px;
+  text-align: center;
+  border-top: 1px dotted #ccc;
+  border-bottom: 1px dotted #ccc;
+  font-size: 14px;
+  margin: auto;
+}
+.reg_success ul {
+  width: 449px;
+  margin: auto;
+  font-size: 12px;
+}
+.reg_success ul li {
+  list-style: none;
+  text-indent: 50px;
+  height: 34px;
+  line-height: 34px;
+  margin-top: 10px;
+}
+.reg_success ul li #alert {
+  display: inline-block;
+  width: 183px;
+  height: 32px;
+  border: 1px solid #ee9799;
+  line-height: 32px;
+  text-indent: 0;
+  text-align: center;
+  background-color: #fff1f1;
+  margin-left: 15px;
+}
+.reg_success ul li #alert i {
+  font-style: normal;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  background: #c00;
+  text-align: center;
+  line-height: 18px;
+  color: #fff;
+  margin-right: 10px;
+  font-family: arial;
+}
+.reg_success ul li input[type='radio'] {
+  vertical-align: -3px;
+}
+.reg_success ul li input[type='text'] {
+  width: 102px;
+  height: 28px;
+  line-height: 28px;
+  border: 1px solid #ccc;
+  margin-left: 8px;
+  font-size: 12px;
+  text-indent: 4px;
+  font-family: simsun;
+}
+.reg_success ul li #confirm {
+  display: inline-block;
+  width: 120px;
+  height: 40px;
+  line-height: 40px;
+  background-color: #c00;
+  text-align: center;
+  font-size: 14px;
+  color: #fff;
+  font-weight: bold;
+  text-indent: 0;
+  cursor: pointer;
+  border: none;
+}
+/* 修改登录密码样式 */
+.login_left,
+.address_left {
+  width: 65%;
+  float: left;
+}
+.login_left h6 {
+  height: 35px;
+  line-height: 35px;
+  border-bottom: 1px solid #e3e3e3;
+}
+.login_left h6 span,
+.address_left h6 span {
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: 700;
+  color: #cc0000;
+  border-bottom: 1px solid #cc0000;
+  letter-spacing: 2px;
+}
+.login_left ul {
+  padding: 20px 30px;
+}
+.login_left li {
+  margin: 20px 0;
+  text-align: left;
+}
+.login_left .error {
+  background: #ffebea url(../img/vfc_error.gif) 10px center no-repeat;
+  border: 1px solid #ebc1c2;
+  height: 20px;
+  line-height: 20px;
+  margin-left: 70px;
+  width: 150px;
+  padding-left: 30px;
+  color: #333;
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+}
+.login_left span {
+  color: #333;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  width: 90px;
+  display: inline-block;
+}
+.login_left input {
+  height: 30px;
+  width: 280px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.login_left .sub_btn {
+  height: 35px;
+  width: 90px;
+  margin-left: 115px;
+  background: #cc0000;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: 500;
+}
+.login_left a {
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  color: #666;
+  padding: 0 5px;
+  text-decoration: underline;
+}
+#prompt {
+  display: none;
+  position: absolute;
+  width: 250px;
+  height: 74px;
+  background-color: #fffde1;
+  line-height: 74px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+  z-index: 998;
+}
+.login_left .re_span {
+  width: 80px;
+  padding-right: 5px;
+  text-align: right;
+}
+.login_left .re_input {
+  width: 180px;
+}
+.login_left .re_code {
+  border: none;
+  background: #fee4a7;
+  width: 70px;
+  font-size: 12px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  color: #333;
+}
+.login_right,
+.address_right {
+  margin-top: 24px;
+}
+/* 收货地址管理的样式 */
+.address_left h3 {
+  margin-left: 15px;
+  border-bottom: 1px solid #e3e3e3;
+  height: 35px;
+  line-height: 35px;
+}
+.address_left h3 span {
+  display: inline-block;
+}
+.address_tit {
+  margin-top: 15px;
+  margin-left: 25px;
+  font-size: 12px;
+}
+#add_newAddress {
+  text-decoration: none;
+  color: #cc0000;
+}
+#add_newAddress:hover {
+  color: #00E8D7;
+}
+.address_left ul {
+  padding: 20px 25px;
+}
+.address_left li {
+  line-height: 30px;
+  margin: 15px 0;
+}
+#address_pro {
+  width: 95px;
+}
+#address_cit {
+  width: 185px;
+  margin-left: 10px;
+}
+.address_left li textarea {
+  width: 300px;
+  height: 70px;
+  vertical-align: top;
+}
+.address_left li span {
+  width: 90px;
+  color: #333;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  font-weight: normal;
+  display: inline-block;
+}
+.address_left input {
+  height: 20px;
+  width: 300px;
+}
+.default_set .set_radio {
+  width: inherit;
+  height: 12px;
+  margin-left: 125px;
+}
+.address_left .sub_btn {
+  width: 90px;
+  height: 30px;
+  background: #cc0000;
+  border: none;
+  color: #fff;
+  font-size: 14px;
+  font-family: "微软雅黑";
+  margin-left: 125px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+.address_count {
+  margin: 45px 15px 150px 25px;
+}
+.address_list {
+  margin-top: 20px;
+}
+.address_table {
+  width: 100%;
+  margin-bottom: 20px;
+  background: #fff;
+  font-size: 14px;
+}
+.address_table tr > th {
+  background: #f5f5f5;
+  padding: 2px;
+  text-align: center;
+  font-weight: 500 !important;
+}
+.address_table tr > td {
+  padding: 30px 10px 30px;
+  border-bottom: 1px solid #ddd;
+  line-height: 1.42857143;
+  text-align: center;
+}
+.address_table tr:hover {
+  background: #f5f5f5;
+}
+.address_table tr > td a {
+  font-size: 14px;
+  text-decoration: none;
+  color: inherit;
+}
+.address_table tr > td a:first-child:hover {
+  color: lightskyblue;
+}
+.address_table tr > td a:last-child:hover {
+  color: #ff0000;
+}
+.address_table tr .default_address {
+  background: #cc0000;
+}
+.address_table tr .set_default {
+  background: #f99d25;
+}
+.address_table tr .set_default:hover {
+  background: #cc0000;
+  cursor: pointer;
+}
+.address_table tr .default_address,
+.address_table tr .set_default {
+  width: 75px !important;
+  height: 25px !important;
+  color: #fff;
+  border-radius: 5px;
+  border: none;
+}

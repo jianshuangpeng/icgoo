@@ -1,0 +1,21 @@
+{% extends "help_base.html" %}
+
+{% block titlename %}
+  货物跟踪--客户服务
+{% endblock %}
+
+{% block breadlink %}
+  货物跟踪
+{% endblock%}
+
+{% block helpcontent %}
+    <h3><span>货物跟踪</span></h3>
+  <div class="Divdashed Font12">
+    <div class="help_con">
+        <ul class="zy_ul">
+            <br/>
+            <li> 我们会及时为您提供快递公司的运单号以供查询。</li>
+        </ul>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% load account_tags %}
+<div class="tracegoods_DHL">
+    <ul>
+        <li class="title" style="background:#F0F8FF">
+            <span class="ptdetail">DHL货件追踪详情</span>
+            <span class="close" onclick="close_detail()"></span>
+        </li>
+        <li style="border-bottom:1px dashed #e4e4e4;margin:0 20px">
+          <div class="time">时间</div>
+          <div class="action">活动</div>
+        </li>
+        <!-- <li style="position:relative">
+            <span class="span_f">2016-05-18 14:28:53</span>
+            <div class="state_radius"></div>
+            <div class="state_b"></div>
+            <span class="span_t">快件正在派送中</span>
+        </li> -->
+        {% if has_error %}
+          <li style="color:#CC0001;text-align:center">
+            没有跟踪到物流信息，请稍后再试..
+          </li>
+        {% else %}
+          {% for one in packets %}
+          {% if forloop.first %}
+            <li>
+                <span class="span_f">{{one.date}}</span>
+                <div class="state_radius" style="background:#CC0001"></div>
+                <div class="state_b"></div>
+                <span class="span_t" style="color:#cc0001">{{one.description}}</span>
+            </li>
+          {% elif forloop.last %}
+            <li>
+                <span class="span_f">{{one.date}}</span>
+                <div class="state_radius"></div>
+                <span class="span_t">{{one.description}}</span>
+            </li>
+          {% else %}
+            <li>
+                <span class="span_f">{{one.date}}</span>
+                <div class="state_radius"></div>
+                <div class="state_b"></div>
+                <span class="span_t">{{one.description}}</span>
+            </li>
+          {% endif %}
+          {% endfor %}
+        {% endif %}
+    </ul>
+</div>
+<script type="text/javascript">
+  $(function(){
+
+  });
+</script>

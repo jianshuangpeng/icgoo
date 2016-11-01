@@ -1,0 +1,39 @@
+@charset "utf-8";
+
+.roch_main{
+  width:80%;
+  margin:auto;
+  color: #333;
+  font-size:18px;
+  line-height:200%;
+}
+
+.roch_img{
+  text-align:center;
+  margin: 0 auto;
+}
+
+.roch_text{
+  margin:50px auto;
+  font-family: "微软雅黑";
+}
+
+.roch_text p{
+  font-size:14px;
+  width: 800px;
+  margin:auto;
+}
+
+.roch_text h3{
+  text-align:center;
+}
+
+.roch_title_red{
+  color:#be0000;
+  text-align:left;
+}
+
+.roch_title_blue{
+  color:#0070bf;
+  text-align:left;
+}

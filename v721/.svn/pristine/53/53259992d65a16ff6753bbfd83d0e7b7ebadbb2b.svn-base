@@ -1,0 +1,29 @@
+{% if data %}
+{% for one in data %}
+<tr>
+    <td>
+        <a href="{% url 'search:product_detail' one.sup %}?icgoo_num={{one.icg_partno}}&partno={{ one.partno }}&qty={{qty}}">{{one.sup|title}}</a>
+    </td>
+    <td>
+    {% if one.price_calc.price_hkusd %}
+        ${{one.price_calc.price_hkusd}}
+    {% else %}
+        -
+    {% endif %}
+    </td>
+    <td>
+    {% if one.price_calc.price_dlrmb %}
+        ￥{{one.price_calc.price_dlrmb}}
+    {% else %}
+        -
+    {% endif %}
+    </td>
+</tr>
+{% endfor %}
+{% else %}
+<tr>
+    <td colspan="3">
+        暂无其他供应商信息
+    </td>
+</tr>
+{% endif %}

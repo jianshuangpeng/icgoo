@@ -1,0 +1,12 @@
+[uwsgi]
+socket = 127.0.0.1:9000
+chdir = /var/www/v72/icgoo
+pidfile = /var/run/v72.pid
+daemonize = /var/log/v72_uwsgi.log
+wsgi-file = /var/www/v72/icgoo/icgoo/wsgi.py
+processes = 4
+threads = 4
+stats = 127.0.0.1:9001
+#disable-logging = true
+master = true
+enable-threads = true

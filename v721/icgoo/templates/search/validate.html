@@ -1,0 +1,41 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+{% block titlename %}请输入验证码{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+<style type="text/css">
+form{text-align: center;margin-top:180px;font-family: Microsoft YaHei}
+form input[type='submit']{display: inline-block;width: 100px;height:34px;background-color:#c00;color:#FFF;border:none;text-align: center;line-height: 34px;border-radius:5px}
+form input[type='submit'],#js-captcha-refresh{cursor: pointer}
+form div{margin-bottom:20px;}
+form p{margin-top:20px;text-align: center;color:#c00;}
+</style>
+{% endblock %}
+
+{% block container %}
+<form action="{{action}}" method="get">
+{% if method == 'post' %}
+{% csrf_token %}
+{% endif %}
+<div>{{prompt}}</div>
+{{ capform }}
+<input type="submit" value='提&nbsp;交'/>
+<p>{{msg}}</p>
+<input type="hidden" name="partno" value="{{partno}}"/>
+<input type="hidden" name="qty" value="{{qty}}"/>
+<input type="hidden" name="isValidate" value="yes"/>
+</form>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript">
+$('#js-captcha-refresh').click(function(){
+    $.getJSON('{% url "captcha-refresh" %}',{},function(data) {
+        $('#captcha_img').attr("src",data.image_url);
+        $('#id_captcha_0').attr("value",data.key);
+    })
+    return false;
+});
+</script>
+{% endblock %}

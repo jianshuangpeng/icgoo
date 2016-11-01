@@ -1,0 +1,359 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+<style type="text/css">
+/* 复制提示 */
+.copy-tips{position:fixed;z-index:999;bottom:50%;left:50%;box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);margin:0 0 -20px -80px;background-color:rgba(0, 0, 0,.1);filter:progid:DXImageTransform.Microsoft.Gradient(startColorstr=#30000000, endColorstr=#30000000);padding:6px;border-radius: 3px}
+.copy-tips-wrap{padding:10px 20px;text-align:center;background-color:#fff;font-size:14px;border-radius: 3px;color:#666}
+.copy-tips-wrap span{font-size: 22px;}
+.detail_state{border: none;width: 100%;box-shadow: none;position: static;}
+.detail_state li .span_f{width: 140px;padding:0;text-align: left;text-indent: 20px}
+.detail_state .state_radius{left:155px}
+.detail_state .state_b{left:157px}
+.detail_state li .span_t{width:450px;text-align: left;text-indent: 1em}
+.img_box{filter: progid:DXImageTransform.Microsoft.Shadow(color='#666666', Direction=135, Strength=3)}
+#photo_box{filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#88000000,endColorstr=#88000000)}
+</style>
+{% endblock %}
+
+{% block titlename %}
+    已发货--物流中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    {{block.super}}
+    <div class="account_con">
+        {% if user.jyinfo.jy_partner_id %}
+        <div class="picking">
+            <form action="." method="get" style="position:relative">
+              <div class="marchDiv"><ul></ul></div>
+                <label for="partnoitem">输入型号查询:</label>
+                <input name="partnoitem" type="text" autocomplete="off" onkeyup="marchpartno()" id="partno" value="{{partnoitem}}">
+                <label for="date">按日期查询：</label>
+                <input type="text" class="laydate-icon" id="demo" name="date" onclick="marchDateColor()">
+                <label for="deliverycity">库房：</label>
+                <select name="deliverycity" id="location">
+                    <option value="">全部</option>
+                    <option value="hk" {%if deliverycity == 'hk' %}selected{%endif%}>香港库房</option>
+                    <option value="sz" {%if deliverycity == 'sz' %}selected{%endif%}>深圳库房</option>
+                    <option value="bj" {%if deliverycity == 'bj' %}selected{%endif%}>北京库房</option>
+                </select>
+                <input type="submit" class="btn_smt" value="查询">
+            </form>
+        </div>
+        <div class="picking_result">
+        </div>
+        <div class="pagewrap"></div>
+        {% else %}
+            您未绑定！
+        {% endif %}
+    </div>
+    <div id="photo_box">
+        <div id="photo">
+            <span onclick="hide_photo()"></span>
+        </div>
+    </div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/laydate/laydate.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datecommon.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/logistical.js' %}"></script>
+<script src="{% static 'js/jquery.zclip.js' %}"></script>
+<script>
+    $(function(){
+      initPage();
+      setTimeout(function(){
+        $("#demo").val("{{date}}")
+      },10);
+      //在物流信息或签名照片显示的时候，点击其它部分（遮罩层）来隐藏它
+      $("#shade").on('click',function(){
+          $(".express_info:visible").hide();
+          $(".img_box").hide();
+          $(this).hide();
+      });
+    })
+
+    //型号查询中，型号框值输入变化触发事件
+    function marchpartno(){
+      $('.pagewrap').css('display','none')
+      $("#partno").val($("#partno").val().trim().toUpperCase());
+      var marStr = new Array();
+      var str = '';
+      {% for picking in data %}
+        {% if picking.lines_count > 0 %}
+        {% for key,values in picking.lines.items %}
+          {% for value in values %}
+          var flag = true;                              //表示型号还没有加入过
+          var partno = '{{value.name}}';
+          if($("#partno").val().trim() != '' && $("#partno").val().trim() != '0'){
+            if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+              for(var i=0;i<marStr.length;i++){
+                if(partno == marStr[i]){
+                  flag = false;
+                  break;
+                }
+              }
+              if(flag){
+                marStr.push(partno);
+                partno = partno.replace(new RegExp($("#partno").val(),'g'),'<font color="#6f6f6f" class="bold">'+$("#partno").val()+'</font>');
+                str += '<li onclick="partnoSearch(this)">'+ partno +'</li>';
+                flag = false;
+              }
+            }
+          }
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      $(".marchDiv").show();
+      $(".marchDiv ul").html(str);
+    }
+
+    function marchDateColor(){
+      $('.laydate_body .laydate_table td').each(function(){
+        $(this).css('border',0)
+        var year = $('#laydate_y').val().substr(0,4);
+        var month = $('#laydate_m').val().substr(0,2);
+        data = '';
+        if(!$(this).hasClass('laydate_nothis')){
+          $(this).css({'background':'#fff','color':'#333'});
+          var day = $(this).text().trim();
+          if(day.length < 2){
+            day = '0' + day;
+          }
+          data = year + '-' + month + '-' + day;
+          {% if data %}
+          {% for picking in data %}
+          {% for key,values in picking.lines.items %}
+          {% for value in values %}
+            var time = "{{value.confirmed_time}}";
+            var currentDate = time.substr(0,10);
+            if(currentDate == data){
+              if(!$(this).hasClass('laydate_nothis')){
+                  $(this).css({'background':'#FF9233','color':'#fff','border':'1px solid #fff'});
+              }
+            }
+          {% endfor %}
+          {% endfor %}
+          {% endfor %}
+          {% endif %}
+        }else{
+          $(this).css({'background':'#fff','color':'#999'});
+        }
+      });
+    }
+
+    var totalrows = {{totalrows}}                 //获取一共有多少条数据
+    var currentpage = 1;                          //当前是第几页
+    var pagerows = 5;                             //一页显示多少条数据
+    var pagecount = 0;                            //一共有多少页
+    if(totalrows % pagerows == 0){
+      pagecount = Math.floor(totalrows / pagerows);
+    }else{
+      pagecount = Math.floor(totalrows / pagerows + 1);
+    }
+
+    function showMessage(){
+      var str = '';
+      {% for picking in data %}
+      var index = {{ forloop.counter }}
+      if(index > (currentpage-1)*pagerows && index <= currentpage*pagerows){
+        str  +=  '<div class="picking_border">'
+              +  '<table class="title"><tr>'
+              +  '<td><span>发货单号:<strong>{{picking.name}}</strong></span></td>'
+              +  '<td><span>订单生效时间:{{picking.so_confirmed_time}}</span></td>'
+              +  '<td><span>条目数:{{picking.lines_count}}</span></td>'
+              +  '<td><span>库房:{{picking.location}}</span></td>'
+              +  '<td>交货地:{{picking.location|slice:"2"}}</span></td>'
+              +  '<td><span>收货方式：<font class="cA31">'
+                    {% if picking.carrier_type == '自提' %}
+              +       '自提'
+                    {% else %}
+              +       '邮寄'
+                    {% endif %}
+              +    '</font></span>'
+              +  '</td>'
+              +  '</tr></table>'
+              +  '<table border="1" class="content">'
+              +      '<tr>'
+              +          '<th width="10%">订单号</th>'
+              +          '<th width="16%">型号</th>'
+              +          '<th width="14%">厂家</th>'
+              +          '<th width="10%">供应商</th>'
+              +          '<th width="8%">单价</th>'
+              +          '<th width="8%">发货数量</th>'
+              +          '<th width="14%">出库时间</th>'
+              +          '<th width="14%">'
+                          {% if picking.carrier_type == '自提' %}
+              +            '自提照片'
+                          {% else %}
+              +            '物流状态'
+                          {% endif %}
+              +           '</th>'
+              +      '</tr>'
+                    {% for so, lines in picking.lines.items %}
+                    {% with forloop as forloop_one %}
+                    {% for one in lines %}
+                    {% if one.out_qty != 0 %}
+              +      '<tr>'
+                        {% if forloop.first %}
+              +          '<td rowspan="{{lines|length}}" class="bgf2">{{so}}</td>'
+                        {% endif %}
+              +          '<td style="color:#a3101a">{{one.name}}</td>'
+              +          '<td>{{one.mfr}}</td>'
+              +          '<td>{{one.supplier|title}}</td>'
+              +          '<td>{{one.price}}</td>'
+              +        '<td>'
+              +            '{{ one.order_qty }}'
+              +        '</td>'
+              +        '<td>{{one.confirmed_time}}</td>'
+                        {% if forloop_one.first and forloop.first %}
+              +         '<td rowspan="{{picking.lines_count}}" style="border-bottom:none">'
+                        {% if picking.carrier_type == '自提' %}
+              +         '<span class="btn_check" onclick="show_info(this)" sh="ziti">查看</span>'
+              +         '<span class="btn_td">' //为了兼容ＩＥ７的z-index
+              +             '<div class="img_box" style="position:absolute;z-index:95;">'
+              +                 '<span class="btn_close" onclick="close_info(this.parentNode.parentNode)"></span>'
+              +                 '<div class="photo" onclick="showPhoto(this.parentNode)">'
+              +                     '<img src="{{one.imgs_name|default:'http://kufangimg.dzji.com/OUT281968-1306167-20160804154511.jpg'}}" width="109" height="84">'
+              +                     '<p>点击查看大图</p>'
+              +                 '</div>'
+              +             '</div>'
+              +         '</span>'
+                        {% else %}
+              +         '<span class="btn_check" onclick="show_info(this)" sh="youji" {% if picking.carrier == "sf" %}issf="true"{% else %}issf="false"{% endif %}>查看</span>'
+              +         '<span class="btn_td">' //为了兼容ＩＥ７的z-index
+              +         '<div class="express_info">'
+              +             '<span class="btn_close" onclick="close_info(this.parentNode.parentNode)"></span>'
+              +             '<div class="info_top">'
+              +                 '<ul>'
+              +                      '<li>快递公司:{% if picking.carrier == "sf" %}顺丰{% elif picking.carrier == "ems" %}EMS{% elif picking.carrier == "kye" %}跨越{% else %}{{picking.carrier}}{% endif %}</li>'
+              +                      '<li>快递运单号:<span>{{picking.tracking_num}}</span>{% if picking.carrier != "sf" and picking.tracking_num %}&nbsp;[<span class="copy">复制</span>]&nbsp;{% endif %}</li>'
+              +                      '<li>净重:{{picking.package_weight}}g</li><li class="clear"></li>'
+              +                 '</ul>'
+              +             '</div>'
+              +             '<div class="info_bottom">'
+                                {% if picking.carrier == "sf" %}
+              +                 '正在加载，请稍后...'
+                                {% elif picking.carrier == "ems" %}
+              +                 '暂时无法获取物流信息，请至官网<a target="blank" rel="nofollow" href="http://www.ems.com.cn">www.ems.com.cn</a>查询,造成不便请您谅解。'
+                                {% elif picking.carrier == "kye" %}
+              +                 '暂时无法获取物流信息，请至官网<a target="blank" rel="nofollow" href="http://www.ky-express.com/">www.ky-express.com</a>查询,造成不便请您谅解。'
+                                {% else %}
+              +                 '暂无物流信息，请稍后再试'
+                                {% endif %}
+              +             '</div>'
+              +         '</div>'
+              +         '</span>'
+                        {% endif %}
+              +         '</td>'
+                        {% endif %}
+              +      '</tr>'
+                    {% endif %}
+                    {% endfor %}
+                    {% endwith %}
+                    {% endfor %}
+              +  '</table>'
+              + '</div>'
+      }
+        {% endfor %}
+        $(".picking_result").html(str);
+    }
+
+    //点击“查看”按钮，显示物流信息或自提照片，遮罩层
+    function show_info(obj){
+        $("#shade").show();
+        //如果是邮寄的查看
+        if($(obj).attr("sh")=="youji")
+        {
+          $show_obj = $(obj).next().find(".express_info");
+          if($(obj).attr('issf')=='true')
+          {
+            show_status(obj);//显示顺丰的物流信心
+          }
+        }
+        else{
+          $show_obj = $(obj).next().find(".img_box");
+        }
+        $show_obj.show();
+        //flash复制
+        $(".copy").zclip({
+        path: "{% static 'js/ZeroClipboard.swf' %}",
+        copy: function(){
+        return $(this).prev().text();
+        },
+        beforeCopy:function(){/* 按住鼠标时的操作 */
+          $(this).css("color","orange");
+        },
+        afterCopy:function(){/* 复制成功后的操作 */
+          var $copysuc = $("<div class='copy-tips'><div class='copy-tips-wrap'>运单号复制完成!<span>☺</span></div></div>");
+          $("body").find(".copy-tips").remove().end().append($copysuc);
+          $(".copy-tips").fadeOut(3000);
+            }
+        });
+    }
+
+    //显示大图
+    function showPhoto(obj){
+        var $url = $(obj).find("img").prop("src");
+        $(obj).fadeOut();
+        $("#shade").fadeOut();
+        $("#photo").attr("style","background-image:url("+$url+');filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(src="'+$url+'",sizingMethod="scale")');
+        $("#photo").css('background-image','url('+$url+')');
+        $("#photo_box").show();
+    }
+
+    //关闭大图
+    function hide_photo(){
+        $("#photo_box").hide();
+    }
+
+    //点击“ｘ”按钮，隐藏物流信息或自提照片，遮罩层
+    function close_info(obj){
+        $("#shade").fadeOut();
+        $sh = $(obj).prev().attr("sh");
+        //如果是关闭自提图片
+        if($sh=='ziti')
+        {
+            var $hide_obj = $(obj).find(".img_box");
+        }
+        else{
+            var $hide_obj = $(obj).find(".express_info");
+        }
+        $hide_obj.fadeOut();
+    }
+
+    function show_status(obj){
+      var $num = $(obj).next().find(".info_top li:eq(1) span").text();
+      $.ajax({
+          url: '/accounts/already_route',
+          type: 'GET',
+          data: {'num':$num},
+          success: function(data){
+              $(obj).next().find(".info_bottom").html(data)
+          },
+          error:function(){
+              $(obj).next().find(".info_bottom").html('加载失败!');
+          }
+      })
+    }
+    function close_detail(obj, sol){
+        $(".detail_state").remove();
+        $("." + sol).attr('index', '0')
+    }
+</script>
+{% endblock %}

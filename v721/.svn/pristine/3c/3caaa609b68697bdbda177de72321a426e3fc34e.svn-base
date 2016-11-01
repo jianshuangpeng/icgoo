@@ -1,0 +1,369 @@
+{% load staticfiles %}
+{% load search_tags %}
+    <td class="partno_frist">
+        {% if data1.partno %}
+            {{data1.partno|upper}}
+        {% else %}
+        {{partno|upper}}
+        {% endif %}
+    </td>
+    <td class="qty_frist">
+        {% if data1.qty %}
+            {{data1.qty}}
+        {% else %}
+        {{qty}}
+        {% endif %}
+    </td>
+    {% if data1 %}
+    <td class="mfr_frist">{{data1.mfr}}</td>
+    <td class="sup_frist">{{data1.sup|title}}</td>
+    <td class="dc_frist">{{data1.datecode|safe}}</td>
+    <td class="stock_frist">{{data1.stock}}</td>
+    <td class="min_frist">{{data1.mult}}|{{data1.min_qty}}</td>
+    <td class="dlrmb_frist">￥{{data1.price_calc.price_dlrmb}}</td>
+    <td class="hkusd_frist">${{data1.price_calc.price_hkusd}}</td>
+    <td class="total_frist">
+        {% if de_city == 'hk' %}
+        ${{data1.price_calc.price_hkusd|total:qty }}
+        {% else %}
+        ￥{{data1.price_calc.price_dlrmb|total:qty }}
+        {% endif %}
+    </td>
+    <td class="delvery_frist">
+        {% if de_city == 'hk' %}
+        香港交货:{{data1.delvery_hk}}
+        {% else %}
+        国内交货:{{data1.delvery_dl}}
+        {% endif %}
+    </td>
+    <td style="padding:0;min-width:109px">
+        <a href="javascript:void(0)" class="a_btn btn_change" onclick="other_pro(this, '{{partno|upper}}')">修改</a>
+        <a href="javascript:void(0)" class="a_btn btn_del" onclick="delete_info(this)">删除</a>
+        <a href="javascript:void(0)" class="a_btn btn_more" id="more_{{data1.icg_partno}}" onclick="mult_info(this,'{{de_city}}')">更多</a>
+    </td>
+    <td style="display:none" id="info_{{data1.icg_partno}}">
+        <div class="mult_info">
+            <div class="mult_tit">
+                <ul style="width: 100%;display: inline-block;">
+                    <li class="old-partno">型号：<span>{{data1.partno}}</span></li>
+                    <li style="position:relative;">
+                        <span>采购量：</span>
+                        <span id="reduce">－</span><input type="text" class="qty_input" value="{{qty}}"><span id="add">＋</span>
+                    </li>
+                    <li>交货地：
+                        {% if de_city == 'hk' %}
+                        香港
+                        {% else %}
+                        国内
+                        {% endif %}
+                    </li>
+                    <li class="right">
+                        <!--<button class="btn_s" onclick="close_all(this);">关闭</button>-->
+                        <a href="javascript:;" class="btn_s" style="background:none;line-height:50px;" onclick="close_all(this)">
+                            <img src="{% static 'img/close.png' %}" alt="关闭" >
+                        </a>
+                    </li>
+                </ul>
+                <table width="100%">
+                    <tr>
+                        <th width="9%" class="supplier-list">
+                            <a href="javascript:;" class="supCheckBtn" onclick="checkSupplier(this)">
+                                供应商
+                                <img src="{% static 'img/supplier.png' %}" alt="supplier" >
+                            </a>
+                            <div class="supplier-check">
+                                <ul>
+                                    {% for one in data %}
+                                    <li>
+                                        <input type="checkbox" name="supplier" value="{{one.sup|title}}">
+                                        <span class="{{one.sup}}">{{one.sup|title}}</span>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="supplierCon-btn">
+                                    <button class="confirm" onclick="confirmSup(this)">确定</button>
+                                </div>
+                            </div>
+                        </th>
+                        <th width="9%">制造商</th>
+                        <th width="12%">批号</th>
+                        <th width="11%">货期(工作日)</th>
+                        <th width="9%" class="store-list">
+                            库存
+                            <a href="javascript:;" onclick="ascStoreBtn(this)" title="up">
+                                <img class="upIcon" src="{% static 'img/up.png' %}" alt="up" >
+                            </a>
+                            <a href="javascript:;" onclick="descStoreBtn(this)" title="down">
+                                <img class="downIcon" src="{% static 'img/down.png' %}" alt="down" >
+                            </a>
+                        </th>
+                        <th width="8%">倍数|起订量</th>
+                        <th width="8%">数量</th>
+                        <th width="8%">国内含税</th>
+                        <th width="8%">香港交货</th>
+                        <th width="9%" class="total-list">
+                            总计
+                            <a href="javascript:;" onclick="ascTotalBtn(this)" title="up">
+                                <img class="upIcon" src="{% static 'img/up.png' %}" alt="up" >
+                            </a>
+                            <a href="javascript:;" onclick="descTotalBtn(this)" title="down">
+                                <img class="downIcon" src="{% static 'img/down.png' %}" alt="down" >
+                            </a>
+                        </th>
+                        <th width="9%">操作</th>
+                    </tr>
+                </table>
+            </div>
+            <!-- 精确查询 -->
+            <div class="mult_con">
+                <table width="100%" style="height:150px; overflow:auto">
+                    <tr>
+                    {% for one in data %}
+                        <td width="9%" class="sup_mult">{{one.sup|title}}</td>
+                        <td width="9%" class="mfr_mult">{{one.mfr|title}}</td>
+                        <td width="12%" class="dc_mult">{{one.datecode|safe}}</td>
+                        <td width="11%" class="delvery_mult">
+                            {% if de_city == 'hk' %}
+                            香港交货:{{one.delvery_hk}}
+                            {% else %}
+                            国内交货:{{one.delvery_dl}}
+                            {% endif %}
+                        </td>
+                        <td width="9%" class="stock_mult">
+                            {{one.stock}}<br >
+                            <span class="stock-warning" style="color:#CC0000;display:none;">库存数量不足</span>
+                        </td>
+                        <td width="8%" class="min_mult">{{one.mult}}|{{one.min_qty}}</td>
+                        <td width="8%" class="qty_mult price">
+                            <ul>
+                                {% for o in one.price_calc_all %}
+                                <li>
+                                    <span>{{o.quantity}}+</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="h15" style="height:15px"></div>
+                        </td>
+                        <td width="8%" class="dlrmb_mult price">
+                            <ul>
+                                {% for o in one.price_calc_all %}
+                                <li>
+                                    <span>￥{{o.price_dlrmb}}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <p class="open" onclick="close_price(this)"></p>
+                            <!--￥{{one.price_calc.price_dlrmb}}--></td>
+                        <td width="8%" class="hkusd_mult price">
+                            <ul>
+                                {% for o in one.price_calc_all %}
+                                <li>
+                                    <span>${{o.price_hkusd}}</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <div class="h15" style="height:15px"></div>
+                            <!--${{one.price_calc.price_hkusd}}-->
+                        </td>
+                        <td width="9%" class="total_mult">
+                            {% if de_city == 'hk' %}
+                            ${{one.price_calc.price_hkusd|total:qty }}
+                            {% else %}
+                            ￥{{one.price_calc.price_dlrmb|total:qty }}
+                            {% endif %}
+                        </td>
+                        <td width="9%">
+                            <input type="button" class="btn_s" value="替换" onclick="change_info(this)">
+                            <span class="btn-check">已选</span>
+                        </td>
+                    </tr>
+                    {% endfor%}
+                </table>
+            </div><!-- end -->
+
+            <!-- 模糊查询 -->
+            <div class="blur-info">
+                <div class="blur-tit">
+                    <h3>您是不是要找</h3>
+                    <a href="javascript:;" onclick="toggleBlur(this)">+ 收起</a>
+                </div>
+                <div class="blur-res">
+                    <ul id="blur-data">
+                        {% for one in similar_data %}
+                        <li class="{{one.partno}}">
+                            <a href="javascript:;" class="partnoCount" id="more1_{{one.icg_partno}}" onclick="blur_info(this)">
+                                <span>{{one.partno}}</span>
+                                <span class="close-blur" onclick="close_blur(this)" title="close">&times;</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="blur-box">
+                        <div class="mult_tit">
+                            <table width="100%">
+                                    <tr>
+                                        <th width="9%" class="supplier-list">供应商</th>
+                                        <th width="9%">制造商</th>
+                                        <th width="12%">批号</th>
+                                        <th width="11%">货期(工作日)</th>
+                                        <th width="8%" class="store-list">
+                                            库存
+                                            <a href="javascript:;" onclick="ascStoreBtn(this)" title="up">
+                                                <img class="upIcon" src="{% static 'img/up.png' %}" alt="up" >
+                                            </a>
+                                            <a href="javascript:;" onclick="descStoreBtn(this)" title="down">
+                                                <img class="downIcon" src="{% static 'img/down.png' %}" alt="down" >
+                                            </a>
+                                        </th>
+                                        <th width="9%">倍数|起订量</th>
+                                        <th width="8%">数量</th>
+                                        <th width="8%">国内含税</th>
+                                        <th width="8%">香港交货</th>
+                                        <th width="9%" class="total-list">
+                                            总计
+                                            <a href="javascript:;" onclick="ascTotalBtn(this)" title="up">
+                                                <img class="upIcon" src="{% static 'img/up.png' %}" alt="up" >
+                                            </a>
+                                            <a href="javascript:;" onclick="descTotalBtn(this)" title="down">
+                                                <img class="downIcon" src="{% static 'img/down.png' %}" alt="down" >
+                                            </a>
+                                        </th>
+                                        <th width="9%">操作</th>
+                                    </tr>
+                                </table>
+                        </div>
+                        <div class="mult_con" id="blur-con">
+                                <table width="100%" style="height:150px; overflow:auto">
+
+                                </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script type="text/javascript">
+                $(function(){
+                    $('.partnoCount').each(function () {
+                        $(this).bind('click', function () {
+                            var thisHtml = '';
+                            {% for one in similar_data %}
+                            if ($.trim($(this).find('span').eq(0).html()) == '{{one.partno}}') {
+                                //拼接字符串(插入到表格中)
+                                thisHtml += '<tr>'
+                                        + '<td width="9%" class="sup_mult">' + '{{one.sup|title}}' + '</td>'
+                                        + '<td width="9%" class="mfr_mult">' + '{{one.mfr|title}}' + '</td>'
+                                        + '<td width="12%" class="dc_mult">' + '{{one.datecode|safe}}' + '</td>'
+                                        + '<td width="11%" class="delvery_mult">' +
+                                        '{% if de_city == "hk" %}' +
+                                        '香港交货:{{one.delvery_hk}}' +
+                                        '{% else %}' +
+                                        '国内交货:{{one.delvery_dl}}' +
+                                        '{% endif %}' + '</td>'
+                                        + '<td width="8%" class="stock_mult">' + '{{one.stock}}'
+                                            +'<br >'+ '<span class="stock-warning" style="color:#CC0000;display:none;">'+'库存数量不足'+'</span>'
+                                        + '</td>'
+                                        + '<td width="9%" class="min_mult">' + '{{one.mult}}|{{one.min_qty}}' + '</td>'
+                                        + '<td width="8%" class="qty_mult price">'
+                                        + '<ul>'
+                                        + '{% for o in one.price_calc_all %}'
+                                        + '<li>'
+                                        + '<span>' + '{{o.quantity}}+' + '</span>'
+                                        + '</li>'
+                                        + '{% endfor %}'
+                                        + '</ul>'
+                                        + '<div class="h15" style="height:15px">'+'</div>'
+                                        + '</td>'
+                                        + '<td width="8%" class="dlrmb_mult price">'
+                                        + '<ul>'
+                                        + '{% for o in one.price_calc_all %}'
+                                        + '<li>'
+                                        + '<span>' + '￥{{o.price_dlrmb}}' + '</span>'
+                                        + '</li>'
+                                        + '{% endfor %}'
+                                        + '</ul>'
+                                        + '<p class="open" onclick="close_price(this)">'+'</p>'
+                                        + '</td>'
+                                        + '<td width="8%" class="hkusd_mult price">'
+                                        + '<ul>'
+                                        + '{% for o in one.price_calc_all %}'
+                                        + '<li>'
+                                        + '<span>' + '${{o.price_hkusd}}' + '</span>'
+                                        + '</li>'
+                                        + '{% endfor %}'
+                                        + '</ul>'
+                                        + '<div class="h15" style="height:15px">'+'</div>'
+                                        + '</td>'
+                                        + '<td width="9%" class="total_mult">'
+                                        + '{% if de_city == "hk" %}'
+                                        + '${{one.price_calc.price_hkusd|total:qty }}'
+                                        + '{% else %}'
+                                        + '￥{{one.price_calc.price_dlrmb|total:qty }}'
+                                        + '{% endif %}'
+                                        + '</td>'
+                                        + '<td width="9%">'
+                                        + '<input type="button" class="btn_s" value="替换" onclick="change_info1(this)">'
+                                        + '<span class="btn-check">' + '已选' + '</span>'
+                                        + '</td>'
+                                        + '</tr>';
+                                $(this).parents('#blur-data').next().find('#blur-con table').html(thisHtml);
+                            }
+                            {% endfor %}
+                        });
+                    });
+
+                    if(screen.width > 1024) {
+                        $(".mult_con").slimScroll({
+                            width: '1080px',
+                            height: '350px'
+                        });
+                    }else {
+                        $(".mult_con").slimScroll({
+                            width: '960px',
+                            height: '350px'
+                        });
+                    }
+                    $(".qty_input").focus(function(){
+                        var thisHeight = $(this).parent('td.qty_mult').height();
+                        //if (thisHeight < 30) thisHeight =30;
+                        $(this).siblings('div.mult_price').css({
+                            'top': thisHeight
+                        }).show();
+                    }).blur(function(){
+                        $(this).siblings('div.mult_price').hide()
+                    });
+                })
+            </script>
+        </div>
+
+        <!-- 左侧栏的导航(此块功能暂时不需要) -->
+       <!-- <div class="left_filter">
+            <ul id="left_sup" class="list_left">
+                {% for one in data %}
+                <li class="{{one.sup}}" onclick="reset_sup(this, 0)">
+                    <a href="" onmouseover="lefton(this)" onmouseout="leftout(this)" title="{{one.sup|title}}">
+                        {{one.sup|slice:"1"|upper}}
+                    </a>
+                    <a href="javascript:;" class="close-sup" onclick="close_sup(this)" title="close">&times;</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>-->
+    </td>
+    {% else %}
+
+    <td colspan="9" class="acenter" style="color:#666">
+        <!--暂无信息
+        <a href="javascript:void(0)" class="a_btn" onclick="other_pro(this, '{{partno|upper}}')">再次查询</a>-->
+        {% if errmsg %}
+        {{errmsg|safe}}
+        {% else %}
+        型号过于模糊，您可点击"修改"按钮修改该型号或者减少采购数量以满足库存来再次查询。
+        {% endif %}
+    </td>
+    <td style="padding: 0;">
+        <a href="javascript:void(0)" class="a_btn btn_change" onclick="other_pro(this, '{{partno|upper}}')">修改</a>
+        <a href="javascript:void(0)" class="a_btn btn_del" onclick="delete_info(this)">删除</a>
+        <a href="javascript:void(0)" style="width:30px;display:inline-block"></a><!--这里为了排版与其它一致，添加一个元素占位-->
+        <!-- <a href="javascript:void(0)" class="e_btn" onclick="other_pro(this, '{#{partno|upper}#}')">其它</a> -->
+        <!--<a href="javascript:;" class="a_btn btn_more" id="more1" onclick="mult_info1(this)">更多</a>-->
+    </td>
+    {% endif %}

@@ -1,0 +1,366 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/mult.css' %}">
+<link rel="stylesheet" href="{% static 'css/public_section.css' %}">
+{% endblock %}
+
+{% block titlename %}
+    批量查询
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn" type="submit" value="搜索">
+        </form>
+        <!--<p>
+            <!-- <a href="#">ADIS16251ACCZ</a>
+            <a href="#">STY130NF20D</a>
+            <a href="#">MK-AOB3202405N</a>
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配</label>
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>-->
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="breadlink">
+        <p>
+            <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+            <a href="{% url 'search:mult_index' %}">批量查询</a> <span class="line">></span>
+            <span>查询结果</span>
+        </p>
+    </div>
+    <!--<hr />-->
+    <div style="background:url({% static 'img/mult_results.png' %})" class="content">
+        <table width="100%" id="mult_results">
+            <tr>
+                <th>型号</th>
+                <th>采购数量</th>
+                <th>制造商</th>
+                <th>供应商</th>
+                <th>批号</th>
+                <th>库存量</th>
+                <th>倍数|起订量</th>
+                <th>国内含税</th>
+                <th>香港交货</th>
+                <th>总计</th>
+                <th>货期(工作日)</th>
+                <th>操作</th>
+            </tr>
+
+            {% for one in partnos_qtys %}
+            <tr class="{{one.0}}_{{forloop.counter}}">
+              <td>
+                {{one.0}}
+              </td>
+              <td>
+                {{one.1}}
+              </td>
+              <td colspan="10" style="text-align:center;padding-right:250px">
+                  <div style="height:20px;color:#666">查询中</div>
+                  <img class="img-flag" src="{% static 'img/loading_s1.gif' %}" alt="数据加载中...">
+              </td>
+            </tr>
+            {% endfor %}
+
+            {% comment %}
+            {% for partno in partnos %}
+            <tr class="{{partno}}_{{forloop.counter}}">
+                <td>{{partno}},{{partnos_qtys}}</td>
+                <td colspan="11" style="text-align:center">
+                    <div style="height:20px;color:#666">查询中</div>
+                    <img class="img-flag" src="{% static 'img/loading_s1.gif' %}" alt="数据加载中...">
+                </td>
+            </tr>
+            {% endfor %}
+            {% endcomment%}
+
+        </table>
+    </div>
+    <div class="load_waring" id="load_waring">
+        <ul>
+            <li class="tip">咻~好货来啦</li>
+            <li class="tip">好货正在路上，稍等一下哦</li>
+            <li class="tip">库存那么大，我帮您找找</li>
+            <li class="tip">放心好货正在火速赶来</li>
+            <li class="tip">莫愁前路无知己，好货来到就欢喜</li>
+        </ul>
+    </div>
+    <p class="mt20" id="do_con" style="display:none">
+        <button type="button" id="mult_excel" class="btn"><span id="sign_excel"></span>导出Excel表格</button>
+        <button type="button" class="btn btn_service" onclick="contact_service()"><span id="sign_service"></span>&nbsp;联系客服</button>
+        <button type="button" class="btn gray_btn" onclick="window.location.href='/search/mult_index/'"><span class="for_compatible"></span>返回批量查询页</button>
+        <a href="#" id='csv_a' style="display:none"><span id="downloadcsv">下载</span></a>
+        <span class='tip' style="margin:0 auto;">查询完毕！</span>
+        <!-- <a class="gray_btn" href="{% url 'search:mult_index' %}">返回批量查询页</a> -->
+        <!-- <input type="button" value="导出Excel表格" id="mult_excel" class="btn">
+        <input type="button" value="联系客服" class="btn">
+        <a class="gray_btn" href="{% url 'search:mult_index' %}">返回批量查询页</a>
+         <input type="button">
+        <a href="#" id='csv_a' style="display:none"><span id="downloadcsv">下载</span></a>
+        <span class='tip' style="margin:0 auto;">查询完毕！</span> -->
+    </p>
+    <form id="pdf_form" action="{% url 'search:printpdf' %}" method="get">
+        <label></label>
+        <input type="hidden" name="getpdf" value="1">
+        <input type="submit" style="display:none" id="pdf_sub">
+    </form>
+    <div id="mask"></div>
+{% endblock %}
+
+{% block other%}
+<div class="search_login">
+<div class="title">用户登录<span class="close" onclick="">x</span></div>
+<div class="ajax_input"><label>用户名：</label><input type="text" style="width:220px" name="username" autocomplete='off'></div>
+<div class="ajax_input"><label>密&nbsp;&nbsp;&nbsp;&nbsp;码：</label><input style="width:220px" type="password" name="password" autocomplete='off'></div>
+<div class="ajax_input">{{ capform }}</div>
+<input type="hidden" name="ajax_login" value="true">
+<div class="ajax_input last"><span class="link"><a href="/accounts/forgetpassword/">忘记密码</a></span><span class="ajax_login">登&nbsp;&nbsp;&nbsp;&nbsp;录</span><span class="link"><a href="/accounts/register/">免费注册</a></span></div>
+<div class="error_info">登录失败！</div>
+</div>
+<div class="shadow"></div>
+{% endblock %}
+
+{% block footerjs%}
+
+<script type="text/javascript" src="{% static 'js/search_mult.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript">
+    //禁掉右键，防止用户从源代码中复制
+    /*$(document).bind("contextmenu",function(e){
+      return false;
+    });
+    //禁掉页面拷贝功能
+    $(document).bind('copy',function(){
+      return false;
+    })*/
+    $(function() {
+        var urls = "{{urls|safe}}";
+        urls = urls.split(",")
+        for (i in urls) {
+            url = urls[i];
+            $.get(url, function(data, status) {
+                if (data) {
+                    load_flag = $("#loading").is(':hidden')
+                    if(!load_flag) {
+                        $("#loading").hide();
+                        $("#mult_results").show();
+                    }
+                    var pageContent = '';
+                    pageContent = pageContent + "<tr>";
+                    pageContent = pageContent + data;
+                    pageContent = pageContent + "</tr>";
+                    curClass = $(pageContent).find('td').eq(0).text();
+                    curClass = $.trim(curClass);
+                    $("#mult_results").find("tr[class^='"+ curClass +"']").html(data);
+                    var loaded_muns = $(".img-flag").length;
+                    if(loaded_muns == 0) {
+                        $("#load_waring").hide();
+                        $("#do_con").show();
+
+                        //当查询结果显示完毕后出现一个添加按钮（调用一个函数）
+                        function addNew() {
+                            $("#mult_results").append('<tr><td colspan="12" style="text-align:left"><a href="javascript:void(0)" class="search_add" onclick="new_pro(this)"><span class="symbol">+</span>添加型号查询</a></td></tr>');
+                        }
+                        if(!($("td a").hasClass("search_add")))
+                        {
+                          addNew();
+                        }
+                    }
+
+                }
+            })
+        }
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings){
+          var csrftoken = $.cookie('csrftoken');
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    });
+    $("#mult_excel").click(function() {
+      var mult_len = $("#mult_results tbody").children('tr:visible').length,
+          mult_con = $("#mult_results tbody").children('tr:visible'),
+          phone_number=$("input[name='phone_number']").val(),
+          save_cons = [],
+          $label = $("#pdf_form").find("label");
+      if (!$label.hasClass('hi')){
+        $label.addClass('hi');
+        for (i = 1; i < mult_len; i++) {//遍历表格里的行
+            trCons = '';
+            //如果能准确搜到对应的型号
+            if(!mult_con.eq(i).find("td:eq(2)").hasClass("acenter"))
+            {
+                tds = mult_con.eq(i).children('td:visible');
+                for (j = 0; j < tds.length - 1; j++) {
+                    trCons += $.trim(tds.eq(j).text()) + '^'
+                }
+                $("#pdf_form").append("<input type='hidden' name='cons' value='"+trCons+"'>")
+            }
+        }
+      }
+      $("#pdf_sub").click();
+    })
+        /*$("#mult_excel").click(function() {
+            if('{{request.COOKIES.sessionid}}'==''&& ($.cookie("ajax_login")=='null'||$.cookie("ajax_login")==null) )//如果用户没有登录
+            {
+              $(".search_login").css({"top":($(window).height()-$(".search_login").height())/2+"px","left":($(window).width()-$(".search_login").width())/2+"px"});
+              $(".shadow").show();
+              $(".search_login").show();
+              return false;
+            }
+            derive_excel();
+        });*/
+        function derive_excel(){
+          var mult_len = $("#mult_results tbody").children('tr:visible').length;
+          var mult_con = $("#mult_results tbody").children('tr:visible');
+          var phone_number=$("input[name='phone_number']").val();
+          save_cons = []
+          for (i = 1; i < mult_len; i++) {//遍历表格里的行
+              trCons = '';
+              //如果能准确搜到对应的型号
+              if(!mult_con.eq(i).find("td:eq(2)").hasClass("acenter"))
+              {
+                  tds = mult_con.eq(i).children('td:visible');
+                  for (j = 0; j < tds.length - 1; j++) {
+                      trCons += $.trim(tds.eq(j).text()) + '^'
+                  }
+                  save_cons.push(trCons)
+              }
+          }
+          $.ajax({
+              url: "{% url 'search:download_csv' %}",
+              type: 'POST',
+              data: {
+                  'cons': save_cons,'phone_number':"{{sales.0.phone}}",'qq_number':"{{sales.0.qq}}"
+              },
+              success: function(result) {
+                  if (window.navigator.msSaveOrOpenBlob) {
+                      var blob = new Blob([decodeURIComponent(encodeURI(result))], {
+                          type: "application/csv;charset=utf-8,\ufeff"
+                      });
+                      window.navigator.msSaveBlob(blob, "result.csv");
+                  } else {
+                      result = encodeURIComponent(result);
+                      $('#csv_a').attr({
+                          "href": "data:application/csv;charset=utf-8,\ufeff" + result,
+                          "download": "result.csv",
+                          "target": "_blank"
+                      });
+                      $('#downloadcsv').click()
+                  }
+              },
+              error: function() {
+                  console.log('awo,error')
+              }
+          })
+        }
+        $(".shadow").click(function(){
+          $(".search_login,.shadow").hide();
+        })
+        $(".ajax_login").click(function(){
+          var username=$("input[name='username']").val();
+          var password=$("input[name='password']").val();
+          var captcha_1=$("input[name='captcha_1']").val();
+          var captcha_0=$("input[name='captcha_0']").val();
+          var ajax_login=$("input[name='ajax_login']").val();
+          $.post("{% url 'accounts:user_login' %}",{'username':username,'password':password,'captcha_1':captcha_1,'captcha_0':captcha_0,'ajax_login':ajax_login},function(res){
+            if(res=='error')
+            {
+              $(".error_info").show();
+            }
+            else{
+              $(".topmenu").find(".menu p").remove();
+              $(".topmenu").find(".menu ul").before('<p>欢迎回来，'+res+'&nbsp;<a href="/accounts/home/">用户中心</a>&nbsp;<a href="/accounts/logout/" onclick="ajax_loginout()">退出登录</a></p>');
+              var ajax_login=$.cookie("ajax_login","yes",{path: '/' })
+              $(".search_login,.shadow").hide();
+              derive_excel();
+            }
+          });
+        });
+        $('#js-captcha-refresh').click(function(){
+            $.getJSON('{% url "captcha-refresh" %}',{},function(data) {
+                $('#captcha_img').attr("src",data.image_url);
+                $('#id_captcha_0').attr("value",data.key);
+            })
+            return false;
+        });
+        $(".close").click(function(){
+          $(".search_login,.shadow").hide();
+        })
+    })
+    //联系客服
+    function contact_service(){
+      //用户是否未登录
+      if('{{request.COOKIES.sessionid}}'==''&& ($.cookie("ajax_login")=='null'||$.cookie("ajax_login")==null) )
+      {
+        $link = $("#server").attr("href");
+        window.open($link);
+      }
+      else{
+        var link=$("#server").attr("href");
+        window.open(link);
+      }
+    }
+    function text_change(obj){
+        if($(obj).hasClass("borderRed"))
+        {
+            $(obj).removeClass("borderRed");
+        }
+    }
+    /* 库存数据按升序显示 */
+    function ascStoreBtn(obj) {
+        $(obj).find('img.upIcon').attr("src","{% static 'img/up_1.png' %}");              //点击后改变当前图片路径
+        $(obj).next().find('img.downIcon').attr("src","{% static 'img/down.png' %}");    //改变兄弟节点图片路径
+        var oTr = $(obj).parents('th.store-list').parents('.mult_tit').next().find('tr');
+        oTr.toArray();
+        oTr.sort(function(v1,v2) {          //sort升序
+            return parseInt($(v1).find('td.stock_mult').html()) - parseInt($(v2).find('td.stock_mult').html());
+        });
+        oTr.appendTo(oTr.parent());
+    }
+
+    /* 总计数据按升序显示 */
+    function ascTotalBtn(obj) {
+        $(obj).find('img.upIcon').attr('src',"{% static 'img/up_1.png' %}");              //点击后改变当前图片路径
+        $(obj).next().find('img.downIcon').attr('src',"{% static 'img/down.png' %}");    //改变兄弟节点图片路径
+        var oTr = $(obj).parents('th.total-list').parents('.mult_tit').next().find('tr');
+        oTr.toArray();　　　　　　　　　　　　　　//转换成数组
+        oTr.sort(function(v1,v2) {          //sort升序
+            return $.trim($(v1).find('td.total_mult').html()).substring(1) - $.trim($(v2).find('td.total_mult').html()).substring(1);
+        });
+        oTr.appendTo(oTr.parent());
+    }
+
+    /* 库存数据按降序显示 */
+    function descStoreBtn(obj) {
+        $(obj).find('img.downIcon').attr('src',"{% static 'img/down_1.png' %}");        //点击后改变当前图片路径
+        $(obj).prev().find('img.upIcon').attr('src',"{% static 'img/up.png' %}");       //改变兄弟节点图片路径
+        var oTr = $(obj).parents('th.store-list').parents('.mult_tit').next().find('tr');
+        oTr.toArray();
+        oTr.sort(function(v1,v2) {          //sort降序
+            return parseInt($(v2).find('td.stock_mult').html()) - parseInt($(v1).find('td.stock_mult').html());
+        });
+        oTr.appendTo(oTr.parent());
+    }
+
+    /* 总计数据按降序显示 */
+    function descTotalBtn(obj) {
+        $(obj).find('img.downIcon').attr('src',"{% static 'img/down_1.png' %}");        //点击后改变当前图片路径
+        $(obj).prev().find('img.upIcon').attr('src',"{% static 'img/up.png' %}");　　　　//改变兄弟节点图片路径
+        var oTr = $(obj).parents('th.total-list').parents('.mult_tit').next().find('tr');
+        oTr.toArray();
+        oTr.sort(function(v1,v2) {          //sort降序
+            return $.trim($(v2).find('td.total_mult').html()).substring(1) - $.trim($(v1).find('td.total_mult').html()).substring(1);
+        });
+        oTr.appendTo(oTr.parent());
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "help_base.html" %}
+{% load staticfiles %}
+
+{% block titlename %}
+  退换货政策及流程--客户服务
+{% endblock %}
+
+{% block breadlink %}
+  退换货政策及流程
+{% endblock%}
+
+{% block helpcontent %}
+    <h3><span>退换货政策及流程</span></h3>
+    <div>
+        <ul>
+            <h3>尊敬的客户，您好，可靠的产品质量是ICGOO在线商城给您的承诺！
+                在符合以下几点要求的情况下，您有无条件退货的权利。</h3>
+            <li>1. 客户在收到货物后，须在7个工作日内完成抽样试用；</li>
+            <li>2. 若有质量问题，请客户在30天内出示相关检测反馈报告，经ICGOO在线商城检验确认，
+            证实存在质量问题，方可进入退货换货流程；
+            </li>
+            <li>
+            3. 所有涉及退换货的产品，请您务必保留完整原包装及货物标签；
+            </li>
+            <h4 style="color:#333;margin-top:5px">请您注意在下列情况出现时我们是不能为您退货的:</h4>
+            <li>
+            1. 任何非由ICGOO在线商城出售的商品；
+            </li>
+            <li>
+            2. 未经检测上电路板而引起的质量纠纷；
+            </li>
+            <li>
+            3. 任何已使用过的商品，但有质量问题的除外；
+            </li>
+            <li>
+            4. 任何因非正常使用及保管导致出现质量问题的商品；
+            </li>
+            <li>
+            5. 若30天内客户对产品质量无任何异议，则默认产品质量完全符合要求。
+            </li>
+            <h4 style="color:#333;margin-top:5px">退换货期间产生的运费收取标准如下:</h4>
+            <h4 style="color:#333">质量问题：</h4>
+            <li>经厂家鉴定确属于质量问题的，退换货产生的运费均由我们承担。</li>
+            <li>秉持“为客户服务，为客户解决问题”的宗旨，努力保障您的生产运营。</li>
+        </ul>
+        </div>
+    <h3 style="color:#333;margin:5px auto;">当您的退换货申请符合网站要求时，请查看以下流程：</h3>
+        <ul>
+        <li style="margin:20px;"></li>
+        </ul>
+    <div>
+    <img src="{% static "img/help_exchange-process.jpg" %}" alt="退换货流程" title="退换货流程">
+    </div>
+    <br>
+    <h4 style="color:#333">关于补货</h4>
+        <div>
+          <p>
+          当您在收到货物的三天内，发现货物实到数量与订购数量不符时，
+          请及时将信息反馈给ICGOO工作人员，并附上实物标签及货物清晰照片。
+          我们的售后人员会及时地联系您，告知您供应商的库存状况，及时为您补发缺少货物。
+          </p>
+        </div><br>
+        <div>
+           <p>如果您在帮助的主题中找不到您要解决的问题，请通过“在线客服”，
+              或者致电<font color="#c1282d">400 660 6568</font>， 我们将竭诚为您提供服务。
+           </p>
+        </div>
+        <h3>ICGOO在线商城所有员工祝您在本商城购物愉快。</h3>
+
+{% endblock %}
+
+
+
+{%comment%}
+  <div class="Divdashed Font12">
+
+    <div class="help_con">
+
+  </div>
+    <h3><span>退换货流程</span></h3>
+  <div class="Divdashed Font12">
+    <div class="title">
+       <p>尊敬的客户，您好！可靠的产品质量是ICGOO在线商城给您的承诺！
+       当您的退换货申请符合网站要求时，进入以下流程查看
+       <a href="">退换货政策>></a>
+       </p>
+    </div>
+    <div class="help_con">
+      <div class="ReturnTips">
+        <a id="RMA" onmouseover="ShowTip(0)" href="">退换货申请</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>退换货申请：</strong>请您参照
+              <a href="exchange-help">退换货政策</a>
+              详细内容，如符合相关退换条例，请填写下方的
+              <a href="#questionnaire">《售后信息调查表》</a>，
+              并确保其完整无误。（注：带*号的为必填项目）
+            </p>
+          </div>
+        </div>
+        <a id="Success_accepted" href="">ICGOO受理成功</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>ICGOO受理成功：</strong>
+              您的申请已被ICGOO成功受理，请您提供以下材料（问题货物清晰照片、货物清晰标签、质量检测报告）。
+            </p>
+          </div>
+        </div>
+        <a id="Accept_failure" href="">ICGOO受理失败</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>ICGOO受理失败：</strong>
+              您所申诉的货物质量问题未能符合ICGOO商城相关<a href="exchange-help">退换货政策</a>，申诉失败。
+            </p>
+          </div>
+        </div>
+        <a id="Confirm" href="">等待供应商确认信息</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>等待供应商确认信息：</strong>
+              您的申请已提交至相应供应商，ICGOO工作人员会在第一时间给予您信息反馈。
+              （不同供应商的处理细节略有不同，ICGOO工作人员会及时与您取得联系，获取相应申请材料）
+            </p>
+          </div>
+        </div>
+        <a id="passed" href="">通过</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>通过：</strong>供应商已同意受理您的申请，接受退换货。
+            </p>
+          </div>
+        </div>
+        <a id="unpassed" href="">未通过</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>未通过：</strong>供应商未审核通过相应问题货物的质量检测报告。
+            </p>
+          </div>
+        </div>
+        <a id="post" href="">客户邮寄问题货物</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>客户邮寄问题货品：</strong>
+              ①若您已经收到ICGOO开具的发票，请将发票与问题货物一并寄回ICGOO收货地址。
+              ②请务必在退回前确认所退货物与申请内容相符。
+            </p>
+          </div>
+        </div>
+        <a id="Returned" href="">退货</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>退货：</strong>
+              ICGOO将在收到客户邮寄的货物后立即发送给相应供应商，待供应商收货核实无
+              误后，ICGOO会立即通知相应部门核对退款，所退款项将在一到两周内完成。
+            </p>
+          </div>
+        </div>
+        <a id="niffer" href="">换货</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>换货：</strong>
+              ①若相应供应商有现货库存，将会立即安排发货。
+              ②若相应供应商无现货库存或现货不足，客户可根据货期长短自行决定是继续
+              等待货期还是选择安排退款。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="Width790">
+
+{% endcomment %}

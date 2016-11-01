@@ -1,0 +1,42 @@
+{% extends "help_base.html" %}
+{% load staticfiles %}
+
+{% block titlename %}
+  怎样询价--客户服务
+{% endblock %}
+
+{% block breadlink %}
+  怎样询价
+{% endblock%}
+
+{% block helpcontent %}
+    <h3><span>怎样询价</span></h3>
+    <div>
+        <ul>
+            <h4 style="color:#333;margin-top:5px">1、什么是询价？</h4>
+            <li>
+            　　ICGOO商城上的“询价”是指客户根据自己的采购需要向ICGOO商城城询问价格的过程。
+            </li>
+            <li>
+            　　客户根据自己采购的产品型号、数量向ICGOO商城城发起询价，ICGOO商城会有专属客服为您服务，综合您产品采购数量等信息反馈一份合理的报价单，客户对报价单不满意可提供您的期望价格重新询价。协议价格达成一致询价结束，进入下订单环节。
+            </li>
+            <h4 style="color:#333;margin-top:5px">2、如何进行产品询价？</h4>
+            <li>
+            　　ICGOO商城为客户提供海外元器件直购产品服务，如果您在ICGOO商城上找到您需要采购的产品，您可以通过以下方式进行产品询价。
+            </li>
+            <li>
+            　　（1）ICGOO商城直接询价：您进入ICGOO商城后可直接在搜索栏查找您需要采购产品的型号和数量，ICGOO商城会综合您采购产品的信息为您直接反馈价格、库存数量、供货商、厂商等详情，如果您对价格有异议，对产品其它信息想进行详细了解，可以通过在线客服进行咨询。
+            </li>
+            <li style="height:4px"></li>
+            <img src="{% static "img/howto-order1.jpg" %}" alt="退换货流程" title="退换货流程"style="width:90%;height:90%;margin:10px 25px;">
+            <br/>
+            <li>
+            　　（2）查看产品详情后询价：您在ICGOO商城查找到您需要采购的产品后，可以点击该产品型号的链接进入产品详情页，通过产品图片右侧的“购买”按钮进入到在线客服页面（请确认您的电脑是否安装QQ软件）直接对该产品进行询价，在线客服会第一时间反馈给您报价单。
+            </li>
+            <li style="height:4px"></li>
+            <img src="{% static "img/howto-order2.jpg" %}" alt="退换货流程" title="退换货流程"style="width:90%;height:90%;margin:10px 25px;">
+        </ul><br/>
+        </div>
+        <h3>ICGOO在线商城所有员工祝您在本商城购物愉快。</h3>
+
+{% endblock %}

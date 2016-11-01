@@ -1,0 +1,142 @@
+{% extends "help_base.html" %}
+
+{% block title %}
+  <title>客户服务--IC购商城</title>
+{% endblock %}
+
+{% block navbar %}
+  <label>客户服务</label>
+{% endblock %}
+
+{% block content %}
+  <div class="Divdashed Font12">
+    <div class="title">
+       退换货流程
+       <p>尊敬的客户，您好！可靠的产品质量是ICGOO在线商城给您的承诺！
+       当您的退换货申请符合网站要求时，进入以下流程查看
+       <a href="">退换货政策>></a>
+       </p>
+    </div>
+    <div class="help_con">
+      <div class="ReturnTips">
+        <a id="RMA" onmouseover="ShowTip(0)" href="">退换货申请</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>退换货申请：</strong>请您参照
+              <a href="exchange-help">退换货政策</a>
+              详细内容，如符合相关退换条例，请填写下方的
+              <a href="#questionnaire">《售后信息调查表》</a>，
+              并确保其完整无误。（注：带*号的为必填项目）
+            </p>
+          </div>
+        </div>
+        <a id="Success_accepted" href="">ICGOO受理成功</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>ICGOO受理成功：</strong>
+              您的申请已被ICGOO成功受理，请您提供以下材料（问题货物清晰照片、货物清晰标签、质量检测报告）。
+            </p>
+          </div>
+        </div>
+        <a id="Accept_failure" href="">ICGOO受理失败</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>ICGOO受理失败：</strong>
+              您所申诉的货物质量问题未能符合ICGOO商城相关<a href="exchange-help">退换货政策</a>，申诉失败。
+            </p>
+          </div>
+        </div>
+        <a id="Confirm" href="">等待供应商确认信息</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>等待供应商确认信息：</strong>
+              您的申请已提交至相应供应商，ICGOO工作人员会在第一时间给予您信息反馈。
+              （不同供应商的处理细节略有不同，ICGOO工作人员会及时与您取得联系，获取相应申请材料）
+            </p>
+          </div>
+        </div>
+        <a id="passed" href="">通过</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>通过：</strong>供应商已同意受理您的申请，接受退换货。
+            </p>
+          </div>
+        </div>
+        <a id="unpassed" href="">未通过</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>未通过：</strong>供应商未审核通过相应问题货物的质量检测报告。
+            </p>
+          </div>
+        </div>
+        <a id="post" href="">客户邮寄问题货物</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>客户邮寄问题货品：</strong>
+              ①若您已经收到ICGOO开具的发票，请将发票与问题货物一并寄回ICGOO收货地址。
+              ②请务必在退回前确认所退货物与申请内容相符。
+            </p>
+          </div>
+        </div>
+        <a id="Returned" href="">退货</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>退货：</strong>
+              ICGOO将在收到客户邮寄的货物后立即发送给相应供应商，待供应商收货核实无
+              误后，ICGOO会立即通知相应部门核对退款，所退款项将在一到两周内完成。
+            </p>
+          </div>
+        </div>
+        <a id="niffer" href="">换货</a>
+        <div class="tooltip">
+          <div class="tipcont">
+            <p>
+              <strong>换货：</strong>
+              ①若相应供应商有现货库存，将会立即安排发货。
+              ②若相应供应商无现货库存或现货不足，客户可根据货期长短自行决定是继续
+              等待货期还是选择安排退款。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="Width790">
+      <h2 class="replenishment">关于补货</h2>
+      <div class="Box792">
+        <div class="Box792t">
+          <div class="Box792b">
+            <p>
+            当您在收到货物的三天内，发现货物实到数量与订购数量不符时，
+            请及时将信息反馈给ICGOO工作人员，并附上实物标签及货物清晰照片。
+            我们的售后人员会及时地联系您，告知您供应商的库存状况，及时为您补发缺少货物。
+            </p>
+          </div>
+        </div>
+       </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="{{ STATIC_URL }}v5/js/jquery.tools.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+    $(document).ready(function() {
+    $("#RMA").tooltip({ effect: 'slide'});
+    $("#Success_accepted").tooltip({ effect: 'slide'});
+    $("#Accept_failure").tooltip({ effect: 'slide'});
+    $("#Confirm").tooltip({ effect: 'slide'});
+    $("#passed").tooltip({ effect: 'slide'});
+    $("#unpassed").tooltip({ effect: 'slide'});
+    $("#post").tooltip({ effect: 'slide'});
+    $("#niffer").tooltip({ effect: 'slide'});
+    $("#Returned").tooltip({ effect: 'slide'});
+    });
+    });
+  </script>
+{% endblock %}

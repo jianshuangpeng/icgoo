@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+  ICGOO商城--注册成功
+{% endblock %}
+
+{% block container %}
+<div class="reg_success">
+    <div class="title">
+        <i></i>注册成功
+    </div>
+    <div class="des">信息已提交，正在审核中(一个工作日内)，请您耐心等待</div>
+    <form action="{% url 'accounts:user_reg_success' %}" method="post">
+        {%csrf_token%}
+    <input type="hidden" name="username" value="{{username |default:''}}">
+    <input type="hidden" name="company_name" value="{{company_name|default:''}}">
+    <ul>
+        <li><span>您是否有专属客服?</span><div id="alert"><i>!</i>请选择一个专属客服选项</div></li>
+        <li><label><input type="radio" name="service">暂时没有</label></li>
+        <li><label><input type="radio" name="service">有，我的专属客服是</label>
+            <input type="text" placeholder="请输入" name="saler"></li>
+        <li><input type="submit" id="confirm" value="确认"></li>
+    </ul>
+    </form>
+</div>
+{% endblock %}

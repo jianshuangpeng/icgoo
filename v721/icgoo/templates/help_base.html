@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/help.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block menu %}
+<ul class="nav_menu">
+    <li class="active"><a href="/">首页</a></li>
+  　<li class="batch_query link"><a href="{% url 'search:mult_index' %}">批量查询</a><div class="icon"></div></li>
+</ul>
+{% endblock %}
+
+{% block container %}
+  <div class="breadlink">
+    <p>
+        <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+        <a href="javascript:void(0)">客服服务</a> <span class="line">></span>
+        <span>
+            {% block breadlink %}
+              客服服务
+            {% endblock%}
+        </span>
+    </p>
+  </div>
+  <div class="clear"></div>
+  <div class="left">
+    <h3>
+      <span>客户服务</span>
+    </h3>
+    <ul>
+      <!-- <li><a href="#">注册帐号</a></li>
+      <li><a href="#">找回密码</a></li> -->
+      <li><a href="{% url "help:howto-order" %}">怎样询价</a></li>
+      <!-- <li><a href="#">怎样下订单</a></li> -->
+    </ul>
+    <ul>
+      <li><a href="{% url "help:pay-method"%}">支付方式</a></li>
+      <li><a href="{% url "help:invoice-system"%}">发票制度</a></li>
+      <li><a href="{% url "help:refund-system"%}">退款制度</a></li>
+      <li><a href="{% url "help:cargo-tracking"%}">货物跟踪</a></li>
+      <li><a href="{% url "help:get-by-yourself"%}">上门自提</a></li>
+    </ul>
+    <ul>
+      <li><a href="{% url "help:service-promise"%}">服务及质量保证承诺</a></li>
+      <li><a href="{% url "help:exchange-help"%}">退换货政策及流程</a></li>
+      <li><a href="{% url "help:shipping-charges"%}">运费收取标准</a></li>
+      <li><a href="{% url "help:deliver-time-station"%}">配送时间和配送范围</a></li>
+      <li><a href="{% url "help:help_solve"%}">售后常见问题解答</a></li>
+    </ul>
+    <ul class="last">
+      <li><a href="#">客户建议</a></li>
+      <li><a href="#">客户投诉</a></li>
+      <li><a href="/help/howto-faq/">常见问题</a></li>
+    </ul>
+  </div>
+  <div class="right">
+    {% block helpcontent %}
+
+    {% endblock %}
+  </div>
+{% endblock%}

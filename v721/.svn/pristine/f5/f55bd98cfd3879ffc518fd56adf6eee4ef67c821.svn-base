@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+  ICGOO商城--登录
+{% endblock %}
+
+{% block container %}
+<div class="accounts">
+    <div class="login">
+        <h3><span class="sign"></span>会员登录{% if msg %}<div id="error" style="left:{% if msg == '验证码错误' %}164px{% else %}62px{% endif %};"><span>!</span>{{ msg|safe }}</div>{% endif %}</h3>
+        <form action="" method="post">
+            {%csrf_token%}
+            <ul>
+                <li>
+                    <span class="item">账号</span>
+                    <input class="" type="text" name="username">
+                </li>
+                <li>
+                    <span class="item">密码</span>
+                    <input class="" type="password" name="password">
+                </li>
+                <li>
+                    <span class="item">验证码</span>
+                    {{ capform }}
+                </li>
+            </ul>
+        <div class="login_btn">
+            <input type="submit" class="sub_btn" name="login" value="登录">
+        </div>
+        <div>
+            <a style="color:#c00;margin-right:60px" href="{% url 'accounts:user_register' %}">免费注册</a>
+            <a href="{% url 'accounts:user_forgetpassword' %}">忘记密码</a>
+        </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+{% block footerjs%}
+<script src="{% static 'js/change_code.js'%}"></script>
+<script type="text/javascript">
+$(function(){
+    /* 在提示验证码错误的时候，当验证码输入框获得焦点，隐藏提示　*/
+    $("#id_captcha_1").on('focus',function(){
+        if($("#error").is(':visible'))
+        {
+          $("#error").hide();
+        }
+    })
+})
+</script>
+{% endblock %}

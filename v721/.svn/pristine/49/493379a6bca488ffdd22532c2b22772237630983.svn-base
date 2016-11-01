@@ -1,0 +1,11 @@
+Django==1.8.5
+django-simple-captcha==0.5.1
+MySQL-python==1.2.5
+# yum install libjpeg-turbo-devel freetype-devel libpng-devel
+# yum install python-pillow-devel
+Pillow==3.1.1
+python-memcached==1.57
+requests==2.8.1
+six==1.10.0
+suds==0.4
+wkhtmltopdf

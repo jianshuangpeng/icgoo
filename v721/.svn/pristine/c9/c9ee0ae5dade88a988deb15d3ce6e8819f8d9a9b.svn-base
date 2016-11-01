@@ -1,0 +1,493 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/mult.css' %}">
+<link rel="stylesheet" href="{% static 'css/public_section.css' %}">
+{% endblock %}
+
+{% block titlename %}
+    批量查询
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn" type="submit" value="搜索">
+        </form>
+        <p>
+            <!-- <a href="#">ADIS16251ACCZ</a>
+            <a href="#">STY130NF20D</a>
+            <a href="#">MK-AOB3202405N</a> -->
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配</label>&nbsp;&nbsp;&nbsp;
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <!--<div class="breadlink">
+        <p>
+            <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+            <span>批量查询</span>
+        </p>
+    </div>-->
+    <div class="content-search">
+        <span id="warnning"></span>
+        <div class="tab_tit">
+            <span class="active" style="border-left:none">文本添加</span>
+            <span class="excel">从Excel表格里</span>
+            <label>请填写型号和数量后进行批量查询，最多输入为10个型号</label>
+        </div>
+        <div class="tab_con">
+            <!--
+            <p class="tip">
+                *请填写型号和数量后进行批量查询，最多输入为10个型号
+                <span class="rc" id="warnning"></span>
+            </p>-->
+            <div class="tab1 active">
+                <form id="form1" method="post" action="{% url 'search:mult_search' %}" onsubmit="return check_input()">
+                    {% csrf_token %}
+                    <table>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <tr>
+                            <td>型号</td>
+                            <td><input type="text" name="mult_par"></td>
+                            <td class="space">数量</td>
+                            <td><input type="text" name="mult_qty"></td>
+                        </tr>
+                        <input type="hidden" name="flag" value="txt">
+                    </table>
+                  <span class="form_bottom">
+                    <span class="bottom_left">
+                        <span class="place">
+                            <span class="red">*</span>选择交货地：
+                            <input type="radio" class="radio_c" id='de_city_hk1' name="de_city" value="hk">
+                            <label for="de_city_hk1">香港</label>
+                            <input type="radio" class="radio_c" id='de_city_dl1' name="de_city" value="dl" checked>
+                            <label for="de_city_dl1">内地</label>
+                        </span>
+                            <input type="submit" class="sub_btn" value="批量查询">
+                            <input type="reset" class="reset_btn" onclick="click_radio(1)" value="重置">
+                    </span>
+                    <!--选择供应商部分开始-->
+                    <span  class="supplier">
+                      <!--弹出的选择框开始-->
+                      <span class="select_border">
+                        <ul>
+                            <!--第一行-->
+                            <li><label><input type="radio"  autocomplete="off" onclick="click_radio(1)" name="supplier" checked="checked" value="all">全部</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Am2">Am2</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Avnet">Avnet</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Arrow">Arrow</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off"  name="supplier" value="Chip1stop">Chip1stop</input></label></li>
+                            <!--第二行-->
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Digikey">Digikey</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Element14">Element14</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Future">Future</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Hot">Hot</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Hpcsystems">Hpcsystems</input></label></li>
+                            <!--第三行-->
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Heilind">Heilind</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Mouser">Mouser</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Oem">Oem</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Online">Online</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Peigenesis">Peigenesis</input></label></li>
+                            <!--第四行-->
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Questcomp">Questcomp</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rs">Rs</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rutronik">Rutronik</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rectron">Rectron</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rochester">Rochester</input></label></li>
+                            <!--第五行-->
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rochester_hot">Rochester_hot</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Tme">Tme</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Tti">Tti</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Verical">Verical</input></label></li>
+                            <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Velocity">Velocity</input></label></li>
+                        </ul>
+                        <!--关闭按钮-->
+                        <span class="close" onclick="close_selectBorder(0)">x</span>
+                      </span>
+                      <!--弹出的选择框结束-->
+                      <!--展示供应商-->
+                      <label class="promt">选择供应商&nbsp;：</label>
+                      <span class="show_supplier">
+                        <span onclick="show_selectBorder(0)">全部<label class="select_supplier" style="display:inline-block"></label></span>
+
+                      </span>
+                  </span>
+                  <!--选择供应商部分结束-->
+                </span>
+                </form>
+                <span class="clear"></span>
+            </div>
+            <div class="tab2">
+                <div class="area_left">
+                    <form id="form2" action="{% url 'search:mult_search' %}" method="post" onsubmit="return check_line()">
+                        {% csrf_token %}
+                        <textarea cols="30" rows="10" name="partno_info" id="partno_info"></textarea><br />
+                        <input type="hidden" name="flag" value="excel">
+                        <span class="form_bottom">
+                          <span class="bottom_left">
+                              <span class="place">
+                                  <span class="red">*</span>选择交货地：
+                                  <input type="radio" class="radio_c" id='de_city_hk2' name="de_city" value="hk">
+                                  <label for="de_city_hk2">香港</label>
+                                  <input type="radio" class="radio_c" id='de_city_dl2' name="de_city" value="dl" checked>
+                                  <label for="de_city_dl2">内地</label>
+                              </span>
+                                  <input type="submit" class="sub_btn" value="批量查询">
+                                  <input type="reset" class="reset_btn" onclick="click_radio(2)" value="重置">
+                          </span>
+                          <!--选择供应商部分开始-->
+                          <span  class="supplier">
+                            <!--弹出的选择框开始-->
+                            <span class="select_border">
+                              <ul>
+                                  <!--第一行-->
+                                  <li><label><input type="radio"  autocomplete="off" onclick="click_radio(2)" name="supplier" checked="checked" value="all">全部</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Am2">Am2</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Avnet">Avnet</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Arrow">Arrow</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off"  name="supplier" value="Chip1stop">Chip1stop</input></label></li>
+                                  <!--第二行-->
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Digikey">Digikey</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Element14">Element14</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Future">Future</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Hot">Hot</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Hpcsystems">Hpcsystems</input></label></li>
+                                  <!--第三行-->
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Heilind">Heilind</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Mouser">Mouser</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Oem">Oem</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Online">Online</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Peigenesis">Peigenesis</input></label></li>
+                                  <!--第四行-->
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Questcomp">Questcomp</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rs">Rs</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rutronik">Rutronik</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rectron">Rectron</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rochester">Rochester</input></label></li>
+                                  <!--第五行-->
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Rochester_hot">Rochester_hot</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Tme">Tme</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Tti">Tti</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Verical">Verical</input></label></li>
+                                  <li><label><input type="checkbox"  autocomplete="off" name="supplier" value="Velocity">Velocity</input></label></li>
+                              </ul>
+                              <!--关闭按钮-->
+                              <span class="close" onclick="close_selectBorder(1)">x</span>
+                            </span>
+                            <!--弹出的选择框结束-->
+                            <!--展示供应商-->
+                            <label class="promt">选择供应商&nbsp;：</label>
+                            <span class="show_supplier">
+                              <span onclick="show_selectBorder(1)">全部<label class="select_supplier" style="display:inline-block"></label></span>
+
+                            </span>
+                        </span>
+                        <!--选择供应商部分结束-->
+                      </span>
+                    </form>
+                </div>
+                <div class="area_right">
+                    <h3>从Excel表格里复制多个型号批量添加</h3>
+                    <img src="{% static 'img/u453.png' %}" alt="" width="231"><!--270-->
+                </div>
+                <div class="clear"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block other%}
+  <!--遮罩层-->
+  <div class="shade"></div>
+{% endblock %}
+{% block footerjs%}
+<script type="text/javascript" src="{% static "js/server.min.js" %}"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".tab_tit span").click(function(){
+            var flag = $(this).hasClass('active');
+            if(!flag){
+                $(this).addClass('active').siblings().removeClass('active');
+                index = $(this).index();
+                $(".tab_con div").eq(index).addClass('active')
+                                 .siblings().removeClass('active')
+            }
+        })
+    })
+    function check_line(){
+        var thisVal = $("#partno_info").val()
+        //reg = /[\r\n\S]+/g
+        //var len = thisVal.split(reg).length;
+        var res=thisVal.split("\n");
+        var len=res.length-1;
+        var number=0;
+        for(var i=0;i<len;i++)
+        {
+          if($.trim(res[i])!='')
+          {
+            number++
+          }
+        }
+        if(number==0){
+            var mult=$("#partno_info");
+            error_prompt('请至少输入一个型号！',mult);
+            return false;
+        }else if(number>10){
+            var mult=$("#partno_info");
+            error_prompt('请最多输入10个型号！',mult);
+            return false;
+        }else{
+            return true
+        }
+    }
+
+    function check_input(){
+      var mult_pars = $("input[name='mult_par']");
+      var mult_qty = $("input[name='mult_qty']");
+      var pars='';
+      var qty='';
+      for(var i=0;i<mult_pars.length;i++)
+      {
+        if(mult_pars.eq(i).val()!='')
+        {
+          pars=mult_pars.eq(i).val();
+          qty=mult_qty.eq(i).val();
+          var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+          if(reg.test(pars))//汉字验证
+          {
+            var mult=$("input[name='mult_par']").eq(i);
+            error_prompt('您输入的型号有误！',mult);
+            return false;
+          }
+          if(qty=='')
+          {
+            var mult=$("input[name='mult_qty']").eq(i);
+            error_prompt('请输入对应的数量！',mult);
+            return false;
+          }
+          if(!parseInt(qty)||parseInt(qty)<=0)
+          {
+            var mult=$("input[name='mult_qty']").eq(i);
+            error_prompt('您输入的数量有误！',mult);
+            return false;
+          }
+          if(/[.]/.test(qty))
+          {
+            var mult=$("input[name='mult_qty']").eq(i);
+            error_prompt('请输入整数！',mult);
+            return false;
+          }
+          else if(/[A-z]/.test(qty)){
+            var mult=$("input[name='mult_qty']").eq(i);
+            error_prompt('您输入的数量有误！',mult);
+            return false;
+          }
+        }
+        if(mult_qty.eq(i).val()!='')
+        {
+          qty=mult_qty.eq(i).val();
+          if(mult_pars.eq(i).val()=='')
+          {
+            var mult=$("input[name='mult_par']").eq(i);
+            error_prompt('请输入对应的型号！',mult);
+            return false;
+          }
+        }
+      }
+      if(pars==''&&qty=='')
+      {
+        var mult=$("input[name='mult_par']:first");
+        error_prompt('搜索的内容不能为空！',mult)
+        return false;
+      }
+    }
+    function error_prompt(text,dom){
+      $(".shade").css("display","block");
+      $("#warnning").text(text).fadeIn(1000);
+      dom.addClass("prompt").focus();
+      dom.keydown(function(){
+        dom.removeClass("prompt");
+      })
+    }
+    //点击“选择供应商”按钮显示选择菜单
+    function show_selectBorder(i){
+      $(".shade").css("display","block");
+      $(".select_supplier").eq(i).css("background","url({% static 'img/supplier_up.png' %}) no-repeat center");
+      $(".select_border").eq(i).fadeIn("fast");
+    }
+    //动态显示三角按钮
+    var btn1=$(".select_supplier").eq(0);
+    var btn2=$(".select_supplier").eq(1);
+    var btn=[btn1,btn2];
+    function show_btn(){
+      if($(".tab1").hasClass('active'))
+      {
+        var i=0;
+      }
+      else{
+        var i=1;
+      }
+      $(".show_supplier").eq(i).find(".select_supplier").remove();
+      $(".show_supplier").eq(i).find("span[onclick='show_selectBorder("+i+")']").removeAttr("onclick");
+      $(".show_supplier").eq(i).find("span[onclick='show_selectBorder("+i+")']").unbind('click');//为兼容IE7
+      $(".show_supplier").eq(i).find("span:last").append(btn[i]);
+      $(".show_supplier").eq(i).find("span:last").attr("onclick","show_selectBorder("+i+")");
+      $(".show_supplier").eq(i).find("span:last").bind('click',function(){show_selectBorder(i)});//为兼容IE7
+    }
+    //选择菜单关闭按钮
+    $(".shade").click(function(){
+      if($(".tab1").hasClass("active"))
+      {
+        var i=0;
+      }
+      else{
+        var i=1;
+      }
+      $(".select_border").eq(i).fadeOut("fast");
+      $(".select_supplier").eq(i).css("background","url({% static 'img/supplier_down.png' %}) no-repeat center")
+      $("#warnning").hide();
+      $(".shade").css("display","none");
+    })
+    function close_selectBorder(i){
+      $(".select_border").eq(i).fadeOut("fast");
+      $(".shade").css("display","none");
+      $(".select_supplier").eq(i).css("background","url({% static 'img/supplier_down.png' %}) no-repeat center")
+    }
+    //点击“全部”供应商
+    function click_radio(i){
+      $(".tab"+i).find('.show_supplier span').remove();
+      var select=$(".tab"+i).find('.select_border :checkbox');
+      for(var j=0;j<select.length;j++)
+      {
+        if(select.eq(j).is(':checked'))
+        {
+          //选中单选按钮时，所有的复选框取消选中
+          select.eq(j).attr("checked",false);
+        }
+      }
+      //显示所有供应商
+      $(".tab"+i).find('.show_supplier').append("<span>全部</span>");
+      $("input[value='all']").eq(i-1).attr("checked","checked");
+      show_btn();
+    }
+    //设置弹窗的位置，点击“供应商”复选框
+    $(function(){
+      $(".select_border").each(function(){
+        $(this).css("top",(-5-$(".select_supplier").height()-$(".select_border").height())+"px");
+      })
+      for(var j=1;j<3;j++)
+      {
+        for(var i=0;i<$(".tab"+j).find('.select_border :checkbox').length;i++)
+        {
+          $(".tab"+j).find('.select_border :checkbox').eq(i).click(function(){
+            var select_border=$(this).parents(".select_border");
+            var show_supplier=$(this).parents('.select_border').siblings('.show_supplier');
+            if($(this).is(':checked'))
+            {
+              //选中复选框时，单选按钮是否选中
+              if(select_border.find("input[value='all']").is(':checked'))
+              {
+                select_border.find("input[value='all']").attr("checked",false);
+                show_supplier.find('span').remove();
+                show_supplier.append("<span>"+$(this).val()+"</span>")
+                show_btn();
+              }
+              else{
+                if(show_supplier.find("span:first").text()=='全部')
+                {
+                  show_supplier.find("span").remove();
+                  show_supplier.append("<span>"+$(this).val()+"</span>")
+                }
+                else{
+                  show_supplier.find("span:last").after("<span>"+$(this).val()+"</span>");
+                }
+                show_btn();
+              }
+            }
+            else{
+              //复选框取消选中时，在展示区去掉该供应商
+              var list=show_supplier.find("span");//展示区的供应商
+              for(var i=0;i<list.length;i++)
+              {
+                if($(this).val()==list.eq(i).text())
+                {
+                  if(list.length==1)
+                  {
+                    //如果展示区没有供应商了
+                    list.eq(i).remove();
+                    select_border.find("input[type='radio']").click();
+                  }
+                  else{
+                    list.eq(i).remove();
+                    show_btn();
+                  }
+                }
+              }
+            }
+          })
+        }
+      }
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,49 @@
+/*屏幕宽度小于1190px的时候*/
+@media screen and (max-width: 1190px) {
+  /*首页主内容部分*/
+  .topAdv {
+    width: 930px;
+  }
+  .container {
+    width: 960px;
+  }
+  .container .left {
+    width: 140px;
+  }
+  .container .right {
+    width: 760px;
+  }
+  .container .right .search .con {
+    margin-left: 0;
+  }
+  .container .right .search p {
+    margin-left: 0;
+  }
+  .container .right .banner {
+    height: 214px;
+  }
+  .container .right .banner .big li {
+    width: 560px;
+    height: 214px;
+  }
+  .container .right .banner .big li img {
+    width: 560px;
+    height: 214px;
+  }
+  .container .right .small li {
+    width: 200px;
+    height: 107px;
+  }
+  .container .right .small li img {
+    width: 200px;
+    height: 107px;
+  }
+  .container .right .link {
+    padding: 0;
+  }
+  .container .right .link dl {
+    width: 140px;
+    margin-right: 50px;
+    margin-left: 0;
+  }
+}

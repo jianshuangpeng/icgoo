@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+  ICGOO商城--注册
+{% endblock %}
+
+{% block container %}
+<div class="accounts" type='login'>
+    <div class="register">
+        <div class="top"><i></i><span id="title">会员注册</span><span>或</span><a href="{% url 'accounts:user_login' %}">登录已有账号</a></div>
+        <div class="content">
+            <form name="register" action="{% url 'accounts:user_register' %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <ul>
+                <li><div class="item"><span>*</span>用户类型</div><label><input type="radio" checked name="type" value='company' autocomplete="off">企业</label><label><input type="radio" name="type" value="personal" autocomplete="off">个人</label></li>
+                <li id="company"><div class="item"><span>*</span>公司全称</div><input type="text" name="company" autocomplete="on"><span>请填写贵公司营业执照中的完整名称，以后如需更改，需再次提供营业执照副本</span><i></i></li>
+                <li id="contacts"><div class="item"><span>*</span>联系人姓名</div><input type="text" class="small_text" name="surname" autocomplete="on" placeholder="姓氏"><input type="text" class="small_text" name="name" id="name" autocomplete="on" placeholder="名称"><i></i><span>请填写准确的联系人姓名</span></li>
+                <li><div class="item"><span>*</span>手机</div><input type="text" name="phone" autocomplete="on"><span>作为您的登录账号，以及密码找回等服务</span><i></i></li>
+                <li><div class="item"><span>*</span>手机验证码</div><div id="border"><input id="ver_code" type="text" name="code" autocomplete="on"><div id="btn_get">获取验证码</div></div><div id="des"><b>60</b>秒后可再获取</div><i></i></li>
+                <li><div class="item"><span>*</span>密码</div><input type="password" name="password" autocomplete="on"><span>密码需大于６位，可输入字母、数字、英文标点</span><i></i></li>
+                <li><div class="item"><span>*</span>确认密码</div><input type="password" name="password_again" autocomplete="on"><i></i></li>
+                <li id="licence"><div class="item"><span>*</span>上传营业执照</div><div id="file"><input type="text" readonly name="file" autocomplete="on"><div id="btn_file">选择文件</div></div><i></i><span>作为审核的重要凭证之一</span><input type="file" name="upload" autocomplete="on"></li>
+                <li><div id="code" class="item"><span>*</span>验证码</div><div id="validate_sec">{{ capform }}</div></li>
+                <li><div class="item">Email</div><div id="email_border"><input type="text" name="email" autocomplete="on"><ul></ul></div><i></i><span>作为您的登录账号，以及密码找回等服务</span></li>
+                <li id="small_text"><div class="item">固定电话</div><input class="small_text" type="text" name="area_code" placeholder="区号" autocomplete="on"><span class="word">—</span><input id="tel" class="small_text" name="telephone" type="text" placeholder="座机" autocomplete="on"><span class="word">转</span><input class="small_text" type="text" name="extensionnumber" autocomplete="on"><i></i><span>为了提高订货效率，请输入准确的座机号</span></li>
+                <li><div class="item"></div><label><input type="checkbox" name="clause" autocomplete="on">我已阅读并同意《<a target="_blank" href="{% url 'ad' url='clause' %}">ICGOO相关服务条款</a>》</label><i></i></li>
+            </ul>
+            <input type="button" value="确认注册">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block footerjs%}
+<script src="{% static 'js/validate.js' %}"></script>
+<script src="{% static 'js/change_code.js' %}"></script>
+<script>
+    $(function(){
+        /*　文本框获得/失去焦点时右边的提示显示/隐藏　*/
+        $(".content").find("input[type='text'],input[type='password']").each(function(){
+            $(this).on('focus',function(){
+                if($(this).hasClass("small_text"))
+                {
+                    $(this).siblings("span:last").show();
+                }
+                else if($(this).attr("name")=='file')
+                {
+                    $(this).parent().next("span").show();
+                }
+                else{
+                    $(this).next("span").show();
+                }
+                if($(this).attr('name')=='surname' || $(this).attr('name')=='name')
+                {
+                    check_status($("input[name='surname']"));
+                }
+                else if($(this).attr('name')=='area_code' || $(this).attr('name')=='telephone' || $(this).attr('name')=='extensionnumber')
+                {
+                    check_status($("input[name='telephone']"));
+                }
+                else{
+                    check_status($(this));
+                }
+            });
+            $(this).on('blur',function(){
+                if($(this).hasClass("small_text"))
+                {
+                    $(this).siblings("span:last").hide();
+                }
+                else if($(this).attr("name")=='file')
+                {
+                    $(this).parent().next("span").hide();
+                }
+                else{
+                    $(this).next("span").hide();
+                }
+                if(!$(this).hasClass('hover'))  //防止选择邮箱的时候，没等到提示邮箱填到输入框，输入框就失去焦点
+                {
+                    validate($(this),'login');//验证
+                }
+            });
+        });
+        /*　点击“企业”或“个人”的时候，显示/隐藏相应部分　*/
+        $(".content").find("input[type='radio']").each(function(){
+            $(this).on('click',function(){
+                if($(this).parent().text()=='个人')
+                {
+                  $("#company").hide();
+                  $("#licence").hide();
+                }
+                else{
+                  $("#company").show();
+                  $("#licence").show();
+                }
+            })
+        });
+        /*　营业执照点击选择文件　*/
+        $("#btn_file").on('click',function(){
+            $("input[name='upload']").click();
+        })
+        /*  选择文件的时候  */
+        $("input[name='upload']").on('change',function(){
+            var $file = $("input[name='file']");
+            $("input[name='file']").val($(this).val());
+            if($file.hasClass('validated_error'))
+            {
+                $file.removeClass('validated');
+                $file.parents("li").find('i').prop('class','').end().find("p").remove();
+            }
+            validate_sucess('file');
+        });
+        /*  关闭专属客服询问窗口  */
+        $("#window").find("span").each(function(){
+            $(this).on('click',function(){
+                $("#window").hide();
+            })
+        })
+        /* 输入邮箱的时候，提示可选邮箱 */
+        $("input[name='email']").on('keyup',function(){
+            var list = ['@qq.com','@hotmail.com','@yahoo.com','@sina.com','@163.com','@126.com','@sina.cn','@vip.sina.com'],dom,
+                $print = $(this).val(),
+                $ul = $("#email_border ul");
+            $ul.empty().addClass('show');
+            for(var i = 0;i<list.length;i++)
+            {
+                dom = '<li>'+$print+list[i]+'</li>'
+                $ul.append(dom);
+                $ul.find("li:last").on('click',function(){
+                    $("input[name='email']").val($(this).text());
+                    $ul.empty().removeClass('show');
+                    $("input[name='email']").removeClass('hover').focus().blur(); //防止选择邮箱的时候，没等到提示邮箱填到输入框，输入框就失去焦点
+                })
+            }
+        })
+        /* 点击其它部分，关闭可选邮箱提示 */
+        $(document).on('click',function(){
+            var $ul = $("#email_border ul");
+            if($ul.hasClass('show'))
+            {
+                $ul.empty().removeClass('show');
+            }
+        })
+        /* 鼠标悬浮在邮箱选项的时候，添加hover类，否则去掉*/
+        $("#email_border ul").hover(function(){
+            $("input[name='email']").addClass('hover')
+        },function(){
+            $("input[name='email']").removeClass('hover')
+        })
+    })
+    /* 点击“确认注册”检查用户输入的信息 */
+    $("input[type='button']").on('click',function(){
+        var $type = $("input[name='type']:checked").val(),
+            $name,$company,$file,$password,$password_again,$clause,$email;
+        $name = validate("input[name='surname']",'login');
+        $phone = validate("input[name='phone']",'login');
+        $password = validate("input[name='password']",'login');
+        $password_again = validate("input[name='password_again']",'login');
+        $clause = $("input[name='clause']").is(":checked");
+        $email = validate("input[name='email']",'login');
+        $area_code = validate("input[name='area_code']",'login');
+        $telephone = validate("input[name='telephone']",'login');
+        $extensionnumber = validate("input[name='extensionnumber']",'login');
+        if(!$clause)
+        {
+            validate_error('clause','请阅读《ICGOO相关服务条款》,并勾选同意')
+        }
+        if($type == 'personal')
+        {
+            if($name && $phone && $password && $password_again && $clause && $email && $area_code && $telephone && $extensionnumber)
+            {
+                register.submit();
+            }
+        }
+        else{
+            $company = validate("input[name='company']",'login');
+            $file = validate("input[name='file']",'login');
+            if($name && $company && $phone && $password && $password_again && $file && $clause && $email && $area_code && $telephone && $extensionnumber)
+            {
+                register.submit();
+            }
+        }
+
+    })
+    /*  点击“同意条款”　*/
+    $("input[name='clause']").on('click',function(){
+        if($(this).is(":checked"))
+        {
+            if($(this).hasClass('validated_error'))
+            {
+                $(this).removeClass('validated_error');
+                $(this).parents('li').find('i').removeClass('error').empty().end().find('p').remove();
+            }
+        }
+        else{
+            validate_error('clause','请阅读《ICGOO相关服务条款》,并勾选同意')
+        }
+    })
+</script>
+{% endblock %}

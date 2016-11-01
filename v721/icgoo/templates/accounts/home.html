@@ -1,0 +1,104 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    个人中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="account_menu">
+        <ul class="menu_f">
+            <li><div id="iconDd" class="icon"></div><div class="menu_title">订单中心</div>
+                <ul class="second_ul">
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=quote">报价单</a></li>
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=order">当前订单</a></li>
+                    <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+                </ul>
+            </li>
+            <li><div id="iconWl" class="icon"></div><div class="menu_title">物流中心</div>
+              <ul>
+                <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+                <li><a href="{% url 'accounts:user_goodsarriveport'%}">货已到港</a></li>
+                <li><a href="{% url 'accounts:user_customer_finish'%}">报关</a></li>
+                <li><a href="{% url 'accounts:user_already_instorage' %}">已入库</a></li>
+                <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+                <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+                <li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="account_con">
+        <div class="home_tip">
+            <div id="img_notice"></div>
+            <p>
+                ICGOO商城将于元旦期间（1月1日-1月3日）放假三天。在此期间商城会为您提供不间断服务。祝您元旦快乐，幸福康泰。
+            </p>
+            <span onclick="closeInfo()">x</span>
+        </div>
+        <div class="base_message">
+            <div class="base_left">
+                <div class="mes_tit">
+                    <p>{{ user.username }}, <span><a href="{% url 'accounts:user_logout' %}">[退出账号]</a></span>
+                        <span class="icon" id="icon_vip"></span><!--vip图标-->
+                        <span class="icon" id="icon_yj"></span><!--月结图标-->
+                    </p>
+                    <p>公司名称： <span>{{user.company}}{{data.company_name}}</span></p>
+                    <div class="my_server"></div>
+                </div>
+            </div>
+            <div class="base_right">
+                <!--<ul>
+                    {% for one in small %}
+                    <li>
+                        <img src="{{ one.imgpath }}" alt="" />
+                    </li>
+                    {% endfor %}
+                </ul>-->
+                <div class="banner">
+                    <ul id="big" class="big">
+                        <li index='1' class="active">
+                            <a href="">
+                                <img src="../../statics/img/banner/small/rad1.png" alt="" />
+                            </a>
+                        </li>
+                        <li index='2' >
+                            <a href="">
+                                <img src="../../statics/img/banner/small/rad2.png" alt="" />
+                            </a>
+                        </li>
+                    </ul>
+                    <div id="icon" class="icon">
+                        <a index='1' href="javascript:void(0)" class="active"></a>
+                        <a index='2' href="javascript:void(0)" ></a>
+                    </div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="sale_info">
+            <div class="sale_img"></div>
+            <ul>
+                <li>客服&nbsp;:&nbsp;{{sale.name}}</li>
+                <li>QQ&nbsp;:&nbsp;{{sale.qq}}</li>
+                <li>电话&nbsp;:&nbsp;{{sale.phone}}</li>
+                <li>手机&nbsp;:&nbsp;{{sale.mobile}}</li>
+                <li>email&nbsp;:&nbsp;{{sale.email}}</li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

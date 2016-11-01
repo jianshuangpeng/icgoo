@@ -1,0 +1,125 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+<link rel="stylesheet" href="{% static "css/information.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    个人中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="account_menu">
+        <ul class="menu_f">
+            <li><div id="iconDd" class="icon"></div>
+                <div class="menu_title">订单中心</div>
+                <ul class="second_ul">
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=quote">报价单</a></li>
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=order">当前订单</a></li>
+                    <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+                </ul>
+            </li>
+            <li><div id="iconWl" class="icon"></div>
+                <div class="menu_title">物流中心</div>
+                <ul>
+                  <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+                  <li><a href="">货已到港</a></li>
+                  <li><a href="{% url 'accounts:user_customer_finish'%}">报关</a></li>
+                  <li class="active"><a href="{% url 'accounts:user_already_instorage' %}">已入库</a></li>
+                  <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+                  <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+                  <li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="main">
+        <div class="left">
+            <h6>修改头像</h6>
+            <div class="line_gray"><div class="line_red"></div></div>
+            <div class="left_change">
+                <form action="" method="">
+                  <div class="btn" onclick="upload()"><span>选择上传图片</span></div>
+                  <input type="file" id="path" onchange="preview(this)" style="height:0px;border:0px" accept="image/png,image/jpeg,image/gif,image/BMP">
+                  <p>仅支持JPG、GIF、PNG、JPEG、BMP格式，文件小于4M</p>
+                  <div id="preview"></div>
+                  <input type="submit"  value="保存"/>
+                </form>
+            </div>
+            <div class="right_change">
+                <span>效果预览</span>
+                <p>你上传的图片会自动生成2种尺寸，请注意小尺寸的头像是否清晰</p>
+                <div class="content">
+                    <div class="small_pic"><div id="headImage1"></div><span>60*60像素</span></div>
+                    <div class="small_pic"><div id="headImage2"></div><span>60*60像素</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div class="banner">
+                <ul id="big" class="big">
+                    <li index='1' class="active">
+                        <a href="">
+                            <img src="../../statics/img/banner/small/rad1.png" alt="" />
+                        </a>
+                    </li>
+                    <li index='2' >
+                        <a href="">
+                            <img src="../../statics/img/banner/small/rad2.png" alt="" />
+                        </a>
+                    </li>
+                </ul>
+                <div id="icon" class="icon">
+                    <a index='1' href="javascript:void(0)" class="active"></a>
+                    <a index='2' href="javascript:void(0)" ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    function upload()
+    {
+        document.getElementById("path").click();
+    }
+    function preview(file)
+    {
+        var prevDiv = document.getElementById('preview');
+        var headImage1=document.getElementById('headImage1');
+        var headImage2=document.getElementById('headImage2');
+        if (file.files && file.files[0])
+        {
+            var reader = new FileReader();
+            reader.onload = function(evt){
+            prevDiv.innerHTML = '<img src="' + evt.target.result + '" />';
+            headImage1.innerHTML = '<img src="' + evt.target.result + '" />';
+            headImage2.innerHTML = '<img src="' + evt.target.result + '" />';
+          }
+          reader.readAsDataURL(file.files[0]);
+        }
+        else
+        {
+          if(document.selection)
+          {
+            file.select();
+            file.blur();
+            var src=document.selection.createRange().text;
+            prevDiv.innerHTML = '<div class="img" style="filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + src + '\'"></div>';
+            headImage1.innerHTML = '<div class="img1" style="width:60px;height:60px;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + src + '\'"></div>';
+            headImage2.innerHTML = '<div class="img2" style="width:60px;height:60px;border-radius:30px;filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src=\'' + src + '\'"></div>';
+          }
+        }
+     }
+    </script>
+{% endblock %}

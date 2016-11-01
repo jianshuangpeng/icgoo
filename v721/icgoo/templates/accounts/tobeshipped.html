@@ -1,0 +1,305 @@
+{% extends "account_base.html" %}
+{% load account_tags %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    未入库--物流中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="account_menu">
+        <ul class="menu_f">
+            <li><div id="iconDd" class="icon"></div>
+                <div class="menu_title">订单中心</div>
+                <ul class="second_ul">
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}">当前订单</a></li>
+                    <li>
+                        <a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a>
+                    </li>
+                </ul>
+            </li>
+            <li><div id="iconWl" class="icon"></div>
+                <div class="menu_title">物流中心</div>
+                <ul>
+                  <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+                  <li><a href="{% url 'accounts:user_goodsarriveport'%}">货已到港</a></li>
+                  <li><a href="{% url 'accounts:user_customer_finish'%}">报关完成</a></li>
+                  <!-- <li class="active"><a href="{#% url 'accounts:user_alreadyinstorage_tobeshipped' %#}">待发货</a></li>
+                  <li><a href="{#% url 'accounts:user_stockpicking_self' %#}">待自提</a></li> -->
+                  <li><a href="{% url 'accounts:user_already_instorage' %}">已入库</a></li>
+                  <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+                  <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+                  <!--<li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>-->
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="account_con">
+        {% if user.jyinfo.jy_partner_id %}
+        <div class="picking">
+            <form action="javascript:void(0)" method="GET" style="position:relative">
+                <div class="marchDiv"><ul></ul></div>
+                <label for="">输入型号查询:</label>
+                <input type="text" autocomplete="off" onkeyup="marchpartno()" id="partno">
+                <input type="button" class="btn_smt" value="查询" onclick="showMessage()">
+            <label for="del_city">库房：</label>
+            <select name="del_city" id="location">
+                <option value="" selected="">显示全部</option>
+                <option value="香港库房" {%if request.GET.del_city == '香港库房' %}selected{%endif%}>香港库房</option>
+                <option value="深圳库房" {%if request.GET.del_city == '深圳库房' %}selected{%endif%}>深圳库房</option>
+            </select>
+            <label for="del_states">发货状态：</label>
+            <select name="del_states" id="states">
+                <option value="">显示全部</option>
+                <option value="not_available" {% if request.GET.del_states == 'not_available' %}selected{% endif %}>待发货</option>
+                <option value="qty_confirmed" {% if request.GET.del_states == 'qty_confirmed' %}selected{% endif %}>正在备货</option>
+                <!-- <option value="confirmed" {#% if request.GET.del_states == 'confirmed' %#}selected{#% endif %#}>打包完成</option> -->
+            </select>
+            <label for="del_type">发货方式：</label>
+            <select name="del_type" id="deliverytype">
+                <option value="">显示全部</option>
+                <option value="到齐后发" {% if request.GET.del_type == '到齐后发' %}selected{% endif %}>到齐后发</option>
+                <option value="货到即发" {% if request.GET.del_type == '货到即发' %}selected{% endif %}>货到即发</option>
+            </select>
+            </form>
+        </div>
+        <div class="picking_result">
+
+        </div>
+        <div class="pagewrap"></div>
+        {% else %}
+            您未绑定！
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/logistical.js' %}"></script>
+<script type="text/javascript">
+    //型号查询中，型号框值输入变化触发事件
+    function marchpartno(){
+      pagerows = totalrows;
+      $('pagewrap').css('display','none')
+      $("#partno").val($("#partno").val().trim().toUpperCase());
+      var marStr = new Array();
+      var str = '';
+      {% for picking in data %}
+        {% if picking.lines_count > 0 %}
+        {% for key,values in picking.lines.items %}
+          {% for value in values %}
+          var flag = true; //表示型号还没有加入过
+          var partno = '{{value.name}}';
+          if($("#partno").val().trim() != '' && $("#partno").val().trim() != '0'){
+            if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+              for(var i=0;i<marStr.length;i++){
+                if(partno == marStr[i]){
+                  flag = false;
+                  break;
+                }
+              }
+              if(flag){
+                marStr.push(partno);
+                partno = partno.replace(new RegExp($("#partno").val(),'g'),'<font color="#6f6f6f" class="bold">'+$("#partno").val()+'</font>');
+                str += '<li onclick="partnoSearch(this)">'+ partno +'</li>';
+                flag = false;
+              }
+            }
+          }
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      $(".marchDiv").show();
+      $(".marchDiv ul").html(str);
+      showMessage();
+    }
+
+    var totalrows = {{totalrows}}  //获取一共有多少条数据
+    var currentpage = 1;           //当前是第几页
+    var pagerows = 5;              //一页显示多少条数据
+    var pagecount = 0              //一共有多少页
+    if(totalrows % pagerows == 0){
+      pagecount = Math.floor(totalrows / pagerows);
+    }else{
+      pagecount = Math.floor(totalrows / pagerows + 1);
+    }
+
+    function showMessage(){
+      var str = '';
+      var flag1 = flag2 = flag3 = flag4 = false;
+      {% for picking in data %}
+      var index = {{ forloop.counter }}
+      if(index > (currentpage-1)*pagerows && index <= currentpage*pagerows){
+      {% if picking.lines_count > 0 %}
+        //型号查询
+        {% for key,values in picking.lines.items %}
+          {% for value in values %}
+            if($("#partno").val() == '请输入产品型号'){
+              $("#partno").val('');
+            }
+            var partno = '{{value.name}}';
+            if($("#partno").val().trim() == '' || $("#partno").val().trim() == partno){
+              flag1 = true;
+            }else if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+              flag1 = true;
+            }
+          {% endfor %}
+        {% endfor %}
+        //库房
+        if($("#location").val() == '' || $("#location").val() == '{{picking.location}}'){
+          flag2 = true;
+        }
+        //发货状态
+        var state = '{{picking.state}}';
+        if(state == 'assigned'){
+          state = 'not_available';
+        }
+        if($("#states").val() == '' || $("#states").val() == state){
+          flag3 = true;
+        }
+        //发货方式
+        if($("#deliverytype").val() == '' || $("#deliverytype").val() == '{{picking.deliverytype}}'){
+          flag4 = true;
+        }
+        if(flag1 && flag2 && flag3 && flag4){
+          str += '<div class="picking_border">'
+              + '<p>'
+              +    '<span>发货单号:<strong>{{picking.name}}</strong></span>'
+              +    '<span>条目数:{{picking.lines_count}}</span>'
+              +    '<span>库房:{{picking.location}}</span>'
+              +    '<span>交货地:{{picking.location|slice:"2"}}</span>'
+              +    '<span style="float:right;margin-right:15px">收获方式：邮寄</span>'
+              // +    '<span>发货方式:{#{picking.deliverytype}#}</span>'
+              // +    '<span>发货状态:'
+              // +          '<strong class="rc">'
+              //           {#% if picking.state == 'not_available' or picking.state == 'assigned' %#}
+              // +            '待发货'
+              //           {#% elif picking.state == 'qty_confirmed' %#}
+              // +            '正在备货'
+              //           {#% elif picking.state == 'confirmed' %#}
+              // +            '打包完成'
+              //           {#% else %#}
+              // +            '{#{picking.state}#}'
+              //           {#% endif %#}
+              // +          '</strong>'
+              // +    '</span>'
+              +'</p>'
+              +'<table border="1">'
+              +    '<tr>'
+              +        '<th width="10%">订单号</th>'
+              +        '<th width="14%">型号</th>'
+              +        '<th width="14%">厂家</th>'
+              +        '<th width="10%">供应商</th>'
+              +        '<th width="8%">单价</th>'
+              +        '<th width="8%">采购数量</th>'
+              +        '<th width="8%">入库数量</th>'
+              +        '<th width="14%">入库时间</th>'
+              +        '<th width="14%">说明</th>'
+              +    '</tr>'
+                  {% for so, lines in picking.lines.items %}
+                  {% with forloop as forloop_one %}
+                  {% for one in lines %}
+              +    '<tr>'
+                      {% if forloop.first %}
+              +        '<td rowspan="{{lines|length}}" class="bgf2">{{so}}</td>'
+                      {% endif %}
+              +        '<td>'
+              +            '<span class="cA31">{{one.name}}</span>'
+              +        '</td>'
+              +        '<td>{{one.mfr}}</td>'
+              +        '<td>{{one.supplier|title}}</td>'
+              +        '<td>{{one.price}}</td>'
+              +        '<td>{{one.order_qty}}</td>'
+              +        '<td>'
+                          {% for o in one.ins %}
+              +            '{{o.0}}<br/>'
+                          {% endfor %}
+              //             {#% for o in one.latest_state %#}
+              //               {#% if o.state == 'st_in_done' %#}
+              // +               '{#{o.qty}#}<br/>'
+              //               {#% endif %#}
+              //             {#% endfor %#}
+              +        '</td>'
+              +        '<td>'
+              +               '{{picking.write_time}}'
+              //             {#% for o in one.latest_state %#}
+              //               {#% if o.state == 'st_in_done' %#}
+              // +               '{#{o.time}#}<br/>'
+              //               {#% endif %#}
+              //             {#% endfor %#}
+              +        '</td>'
+                        {% if forloop.first %}
+              +        '<td rowspan="{{picking.lines_count}}">'
+                          {% if not picking.account_flag %}
+              +             '<span class="cA31">未付款</span>'
+                          {% elif picking.notarrivenum != 0 %}
+              +             '<span class="cA31">货未到齐</span><br/>'
+              +             '<span style="color:#E8B9C0">未到条目:' + {{picking.notarrivenum}} + '</span>'
+                          {% else %}
+              +             '等待打印出库单'
+                          {% endif %}
+                        {% endif %}
+              +    '</tr>'
+                  {% endfor %}
+                  {% endwith %}
+                  {% endfor %}
+              +   '</table>'
+              +   '</div>'
+        }
+        flag1 = flag2 = flag3 = flag4 = false;
+        {% endif %}
+      }
+        {% endfor %}
+        $(".picking_result").html(str);
+    }
+
+    function show_status(sol, obj){
+        var flag = $(obj).attr('index');
+        var bgcolor = $(obj).attr('class').substr(2);
+        if(flag == '0'){
+            partnerId = '{{partnerid}}';
+            var curP = $(obj).offset()
+            leftP = curP.left - 90;
+            topP = curP.top + 20;
+            $(".detail_state").remove();
+            $.ajax({
+                url: '{% url "accounts:user_stockpickinglineroute" %}',
+                type: 'GET',
+                data: {'sol': sol, 'partnerId': partnerId,'bgcolor':bgcolor},
+                success: function(data){
+                    // $(".picking_result").append(data);
+                    $(".picking_result").append(data)
+                    $(".picking_result .detail_state").css({
+                        'top': topP,
+                        'left': leftP
+                    });
+                    $(obj).attr('index', '1')
+                },
+                error: function(){}
+            })
+        }else{
+            $(".detail_state").remove();
+            $(obj).attr('index', '0')
+        }
+    }
+    function close_detail(obj, sol){
+        $(".detail_state").remove();
+        $("." + sol).attr('index', '0')
+    }
+</script>
+{% endblock %}

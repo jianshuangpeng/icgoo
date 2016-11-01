@@ -1,0 +1,67 @@
+{% extends "about_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}" >
+<link rel="stylesheet" href="{% static 'css/rochAd.css' %}" >
+{% endblock %}
+
+{% block titlename %}
+Rochester 停产料推广
+{% endblock %}
+
+{% block container %}
+<div class="rochAd-main">
+    <div class="adTop">
+        <img class="ad-1" src="{% static 'img/supplier/ad1.png' %}" alt="" />
+        <h2>TI 正式授权 Rochester 可持续生产 TI 数位讯号处理器系列</h2>
+        <p>罗彻斯特电子已与德州仪器合作,并获得授权可持续支持生产以延长
+            TI数位讯号处理器系列在指定设备上的产品生命周期。
+        </p>
+        <img class="ad-2" src="{% static 'img/supplier/ad3.png' %}" alt="" />
+    </div>
+    <div class="adBottom">
+        <div class="bot-left">
+            <img src="{% static 'img/supplier/ad2.png' %}" alt="" />
+            <p>罗彻斯特电子</p>
+            <p>是NXP授权</p>
+            <p>产品生命周期</p>
+            <p>解决方案</p>
+            <p>供应商</p>
+            <p>通过授权许可</p>
+            <p>并转移产能给</p>
+            <p>罗彻斯特电子</p>
+            <p>具备长期</p>
+            <p>支持生产</p>
+            <p>的能力</p>
+        </div>
+        <div class="bot-right">
+            <div class="right-title">
+                <h3>MC68020 &MC68040</h3>
+                <p><i>NXP/Freescale</i> 正式授权</p>
+                <p><i>Rochester</i> 可持续生产制造</p>
+            </div>
+            <div class="right-con">
+                <img src="{% static 'img/supplier/ad4.png' %}" alt="" />
+                <p>1984 年, 摩托罗拉推出这款经典的 32 位微处理器 MC68020, 直到今天仍然
+                    被广泛应用在许多产品, 包括在 2015 年的电影“史蒂夫 乔布斯”里占重要地位
+                    的苹果 Macintosh II, 以及许多其他消费和工业类产品。<br>
+                    罗彻斯特电子于 2016 年重新引入, 这是首次从摩托罗拉引入完整的 32 位
+                    MC68000 微处理器。
+                </p>
+                <img src="{% static 'img/supplier/ad5.png' %}" alt="" />
+                <p>1990年, 摩托罗拉推出 MC68030 的继承者 MC68040 这款 32 位微处理器。
+                    MC68040 是可兼容, 高性能的 M68000 系列第四代 32 位微处理器。<br>
+                    它们整合兼容 MC68030 的整数单元和两个独立的缓存。<br>
+                    MC68040 包含双、独立、页码需求内存管理单元(MMUs)指令,
+                    以及数据流访问、独立的 4-kbyte 指令和数据缓存。<br>
+                    MC68040 包含一个兼容 MC68881/MC68882 的浮点单元(FPU)。
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="adFooter">
+        ICGOO.NET作为Rochester中国区首家也是最具实力的授权代理商，为您提供最优质的订货服务，详情请咨询<a href="http://www.icgoo.net">ICGOO.NET</a>.
+    </div>
+</div>
+{% endblock %}

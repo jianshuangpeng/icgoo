@@ -1,0 +1,183 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/search.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    搜索--{{partno}}
+{% endblock %}
+
+{% block searchfloat %}
+    <div id="search_float">
+    <h3 class="logo">
+        <a href="{% url 'mainpage' %}" title="回到首页">
+            <img src="{% static "img/logo.png" %}" alt="电子原件">
+        </a>
+    </h3>
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{ qty }}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配1</label>
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+    <div class="server">
+        <ul>
+            <li>全国销售热线：<span>400-660-6568</span></li>
+            <li>售后服务电话：<span>{{service_phone.content}}</span></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <!-- <a href="#">ADIS16251ACCZ</a>
+            <a href="#">STY130NF20D</a>
+            <a href="#">MK-AOB3202405N</a> -->
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配</label>
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="breadlink">
+        <p>
+            <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+            <a href="javascript:void(0)">搜索</a> <span class="line">></span>
+            <span>{{partno_view|upper}}</span>
+        </p>
+        <p class="tip">
+            ICGOO为您找到
+            <span id="total_count">0</span>
+            家供应商关于<span id="partno" alt="{{partno_view|upper}}" title="{{partno_view|upper}}">{{partno_view|upper}}</span> 的供应信息
+        </p>
+        <p style="float:right">
+            <a href="{% url 'search:search_grid'%}?partno={{partno}}&qty={{qty}}">
+                <img src="{% static 'img/grid.jpg' %}" alt="网格">
+            </a>
+            <a href="{% url 'search:search'%}?partno={{partno}}&qty={{qty}}">
+                <img src="{% static 'img/list_a.jpg' %}" alt="列表">
+            </a>
+        </p>
+    </div>
+    <div class="filter">
+        <h3>供应商筛选：</h3>
+        <p id="a_sups">
+            <a href="javascript:void(0)" onclick="reset_sup(this, 1)" class="topall active">
+                全部
+                <SUP>X</SUP>
+            </a>
+        </p>
+    </div>
+    <!-- <div class="toolbar">
+        <ul>
+            <li class="active"><a href="#">综合排序</a></li>
+            <li><a href="#">价格最优</a></li>
+            <li><a href="#">库存最多</a></li>
+            <li><label>
+                <input type="radio" name="show_type" id="show_type" value="0">模糊查询
+            </label></li>
+            <li>
+                <a href="#" class="grid"><img src="{% static "img/grid.png" %}" alt=""></a>
+            </li>
+            <li class="active">
+                <a href="#" class="list"><img src="{% static "img/list.png" %}" alt=""></a>
+            </li>
+            <li>
+                <form action="">
+                    <span>采购数量</span>
+                    <input type="text" class="src_qty" name="qty" id="qty">
+                    <input type="submit" class="src_btn" value="查询">
+                </form>
+            </li>
+        </ul>
+    </div> -->
+    <div class="results" id="topcontainer">
+        <div class="loading" id="loading">
+            <!--<div style="height:20px;color:#666">查询中</div>-->
+            <img src="{% static 'img/loading1.gif' %}" alt="数据加载中...">
+            <!-- 暂无信息 -->
+        </div>
+    </div>  <!--results end-->
+    <div class="partno_detail" id="partno_detail">
+        <div class="s_img">
+            <img src="{% static 'img/index.png' %}" alt="">
+        </div>
+        <div class="word">
+            <h3>型号说明：</h3>
+            <p></p>
+        </div>
+    </div>
+{% endblock %}
+{% block other %}
+<div class="left_filter">
+    <ul id="left_sup" class="list_left">
+
+    </ul>
+</div>
+{% endblock %}
+
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static "js/server.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/search.js" %}"></script>
+<script type="text/javascript">
+    $(function() {
+        var partno = '{{ partno }}';
+        var qty = parseInt({{ qty }});
+        var supps = '{{ sups }}';
+        var part_no = $("#partno").text();
+        //如果搜索型号长度大于10，则截取型号的前10个字符并加上'...'
+        if(part_no.length>10)
+        {
+          part_no = part_no.substr(0,10);
+          part_no+='...';
+        }
+        $("#partno").text(part_no);
+        if (supps != ''){
+            var sups = supps.split(',');
+            for (var i in sups) {
+                url = "/search/getdata/?sup=" + sups[i] + "&partno=" + partno + '&qty=' + qty;
+                getdata(url);
+                }
+        }
+        setTimeout(noinfo, 10000);
+        function noinfo(){
+            var flag = $("#loading").is(':hidden');
+            if(!flag){
+                $("#loading").append('<p>暂无信息</p>').find('img').hide();
+            }
+        };
+    });
+</script>
+
+{% if from_icnet == '1'%}
+ <script type="text/javascript">
+  $(function(){
+    //var qq = $.cookie('QQ_link');
+    window.open('http://wpa.qq.com/msgrd?v=3&uin={{sales.0.qq}}&site=www.icgoo.net&menu=yes');
+  })
+ </script>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" type="text/css" href="{% static "css/home.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "css/account.css" %}" />
+{% endblock %}
+
+
+{% block titlename %}
+    ICGOO商城--收货地址管理
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock %}
+
+{% block container %}
+    <div class="account_menu">
+        <ul class="menu_f">
+            <li><div id="iconDd" class="icon"></div><div class="menu_title">订单中心</div>
+                <ul>
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}">当前订单</a></li>
+                    <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+                </ul>
+            </li>
+            <li><div id="iconWl" class="icon"></div><div class="menu_title">物流中心</div>
+                <ul>
+                    <li>
+                        <a href="{% url 'accounts:user_stockpicking'%}">未发货</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:user_stockpicking_self' %}">未自提</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'accounts:user_stockpicking_self_finished' %}">已自提</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="accounts">
+        <div class="address_left">
+            <h3>
+                <span>收货地址</span>
+            </h3>
+            <div class="address_tit">
+                <a id="add_newAddress" href="">新增收货地址</a>
+                <span>电话号码、手机号选填一项，其余均为必填项</span>
+            </div>
+            <form action="" method="post">
+                <ul>
+                    <li>
+                        <span>所在地区&nbsp;<i style="color:#cc0000">*</i></span>
+                        <input id="address_pro" type="text" name="addresspro">
+                        <input id="address_cit" type="text" name="addresscit">
+                    </li>
+                    <li>
+                        <span>详细地址&nbsp;<i style="color:#cc0000">*</i></span>
+                        <textarea class="address_detail"></textarea>
+                    </li>
+                    <li>
+                        <span>邮政编码</span>
+                        <input class="zip_code" type="text" name="zipcode">
+                    </li>
+                    <li>
+                        <span>收货人姓名&nbsp;<i style="color:#cc0000">*</i></span>
+                        <input class="ship_name" type="text" name="shipname">
+                    </li>
+                    <li>
+                        <span style="text-indent:20px;">手机号码</span>
+                        <input class="mobile_phone" type="text" name="mobilephone">
+                    </li>
+                    <li>
+                        <span style="text-indent:20px;">电话号码</span>
+                        <input class="phone_no" type="text" name="phoneno">
+                    </li>
+                </ul>
+                <div class="default_set">
+                    <input type="radio" class="set_radio" name="set_def">设置为默认收货地址
+                </div>
+                <div class="login_btn">
+                    <input type="submit" class="sub_btn" name="save" value="保存">
+                </div>
+            </form>
+            <div class="address_count">
+                <p>已有 <span>3</span> 条收货地址</p>
+                <div class="address_list">
+                    <table class="address_table">
+                        <tr>
+                            <th>收货人</th>
+                            <th>所在地区</th>
+                            <th>详细地址</th>
+                            <th>邮编</th>
+                            <th>电话/手机</th>
+                            <th>操作</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td style="width:105px;">张先生</td>
+                            <td style="width:300px;">广东省 深圳市 福
+                                田区 福田街道</td>
+                            <td style="width:320px;">福虹路9号 世贸广场 A
+                                座5楼 501B室</td>
+                            <td>518033</td>
+                            <td style="width:175px;">0755-83665159
+                                13*******94</td>
+                            <td style="width:175px;">
+                                <a href="">修改</a>&nbsp;|&nbsp;<a href="">删除</a>
+                            </td>
+                            <td>
+                                <input class="default_address" type="button" name="default_address" value="默认地址">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:105px;">张先生</td>
+                            <td style="width:300px;">广东省 深圳市 福
+                                田区 福田街道</td>
+                            <td style="width:320px;">福虹路9号 世贸广场 A
+                                座5楼 501B室</td>
+                            <td>518033</td>
+                            <td style="width:175px;">0755-83665159
+                                13*******94</td>
+                            <td style="width:175px;">
+                                <a href="">修改</a>&nbsp;|&nbsp;<a href="">删除</a>
+                            </td>
+                            <td>
+                                <input class="set_default" type="button" name="default_address" value="设为默认">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="width:105px;">张先生</td>
+                            <td style="width:300px;">广东省 深圳市 福
+                                田区 福田街道</td>
+                            <td style="width:320px;">福虹路9号 世贸广场 A
+                                座5楼 501B室</td>
+                            <td>518033</td>
+                            <td style="width:175px;">0755-83665159
+                                13*******94</td>
+                            <td style="width:175px;">
+                                <a href="">修改</a>&nbsp;|&nbsp;<a href="">删除</a>
+                            </td>
+                            <td>
+                                <input class="set_default" type="button" name="default_address" value="设为默认">
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="base_right address_right">
+            <div class="banner">
+                <ul id="big" class="big">
+                    <li index='1' class="active">
+                        <a href="">
+                            <img src="{% static "img/banner/small/rad1.png" %}" alt="" />
+                        </a>
+                    </li>
+                    <li index='2' >
+                        <a href="">
+                            <img src="{% static "img/banner/small/rad2.png" %}" alt="" />
+                         </a>
+                    </li>
+                </ul>
+                <div id="icon" class="icon">
+                    <a index='1' href="javascript:void(0)" class="active"></a>
+                    <a index='2' href="javascript:void(0)" ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

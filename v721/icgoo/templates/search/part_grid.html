@@ -1,0 +1,153 @@
+{% load staticfiles %}
+
+{% for tmp_b in result %}
+<input type="hidden" name="supp_name" class="supp_name" value="{{sup}}">
+<div class="grid" id="{{sup}}_{{ forloop.counter }}">
+    <h3>
+        <img src="{% static sup_logo %}" alt="{{ sup }}">
+        <span>
+            {% if tmp_b.limit.2 == 1 %}
+            <img src="{% static 'img/ccc/jian.jpg' %}" alt="">
+            {% endif %}
+            {% if tmp_b.limit.2 == 5 %}
+            <img src="{% static 'img/ccc/ccc.jpg' %}" alt="">
+            {% endif %}
+            {% if tmp_b.limit.2 == 6 %}
+            <img src="{% static 'img/ccc/jyun.jpg' %}" alt="">
+            {% endif %}
+            {% if tmp_b.limit.2 == 4 %}
+            <img src="{% static 'img/ccc/xheshi.jpg' %}" alt="">
+            {% endif %}
+            {% if tmp_b.limit.2 == 3 %}
+            <img src="{% static 'img/ccc/xheshi.jpg' %}" alt="">
+            {% endif %}
+        </span>
+    </h3>
+    <div class="clear"></div>
+    <p title="{% autoescape off %}{{ tmp_b.new_partno|striptags }}{% endautoescape %}" alt="{% autoescape off %}{{ tmp_b.new_partno|striptags }}{% endautoescape %}" >
+      <span class="partno">
+        {% autoescape off %}
+        {{ tmp_b.new_partno }}
+        {% endautoescape %}
+      </span>
+    </p>
+    <p class="stock_p">
+        <span>库存数量: {{tmp_b.stock}}</span>
+        <span style="display:none">{{tmp_b.min_qty}}</span>
+        <span style="display:none">{{tmp_b.mult}}</span>
+        <span>
+            {% if tmp_b.rohs == 'Y' %}
+            <img src="{% static 'img/ccc/rohs.jpg'%}" alt="环保无铅" title="环保无铅">
+            {% endif %}
+        </span>
+    </p>
+    <div class="clear"></div>
+    <div class="price">
+        <dl>
+            <dt>
+                <span>起订量</span>
+                <span>香港交货</span>
+                <span>国内含税</span>
+            </dt>
+            {% for tmp_c in tmp_b.new_price_calc %}
+            <dd {% if forloop.counter == 1 %}class="rc bold"{%endif%}>
+                <span>{{ tmp_c.quantity }}+</span>
+                <span>
+                {% if tmp_c.price_hkusd %}
+                    ${{ tmp_c.price_hkusd }}
+                    {%else%}
+                    --
+                {% endif %}
+                </span>
+                <span>￥{{ tmp_c.price_dlrmb }}</span>
+            </dd>
+            {% endfor %}
+        </dl>
+    </div>
+    <p class="more">
+        <a href="javascript:void(0)" onclick="grid_detail(this)" >点击查看详细</a>
+    </p>
+    <span class="grid_sj"></span>
+
+    <div class="detail_info">
+        <table width="100%">
+            <tr>
+                <th width="12%">制造商</th>
+                <th width="12%">库位  |  库存</th>
+                <th width="12%">批号  |  数量</th>
+                <th width="28%">
+                    <span class="tag">起订量</span>
+                    <span class="tag">香港交货</span>
+                    <span class="tag">国内含税</span>
+                </th>
+                <th width="10%">货期</th>
+                <th width="12%">其它</th>
+                <th width="14%">操作</th>
+            </tr>
+            <tr>
+                <td>{{ tmp_b.mfr }}</td>
+                <td>{{ tmp_b.stock }}<br>
+                    <span class="rc stock_warning" style="display:none">
+                        库存不足
+                    </span>
+                </td>
+                <td class="dc">
+                    <ul>
+                    {% for dc in tmp_b.new_dc %}
+                        <li>
+                            <span class="dc_span">{{dc.0}}</span>
+                            <span>{{dc.1}}</span>
+                        </li>
+                    {% endfor %}
+                    </ul>
+                </td>
+                <td class="price">
+                    <ul>
+                        {% for tmp_c in tmp_b.price_calc %}
+                        <li>
+                            <span>{{ tmp_c.quantity }}+</span>
+                            <span>
+                            {% if tmp_c.price_hkusd %}
+                            ${{ tmp_c.price_hkusd }}
+                            {%else%}
+                            --
+                            {% endif %}
+                            </span>
+                            <span>￥{{ tmp_c.price_dlrmb }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    {% if tmp_b.delvery_hk %}
+                    香港:{{tmp_b.delvery_hk}}<br>
+                    {% endif %}
+                    国内:{{tmp_b.delvery_dl}}
+                </td>
+                <td>
+                    <p class="min_num">最小起订量：{{tmp_b.min_qty}}</p>
+                    <p>倍数：{{tmp_b.mult}}</p>
+                    {% if tmp_b.product_tax %}
+                    <p>额外关税:
+                        <span class="rc bold">
+                            {{tmp_b.product_tax}}
+                        </span>
+                    </p>
+                    {% endif %}
+                </td>
+                <td>
+                    <p>内地：<span class="priceDl"></span></p>
+                    <p>香港：<span class="priceHk"></span></p>
+                    <div class="qty_box">
+                        <a href="javascript:void(0)" onclick="qty_dowm('{{tmp_b.min_qty}}', '{{tmp_b.stock}}','{{tmp_b.mult}}', this, 'false')">-</a>
+                        <input type="text" name="buy_qty" value="{{qty}}" onchange="check_qty('{{tmp_b.min_qty}}','{{tmp_b.stock}}','{{tmp_b.mult}}', this)" {% if tmp_b.min_qty > tmp_b.stock %}disabled{% endif %}>
+                        <a href="javascript:void(0)" onclick="qty_up('{{tmp_b.min_qty}}','{{tmp_b.stock}}','{{tmp_b.mult}}', this, 'false')">+</a>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="grid_no"></div>
+
+</div>
+{% endfor %}

@@ -1,0 +1,148 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+<link rel="stylesheet" href="{% static "css/responsive.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    首页
+{% endblock %}
+{% block topadv%}
+{% if tops %}
+<div style="width:100%; background:#fee4a7">
+<div class="topAdv">
+    <span>
+        <img src="{% static "img/gg.png" %}">
+    </span>
+    {{tops.imgpath}}
+    <a href="javascript:void(0)" onclick="$(this).parents('div').hide()">关闭</a>
+</div>
+</div>
+{% endif %}
+{%endblock%}
+
+
+{% block container %}
+    <div class="left">
+        <h3>
+            <span>我们的供应商</span>
+        </h3>
+        <ul>
+            <li>
+                <img src="{% static 'img/supplier/mouser.jpg' %}" alt="mouser">
+                <!-- <span><font class="fz16">85</font>折起</span> -->
+            </li>
+            <li>
+                <a href="{% url 'supplier:rochester' %}"><img src="{% static 'img/supplier/roch.jpg' %}" alt="Rochester"></a>
+                <!--<span><font class="fz16">98</font>折起</span> -->
+            </li>
+            <li>
+                <img src="{% static 'img/supplier/future.jpg' %}" alt="">
+                <!-- <span><font class="fz16">95</font>折起</span> -->
+            </li>
+            <li>
+                <img src="{% static 'img/supplier/arrow.jpg' %}" alt="">
+                <!-- <span><font class="fz16">9</font>折起</span> -->
+            </li>
+            <li>
+                <img src="{% static 'img/supplier/verical.jpg' %}" alt="">
+                <!-- <span><font class="fz16">85</font>折起</span> -->
+            </li>
+            <li>
+                <img src="{% static 'img/supplier/chip1stop.jpg' %}" alt="">
+                <!-- <span><font class="fz16">9</font>折起</span> -->
+            </li>
+            <li class="last">
+                <img src="{% static 'img/supplier/online.jpg' %}" alt="">
+                <!-- <span><font class="fz16">95</font>折起</span> -->
+            </li>
+        </ul>
+    </div>
+    <!--end of left-->
+    <!--right start-->
+    <div class="right">
+        <!-- search start -->
+        <div class="search">
+            <div class="con">
+                <form action="/search" method="get" class="srcform">
+                    <input class="partno" type="text" name="partno" value="请输入产品型号">
+                    <input class="qty" type="text" name="qty" value="采购数量">
+                    <input class="submit_btn" type="submit" value="搜索">
+                </form>
+                <a class="bom_btn" href="{% url 'search:mult_index' %}">批量询价</a>
+            </div>
+            <div class="clear"></div>
+            <p>
+                <a href="/search/?partno=ADIS16251ACCZ&qty=1">ADIS16251ACCZ</a>
+                <a href="/search/?partno=STY130NF20D&qty=1">STY130NF20D</a>
+                <a href="/search/?partno=MK-AOB3202405N&qty=1">MK-AOB3202405N</a>
+                <a href="/search/?partno=LT3599EFE&qty=1">LT3599EFE</a>
+                <a href="/search/?partno=SFHR-02V-R&qty=1">SFHR-02V-R</a>
+            </p>
+        </div>
+        <!-- search end -->
+        <!-- banner start -->
+        <div class="banner">
+            <ul id="big" class="big">
+                {% for one in centers %}
+                <li index='{{ forloop.counter }}' {% if forloop.first %}class="active"{% endif %}>
+                    <a href="{{ one.href }}">
+                        <img src="{{ one.imgpath }}" alt="" />
+                    </a>
+                </li>
+                {% endfor %}
+            </ul>
+            <ul id="small" class="small">
+                {% for one in small %}
+                <li>
+                    <img src="{{ one.imgpath }}" alt="" />
+                </li>
+                {% endfor %}
+            </ul>
+
+            <div id="icon" class="icon">
+                {% for one in centers %}
+                <a index='{{ forloop.counter }}' href="javascript:void(0)" {% if forloop.first %}class="active"{% endif %}></a>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!-- banner end -->
+        <!-- menu start -->
+        <div class="link">
+            <dl>
+                <dt><span>新手上路</span></dt>
+                <!-- <dd><a href="#">注册帐号</a></dd>
+                <dd><a href="#">找回密码</a></dd> -->
+                <dd><a href="{% url "help:howto-order" %}">怎样询价</a></dd>
+                <!-- <dd><a href="#">怎样下订单</a></dd> -->
+            </dl>
+            <dl>
+                <dt><span>购物指南</span></dt>
+                <dd><a href="{% url "help:pay-method"%}">支付方式</a></dd>
+                <dd><a href="{% url "help:invoice-system"%}">发票制度</a></dd>
+                <dd><a href="{% url "help:refund-system"%}">退款制度</a></dd>
+                <dd><a href="{% url "help:cargo-tracking"%}">货物跟踪</a></dd>
+                <dd><a href="{% url "help:get-by-yourself"%}">上门自提</a></dd>
+            </dl>
+            <dl>
+                <dt><span>消费保障</span></dt>
+                <dd><a href="{% url "help:service-promise"%}">服务及质量保证承诺</a></dd>
+                <dd><a href="{% url "help:exchange-help"%}">退换货政策及流程</a></dd>
+                <dd><a href="{% url "help:shipping-charges"%}">运费收取标准</a></dd>
+                <dd><a href="{% url "help:deliver-time-station"%}">配送时间和配送范围</a></dd>
+                <dd><a href="{% url "help:help_solve"%}">售后常见问题解答</a></dd>
+            </dl>
+            <dl class="last">
+                <dt><span>帮助中心</span></dt>
+                <!-- <dd><a href="">客户建议</a></dd> -->
+                <!-- <dd><a href="">客户投诉</a></dd> -->
+                <dd><a href="{% url "help:howto_faq"%}">常见问题</a></dd>
+            </dl>
+        </div>
+        <!-- menu end -->
+    </div>
+{% endblock %}

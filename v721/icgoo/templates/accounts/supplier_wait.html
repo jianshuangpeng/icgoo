@@ -1,0 +1,325 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    当前订单--订单中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn" type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="account_menu">
+        <ul class="menu_f">
+            <li style="position:relative"><div id="iconDd" class="icon"></div>
+                <div class="menu_title">订单中心</div>
+                <ul class="second_ul">
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}">当前订单</a></li>
+                    <li><!--<a href="{#% url 'accounts:user_saleorderlist_al' %#}">历史订单</a>-->
+                        <a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a>
+                    </li>
+                </ul>
+            </li>
+            <li style="position:relative"><div id="iconWl" class="icon"></div>
+                <div class="menu_title">物流中心</div>
+                {% comment %}
+                <ul>
+                    <li class="active"><a href="{% url 'accounts:user_supplier_wait'%}">待供应商发货</a></li>
+                    <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+                    <li><a href="{% url 'accounts:user_customer_d'%}">正在报关中</a></li>
+                    <li><a href="{% url 'accounts:user_customer_finish'%}">报关已完成</a></li>
+                    <li><a href="{% url 'accounts:user_alreadyinstorage_tobeshipped' %}">待发货</a></li>
+                    <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+                    <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+                    <li><a href="{% url 'accounts:user_stockpicking_self' %}">待自提</a></li>
+                </ul>
+                {% endcomment %}
+                <ul>
+                  <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+                  <li><a href="">货已到港</a></li>
+                  <li><a href="{% url 'accounts:user_customer_finish'%}">报关完成</a></li>
+                  <li><a href="{% url 'accounts:user_alreadyinstorage_tobeshipped' %}">待发货</a></li>
+                  <li><a href="{% url 'accounts:user_stockpicking_self' %}">待自提</a></li>
+                  <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+                  <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+                  <li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>
+                </ul>
+            </li>
+            <li style="position:relative"><div id="iconDd" class="icon"></div>
+                <div class="menu_title">购物车</div>
+                <ul class="second_ul">
+                    <li><a href="{% url 'accounts:user_saleorderlist' %}">查看购物车</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="account_con">
+        {% if user.jyinfo.jy_partner_id %}
+        <div class="picking">
+            <form action="." method="GET" style="position:relative">
+                <div class="marchDiv"><ul></ul></div>
+                <label for="">输入型号查询:</label>
+                <!-- <input type="text" name="partno" autocomplete="off" id="partno" value="{% if partno %}{{partno}}{% else %}{% endif %}"> -->
+                <input type="text" name="partno" autocomplete="off" id="partno" onkeyup="marchpartno()">
+                <input type="button" class="btn_smt" value="查询" onclick="showMessage()">
+                <label for="">按日期查询：</label>
+                <input type="text" class="laydate-icon" id="demo" name="date" value="{{date}}">
+                <label for="deliverycity">交货地：</label>
+                <select name="deliverycity" id="deliverycity">
+                    <option value="">显示全部</option>
+                    <option value="香港" {%if request.GET.deliverycity == 'hk' %}selected{%endif%}>香港</option>
+                    <option value="深圳" {%if request.GET.deliverycity == 'sz' %}selected{%endif%}>深圳</option>
+                    <option value="北京" {%if request.GET.deliverycity == 'bj' %}selected{%endif%}>北京</option>
+                </select>
+                <label for="carriertype">收货方式：</label>
+                <select name="carriertype" id="carriertype">
+                    <option value="">显示全部</option>
+                    <option value="自提" {%if request.GET.carriertype == 'self' %}selected{%endif%}>自提</option>
+                    <option value="邮寄" {%if request.GET.carriertype == 'express' %}selected{%endif%}>邮寄</option>
+                    <option value="邮寄（到付）">邮寄（到付）</option>
+                </select>
+            </form>
+        </div>
+        <div class="picking_result">
+
+        </div>
+        <div class="pagewrap"></div>
+        {% else %}
+            您未绑定！
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/laydate/laydate.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datecommon.js' %}"></script>
+<script>
+    $(function(){
+      $('.picking_result table tr:last').css('border',0);
+    });
+    //日期背景颜色变化
+    function marchDateColor(){
+      setTimeout(function(){
+        $('.laydate_body .laydate_table td').each(function(){
+          $(this).css('border',0)
+          var year = $('#laydate_y').val().substr(0,4);
+          var month = $('#laydate_m').val().substr(0,2);
+          data = '';
+          if(!$(this).hasClass('laydate_nothis')){
+            $(this).css({'background':'#fff','color':'#333'});
+            var day = $(this).text().trim();
+            if(day.length < 2){
+              day = '0' + day;
+            }
+            data = year + '-' + month + '-' + day;
+            {% if data %}
+            {% for picking in data %}
+              var time = "{{picking.confirm_date}}";
+              time = time.replace('/','-').replace('/','-');
+              var currentDate = time.substr(0,10);
+              if(currentDate == data){
+                if(!$(this).hasClass('laydate_nothis')){
+                    $(this).css({'background':'#FF9233','color':'#fff','border':'1px solid #fff'});
+                    // $('<span style="width:15px;height:15px;border:1px solid #fff;color:#fff;background:#FF9233">123</span>').appendTo($(this))
+                }else{
+
+                }
+              }else{
+
+              }
+            {% endfor %}
+            {% endif %}
+          }else{
+            $(this).css({'background':'#fff','color':'#999'});
+          }
+        });
+      },10);
+    }
+
+    //型号查询中，型号框值输入变化触发事件
+    function marchpartno(){
+      pagerows = totalrows;
+      $('pagewrap').css('display','none')
+      $("#partno").val($("#partno").val().trim().toUpperCase());
+      var marStr = new Array();
+      var str = '';
+      {% for order in data %}
+        {% for sol in order.sols %}
+          var flag = true; //表示型号还没有加入过
+          var partno = '{{sol.partno}}';
+          if($("#partno").val().trim() != '' && $("#partno").val().trim() != '0'){
+            if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+              for(var i=0;i<marStr.length;i++){
+                if(partno == marStr[i]){
+                  flag = false;
+                  break;
+                }
+              }
+              if(flag){
+                marStr.push(partno);
+                partno = partno.replace(new RegExp($("#partno").val(),'g'),'<font color="#6f6f6f" class="bold">'+$("#partno").val()+'</font>');
+                str += '<li onclick="partnoSearch(this)">'+ partno +'</li>';
+                flag = false;
+              }
+            }
+          }
+        {% endfor %}
+      {% endfor %}
+      $(".marchDiv").show();
+      $(".marchDiv ul").html(str);
+      // showMessage();
+      showMessage();
+    }
+
+    var totalrows = {{totalrows}}  //获取一共有多少条数据
+    var currentpage = 1;           //当前是第几页
+    var pagerows = 5;              //一页显示多少条数据
+    var pagecount = 0              //一共有多少页
+    if(totalrows % pagerows == 0){
+      pagecount = Math.floor(totalrows / pagerows);
+    }else{
+      pagecount = Math.floor(totalrows / pagerows + 1);
+    }
+
+    function showMessage(){
+      var str = '';
+      var flag1 = flag2 = flag3 = flag4 = false;
+      if($('#partno').val() == '请输入产品型号'){
+         $("#partno").val('');
+      }
+      {% for order in data %}
+      var index = {{ forloop.counter }}
+      if(index > (currentpage-1)*pagerows && index <= currentpage*pagerows){
+        {% for sol in order.sols %}
+          var partno = '{{sol.partno}}';
+          if($("#partno").val().trim() == '' || $("#partno").val().trim() == partno){
+            flag1 = true;
+          }else if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+            flag1 = true;
+          }
+        {% endfor %}
+        var confirm_date = '{{order.confirm_date}}';
+        confirm_date = confirm_date.replace('/','-').replace('/','-').substr(0,10);
+        if($("#demo").val() == '' || $("#demo").val() == confirm_date){
+          flag2 = true;
+        }
+        if($("#deliverycity").val() == '' || $("#deliverycity").val() == '{{order.delivery_city}}'){
+          flag3 = true;
+        }
+        var carrier_type = '{{order.carrier_type}}';
+        if(carrier_type.indexOf('寄付')>=0){
+          carrier_type = '邮寄';
+        }else if(carrier_type.indexOf('到付')>=0){
+          carrier_type = '邮寄（到付）';
+        }else if(carrier_type == 'EMS'){
+          carrier_type = '邮寄';
+        }
+        if($("#carriertype").val() =='' || $("#carriertype").val() == carrier_type){
+          flag4 = true;
+        }/*else if($("#carriertype").val()=='邮寄' && carrier_type == 'EMS'){
+          flag4 = true;
+        }*/
+
+        if(flag1 && flag2 && flag3 && flag4){
+          str += '<div class="picking_border">'
+              +'<p>'
+              +    '<span>订单号:<strong>{{order.so_name}}</strong></span>'
+              +    '<span>提交日期：{{order.confirm_date}}</span>'
+              +    '<span>条目数:{{order.sol_num}}</span>'
+              +    '<span>交货地:{{order.delivery_city}}</span>'
+              +    '<span>收货方式:'+carrier_type+'</span>'
+              +    '<span>订单状态:'
+              +        '<strong class="rc">交易中</strong>'
+              +    '</span>'
+              +'</p>'
+              +'<table border="1">'
+              +    '<tr style="line-height:40px">'
+              +        '<th width="16%">型号</th>'
+              +        '<th width="13%">厂家</th>'
+              +        '<th width="7%">供货商</th>'
+              +        '<th width="6%">订货数量</th>'
+              +        '<th width="8%">单价</th>'
+              +        '<th width="8%">小计</th>'
+              +        '<th width="4%">货期</th>'
+              +        '<th width="8%">备注</th>'
+              +        '<th width="6%">采购数量</th>'
+              +        '<th width="23%">采购时间</th>'
+              +    '</tr>'
+                  {% for line in order.sols %}
+              +    '<tr>'
+              +        '<td><span class="rc">{{line.partno}}</span></td>'
+              +        '<td>{{line.mfr}}</td>'
+              +        '<td>{{line.supplier|title}}</td>'
+              +        '<td>{{line.product_qty}}</td>'
+              +        '<td>{{line.money_type}}{{line.sale_unit_price}}</td>'
+              +        '<td>{{line.money_type}}{{line.total}}</td>'
+              +        '<td>{{line.delivery_date}}</td>'
+              +        '<td>{{line.note}}</td>'
+              +        '<td>'
+                      {% for o in line.latest_state %}
+                        {% if o.qty == line.product_qty %}
+              +           '{{o.qty}}'
+                        {% endif %}
+                      {% endfor %}
+              +        '</td>'
+              +        '<td class="{{line.sol_id}}">'
+              +            '2016-04-25 14:42:51'
+              +        '</td>'
+              +    '</tr>'
+                  {% endfor %}
+              + '</table>'
+              + '</div>'
+        }
+        flag1 = flag2 = flag3 = flag4 = false;
+      }
+        {% endfor %}
+        $(".picking_result").html(str);
+    }
+
+    function show_status(rid, obj){
+        var flag = $(obj).attr('index')
+        var bgcolor = $(obj).attr('class').substr(2);
+        if(flag == '0'){
+            var curP = $(obj).offset()
+            leftP = curP.left - 90;
+            topP = curP.top + 20;
+            $(".detail_state").remove();
+            $.ajax({
+                url: '{% url "accounts:user_saleorderlineroute" %}',
+                type: 'GET',
+                // TODO NEED a sol_id add by lidong
+                data: {'rid': rid, 'sol':rid,'bgcolor':bgcolor},
+                success: function(data){
+                    // $(".picking_result").append(data);
+                    $(".picking_result").append(data)
+                    $(".picking_result .detail_state").css({
+                        'top': topP,
+                        'left': leftP
+                    });
+                    $(obj).attr('index', '1')
+                },
+                error: function(){}
+            })
+        }else{
+            $(".detail_state").remove();
+            $(obj).attr('index', '0')
+        }
+    }
+    function close_detail(obj, sol){
+        $(".detail_state").remove();
+        $("." + sol).attr('index', '0')
+    }
+</script>
+{% endblock %}

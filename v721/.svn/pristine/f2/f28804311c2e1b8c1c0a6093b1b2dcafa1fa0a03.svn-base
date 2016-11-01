@@ -1,0 +1,97 @@
+{% extends "help_base.html" %}
+
+{% block titlename %}
+  发票制度--客户服务
+{% endblock %}
+
+{% block breadlink %}
+  发票制度
+{% endblock%}
+
+{% block helpcontent %}
+    <h3><span>发票制度</span></h3>
+    <div class="helpcon">
+        <ul class="invoice-system">
+            <h4> 1. 发票政策</h4>
+            <li>
+                <table>
+                    <tr>
+                        <th>发票性质</th>
+                        <td>&nbsp;我们为您提供的是增值税专用发票和普通发票</td>
+                    </tr>
+                    <tr>
+                        <th>开票资料</th>
+                        <td>
+                            <ul>
+                              <li>&nbsp;1)公司名称</li>
+                              <li>&nbsp;2)税号</li>
+                              <li>&nbsp;3)地址及电话</li>
+                              <li>&nbsp;4)开户银行</li>
+                              <li>&nbsp;5)银行账号</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>温馨提示</th>
+                        <td>
+                            &nbsp;我们为您订购的产品系正规报关的商品，发票内容必须与报关的品名一一对应，而不能根据您的需要开具如"办公用品、礼品"等内容的发票，敬请谅解！</td>
+                    <tr>
+                </table>
+            </li>
+        </ul>
+       <br/>
+        <ul class="invoice-system">
+            <h4>2. 索取发票</h4>
+            <li>
+            <table >
+                <tr>
+                    <th>索取发票</th>
+                    <td>&nbsp;我们为您直接寄送增值税票至指定的地址</td>
+                </tr>
+                <tr>
+                    <th>寄票信息</th>
+                    <td>
+                        <ul>
+                          <li>&nbsp;1)公司名称</li>
+                          <li>&nbsp;2)地址</li>
+                          <li>&nbsp;3)电话</li>
+                          <li>&nbsp;4)收票人</li>
+                        </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>温馨提示</th>
+                    <td>&nbsp;我们申请的发票需要由相关税务机构审批，因此，为您寄送的发票可能不会与您订购的商品一起到达，敬请谅解！</td>
+                </tr>
+            </table>
+            </li>
+        </ul>
+       <br/>
+        <ul class="invoice-system">
+            <h4>3. 换开发票</h4>
+            <li>
+            <table>
+                <tr>
+                    <th>换开发票有效期</th>
+                    <td>&nbsp;在您收到发票后三个月内有效</td>
+                </tr>
+                <tr>
+                    <th>换开发票</th>
+                    <td>
+                      <ul>
+                        <li>&nbsp;1)请您直接与我们联系，在换开发票的有效期内将原发票寄送至指定地址</li>
+                        <li>&nbsp;2)同时填写一份《换开发票申请》发邮件或传真至ICGOO客服中心</li>
+                        <li>&nbsp;3)电话</li>
+                        <li>&nbsp;4)收票人</li>
+                      </ul>
+                    </td>
+                </tr>
+                <tr>
+                    <th>温馨提示</th>
+                    <td>&nbsp;我们申请的发票需要由相关税务机构审批，因此，为您寄送的发票可能不会与您订购的商品一起到达，敬请谅解！</td>
+                </tr>
+            </table>
+            </li>
+        </ul>
+  </div>
+{% endblock %}

@@ -1,0 +1,130 @@
+{% load account_tags %}
+
+<div class="detail_state" style="width:350px;z-index:3">
+    <!-- <ul>
+      <li class="title" style="background:#FFF0F0">
+          <span class="ptdetail">短信发送</span>
+          <span class="close" onclick="close_detail(this)"></span>
+      </li>
+        <li style="position:relative;height:45px;line-height:45px">
+            <input class="span_detail_t" placeholder="请输入手机号码" onkeyup="checknum(this)" type="text">
+            <input class="sms_btn" type="button" value="获取提货码" onclick="send(this)">
+        </li>
+        <li style="position:relative;height:auto;">
+            <div style="width:90%;height:40px;line-height:20px;margin:0 auto;border-top:1px dashed #e4e4e4">
+              <span>温馨提示：
+                  <font style="color:#666">如果您没有收到短信，请输入有效号码，点击按钮获取新的提货码。</font><br/>
+                  <font style="color:#cc0001">(一天最多只能发送3次)</font>
+              </span>
+
+            </div>
+        </li>
+    </ul> -->
+    <ul>
+      <li class="title" style="background:#FFF0F0">
+          <span class="ptdetail">查看提货码</span>
+          <span class="close" onclick="close_detail(this)"></span>
+      </li>
+        <li style="position:relative;height:45px;line-height:45px">
+            <span style="margin-left:20px">您的提货码是：</span>
+            <span style="color:#cc0000">{{code.code}}</span>
+        </li>
+        <li style="position:relative;height:auto;">
+            <div style="width:90%;height:40px;line-height:20px;margin:0 auto;border-top:1px dashed #e4e4e4">
+              <span>温馨提示：
+                  <font style="color:#666">请妥善保管好您的提货码。</font><br/>
+              </span>
+
+            </div>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript">
+  // var seconds = 0;  //3分钟内只能发送一次短信,初始值为0.
+  // var sendnum = 3;
+  // if($.cookie('sendnum') == '' || $.cookie('sendnum') == null || $.cookie('sendnum') == 'NaN'){
+  //   $.cookie('sendnum',sendnum,{expires:1}) //一天只能发送三次
+  // }
+  // var t = '';
+  //
+  // //点击发送按钮
+  // function send(obj){
+  //   sendnum = $.cookie('sendnum')
+  //   if(sendnum <= 0){
+  //     $(obj).parent().prev().children('span:first').text('发送次数已达上限!').css('color','#cc0001');
+  //     $(obj).parent().next().css('display','block');
+  //     return;
+  //   }
+  //   var stockpicking = '{{stockpicking}}'
+  //   var phone = $(obj).prev().val();
+  //   if(!checkphone(phone,obj)){
+  //     return;
+  //   }
+  //   $(obj).parent().prev().children('span:first').text('短信发送中,请稍候..')
+  //   $(obj).attr('disabled',true);
+  //   $.ajax({
+  //       url: '{% url "accounts:user_get_deliver_code" %}',
+  //       type: 'GET',
+  //       data: {'stockpicking':stockpicking,'phone':phone},
+  //       success: function(data){
+  //         sendnum = $.cookie('sendnum');
+  //         sendnum -= 1;
+  //         $.cookie('sendnum',sendnum)
+  //         $(obj).parent().prev().children('span:first').text(data);
+  //         countdowntime();
+  //         // $(obj).attr('disabled',true);
+  //       },
+  //       error: function(){
+  //         // $(obj).parent().prev().children('span:first').text(data)
+  //       }
+  //   })
+  // }
+  // //设定只能输入数字
+  // function checknum(obj){
+  //   var value = $(obj).val();
+  //   value=value.replace(/[^\d]/g,'');
+  //   $(obj).val(value)
+  //   $(obj).parent().prev().children('span:first').text('短信发送').css('color','#666')
+  //   // $(obj).parent().next().css('display','none');
+  // }
+  // //验证手机号码输入
+  // function checkphone(phone,obj){
+  //   var message = ''
+  //   var flag = false;
+  //   if(phone == ''){
+  //     message = '<font style="color:red">手机号码不能为空!</font>';
+  //   }else if(!phone.match(/^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/)){
+  //     message = '<font style="color:red">手机号码格式错误!</font>';
+  //   }else{
+  //     message = '短信发送'
+  //     flag = true;
+  //   }
+  //   $(obj).parent().prev().children('span:first').html(message)
+  //   $(obj).prev().focus();
+  //   return flag;
+  // }
+  //
+  // //发送信息成功后，进入3分钟倒计时.
+  // function countdowntime(){
+  //   clearInterval(t)
+  //   if(seconds <= 0){
+  //       seconds = 180;
+  //   }
+  //   if(seconds > 0 && seconds <= 180){
+  //     t = setInterval(function(){
+  //       $('.ptdetail').text('3分钟内最多只能发一次('+seconds+')');
+  //       if(seconds > -1){
+  //           seconds --;
+  //           $('.sms_btn').attr('disabled',true);
+  //       }else{
+  //         $('.sms_btn').attr('disabled',false);
+  //         clearInterval(t);
+  //         $('.ptdetail').html("短信发送")
+  //       }
+  //     },1000);
+  //   }else{
+  //     $('.ptdetail').attr('disabled',true);
+  //     return;
+  //   }
+  // }
+</script>

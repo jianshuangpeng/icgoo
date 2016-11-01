@@ -1,0 +1,46 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+    <head>
+        <title>导出预览</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.18.1/build/cssnormalize/cssnormalize-min.css">
+        <style type="text/css">
+        h2{text-align: center}
+        table{font-size: 16px;font-family:Microsoft YaHei}
+        table th,td{border:1px solid #999;text-align: center}
+        .prompt {height:30px}
+        .prompt td{text-align: left;border:none;padding:0 2px}
+        .space{height:30px}
+        </style>
+    </head>
+    <body>
+        <h2>ICGOO.NET 在线商城批量查询报价单</h2>
+        <table>
+            <tr>
+                <td colspan="11"><img src="http://media.icgoo.net/v7static/img/result.png" width='100%'/></td>
+            </tr>
+            <tr>
+                <th>型号</th> <th>采购数量</th> <th>制造商</th> <th>供应商</th> <th>批号</th> <th>库存量</th> <th>倍数|起订量</th> <th>国内含税</th> <th>香港交货</th> <th>总计</th> <th>货期(工作日)</th>
+            </tr>
+            {% if table %}
+                {% for tr in table %}
+                    {% if tr != '' %}
+                    <tr>
+                        {% for td in tr %}
+                            <td>{{td}}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <tr class="space"></tr>
+            <tr class="prompt"><td colspan="11">温馨提示:</td></tr>
+            <tr class="prompt"><td colspan="11">1.此报价单结果仅供参考,请以实际下单数量、价格为准;</td></tr>
+            <tr class="prompt"><td colspan="11">2.此报价单结果仅供您查询当天参考,如超期请重新查询。</td></tr>
+            <tr class="space"></tr>
+            <tr class="prompt"><td colspan="11">数据导出时间:{{now}}</td></tr>
+            <tr class="prompt"><td colspan="11">联系我们:400-660-6568</td></tr>
+        </talbe>
+    </body>
+</html>

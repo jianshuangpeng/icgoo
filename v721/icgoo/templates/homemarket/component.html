@@ -1,0 +1,709 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+{% block style %}
+<link rel="stylesheet" href="{% static "css/search.css" %}">
+<link rel="stylesheet" href="{% static "css/homemarket.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+<style type="text/css">
+  .container{margin-top:0}
+  #select_box{width:100%;height: 45px;background-color: rgb(250,250,250);margin-bottom:15px;border-bottom:1px solid rgb(227,227,227);font-family: Microsoft YaHei;}
+  #select_box ul{margin-left:20px}
+  #select_box ul .hover{border:1px solid rgb(227,227,227);border-bottom-color:#fff;background-color: #fff;color:rgb(204,0,1);}
+  #select_box li{float:left;width:120px;height:38px;margin-top:6px;text-align: center;line-height: 38px;cursor: pointer;font-size:16px;font-weight: bold;}
+  #select_box p{float:left;font-size:12px;color:#666;height: 20px;margin:20px 0 0 20px;}
+  a.rc:hover{font-weight: bold;text-decoration: underline;}
+</style>
+<script src="{% static 'js/data_C.js' %}"></script>
+{% endblock %}
+
+{% block titlename %}
+    国产元器件
+{% endblock %}
+
+{% block searchfloat %}
+<div id="search_float">
+    <h3 class="logo">
+        <a href="{% url 'mainpage' %}" title="回到首页">
+            <img src="{% static "img/logo.png" %}" alt="电子原件">
+        </a>
+    </h3>
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{ qty }}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配</label>
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+    <div class="server">
+        <ul>
+            <li>全国销售热线：<span>400-660-6568</span></li>
+            <li>售后服务电话：<span>010-62586334</span></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_all">精确匹配</label>
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{partno}}', '{{qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+{% endblock%}
+
+{% block container %}
+  <div id="select_box">
+      <ul>
+          <li class="hover">电阻</li>
+          <li>电容</li>
+      </ul>
+      <p>后续内容敬请期待...</p>
+  </div>
+  <div class="section"> <!--电阻部分-->
+      <form action="." name="cn_ct" method="GET">
+        <input type="hidden" value="1" name="page">
+      <table>
+        <tr>
+          <td class="ver_al_t">
+              <div>制造商</div>
+              <ul class="ms-list w125">
+                  <label>
+                      <li class="ms-elem-selectable bgcurrent">
+                          <input name="zzs" class="ck" type="checkbox" checked="checked" disabled="disabled" value="风华高科">
+                          <span class="ck">风华高科</span>
+                      </li>
+                  </label>
+              </ul>
+          </td>
+          <td class="ver_al_t">
+            <div>额定功率</div>
+            <ul class="ms-list w125">
+              <label><li class="ms-elem-selectable {%if edgl == '' %}bgcurrent{%endif%}">
+                <input name="edgl" class="ck" type="checkbox" {%if edgl == '' %}checked{%endif%} value="">
+                <span class="ck">不限</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="edgl" class="ck" type="checkbox" value="常规功率系列">
+                <span class="ck">常规功率系列</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="edgl" class="ck" type="checkbox" value="提升功率系列">
+                <span class="ck">提升功率系列</span>
+              </li></label>
+            </ul>
+          </td>
+          <td class="ver_al_t">
+            <div>封装尺寸</div>
+            <ul class="ms-list w125">
+              <label><li class="ms-elem-selectable {%if fzcc == '' %}bgcurrent{%endif%}">
+                <input name="fzcc" class="ck" type="checkbox" {%if fzcc == '' %}checked{%endif%} value="">
+                <span class="ck">不限</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="0201">
+                <span class="ck">0201</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="0402">
+                <span class="ck">0402</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="0603">
+                <span class="ck">0603</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="0805">
+                <span class="ck">0805</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="1206">
+                <span class="ck">1206</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="1210">
+                <span class="ck">1210</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="2010">
+                <span class="ck">2010</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="fzcc" class="ck" type="checkbox" value="2512">
+                <span class="ck">2512</span>
+              </li></label>
+            </ul>
+          </td>
+          <td class="ver_al_t">
+            <div>电阻温度</div>
+            <ul class="ms-list w140">
+              <label><li class="ms-elem-selectable {%if dzwd == '' %}bgcurrent{%endif%}">
+                <input name="dzwd" class="ck" type="checkbox" {%if dzwd == '' %}checked{%endif%} value="">
+                <span class="ck">不限</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="跨接电阻">
+                <span class="ck">跨接电阻</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="±50ppm/℃">
+                <span class="ck">±50ppm/℃</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="±100ppm/℃">
+                <span class="ck">±100ppm/℃</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="±200ppm/℃">
+                <span class="ck">±200ppm/℃</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="±250ppm/℃">
+                <span class="ck">±250ppm/℃</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="±400ppm/℃">
+                <span class="ck">±400ppm/℃</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwd" class="ck" type="checkbox" value="±500ppm/℃">
+                <span class="ck">±500ppm/℃</span>
+              </li></label>
+            </ul>
+          </td>
+          <td class="ver_al_t">
+            <div>电阻</div>
+            <ul class="ms-list w100" id="dzlist">
+              <label><li class="ms-elem-selectable {%if dz == '' %}bgcurrent{%endif%}">
+                <input name="dz" class="ck" type="checkbox" {%if dz == '' %}checked{%endif%} value="">
+                <span class="ck">不限</span>
+              </li></label>
+              {% for one in dzdata %}
+                <label><li class="ms-elem-selectable">
+                  <input name="dz" class="ck" type="checkbox" value="{{one}}">
+                  <span class="ck">{{one}}</span>
+                </li></label>
+              {% endfor %}
+            </ul>
+          </td>
+          <td class="ver_al_t">
+            <div>电阻误差</div>
+            <ul class="ms-list" style="width:150px">
+              <label><li class="ms-elem-selectable {%if dzwc == '' %}bgcurrent{%endif%}">
+                <input name="dzwc" class="ck" type="checkbox" {%if dzwc == '' %}checked{%endif%} value="">
+                <span class="ck">不限</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwc" class="ck" type="checkbox" value="小于等于10毫Ω">
+                <span class="ck">小于等于10毫Ω</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwc" class="ck" type="checkbox" value="小于等于50毫Ω">
+                <span class="ck">小于等于50毫Ω</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwc" class="ck" type="checkbox" value="±0.5%">
+                <span class="ck">±0.5%</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwc" class="ck" type="checkbox" value="±1%">
+                <span class="ck">±1%</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwc" class="ck" type="checkbox" value="±2%">
+                <span class="ck">±2%</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="dzwc" class="ck" type="checkbox" value="±5%">
+                <span class="ck">±5%</span>
+              </li></label>
+            </ul>
+          </td>
+          <td class="ver_al_t">
+            <div>包装</div>
+            <ul class="ms-list w125">
+              <label><li class="ms-elem-selectable {%if packing == '' %}bgcurrent{%endif%}">
+                <input name="packing" class="ck" type="checkbox" {%if packing == '' %}checked{%endif%} value="">
+                <span class="ck">不限</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="packing" class="ck" type="checkbox" value="编带包装">
+                <span class="ck">编带包装</span>
+              </li></label>
+              <label><li class="ms-elem-selectable">
+                <input name="packing" class="ck" type="checkbox" value="塑料袋散装">
+                <span class="ck">塑料袋散装</span>
+              </li></label>
+            </ul>
+          </td>
+        </tr>
+      </table>
+      <input type="hidden" name="type" value="dz">
+    </form>
+        <div class="btndiv">
+          <input style="background:#cc0000;color:#fff" class="btn marR25" type="button" value="查询" onclick="document.forms['cn_ct'].submit()">
+          <input class="btn" type="button" value="重置" onclick="clearAll(0)">
+        </div>
+        <div class="picking_border">
+            <table>
+                <tr>
+                    <th>制造商</th>
+                    <th>型号</th>
+                    <th>额定功率</th>
+                    <th>封装尺寸</th>
+                    <th>电阻温度</th>
+                    <th>电阻</th>
+                    <th>电阻误差</th>
+                    <th>包装数量</th>
+                    <th>最小起定量</th>
+                    <th>倍数</th>
+                    <th>包装</th>
+                </tr>
+                {% if count > 0%}
+                  {% for result in results %}
+                <tr>
+                    <td>风华高科</td>
+                    <td><a class="rc" href="{% url 'search:search' %}?partno={{result.partno}}">{{result.partno}}</a></td>
+                    <td>{{result.edgl}}</td>
+                    <td>{{result.fzcc}}</td>
+                    <td>{{result.dzwd}}</td>
+                    <td>{{result.dz}}</td>
+                    <td>{{result.dzwc}}</td>
+                    <td>{{result.bzsl}}</td>
+                    <td>{{result.min_qty}}</td>
+                    <td>{{result.mult}}</td>
+                    <td>{{result.packing}}</td>
+                 </tr>
+                 {% endfor %}
+                {% else %}
+                <tr><td colspan="11" class="tc" style="color:#CC0000;font-size:18px">没有与您的搜索条件匹配的数据</td></tr>
+                {% endif %}
+            </table>
+        </div>
+        <div class="pagination"></div>
+    </div>
+    <div class="section" style="display:none"> <!--电容部分-->
+      <form action="." name="dr" method="GET">
+        <input type="hidden" value="1" name="page_C">
+      <table>
+        <tr>
+          <td class="ver_al_t" type='zzs'>
+              <div>制造商</div>
+              <ul class="ms-list w125">
+                <label>
+                    <li class="ms-elem-selectable bgcurrent">
+                        <input name="zzs" class="ck" type="checkbox" checked="checked" disabled="disabled" value="风华高科">
+                        <span class="ck">风华高科</span>
+                    </li>
+                </label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='drlx'>
+              <div>电容类型</div>
+              <ul class="ms-list w100">
+                  <label><li class="ms-elem-selectable {%if drlx == '' %}bgcurrent{%endif%}">
+                    <input name="drlx" class="ck" type="checkbox" {%if drlx == '' %}checked{%endif%} value="">
+                    <span class="ck">不限</span>
+                  </li></label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='wkdm'>
+              <div>外壳代码(英制单位)</div>
+              <ul class="ms-list w140">
+                <label><li class="ms-elem-selectable {%if wkdm == '' %}bgcurrent{%endif%}">
+                  <input name="wkdm" class="ck" type="checkbox" {%if wkdm == '' %}checked{%endif%} value="">
+                  <span class="ck">不限</span>
+                </li></label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='dr'>
+              <div>电容</div>
+              <ul class="ms-list w100">
+                <label><li class="ms-elem-selectable {%if dr == '' %}bgcurrent{%endif%}">
+                  <input name="dl" class="ck" type="checkbox" {%if dr == '' %}checked{%endif%} value="">
+                  <span class="ck">不限</span>
+                </li></label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='eddy'>
+              <div>额定电压</div>
+              <ul class="ms-list w100">
+                <label><li class="ms-elem-selectable {%if eddy == '' %}bgcurrent{%endif%}">
+                  <input name="dl" class="ck" type="checkbox" {%if eddy == '' %}checked{%endif%} value="">
+                  <span class="ck">不限</span>
+                </li></label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='rc'>
+              <div>容差</div>
+              <ul class="ms-list w100">
+                <label><li class="ms-elem-selectable {%if rc == '' %}bgcurrent{%endif%}">
+                  <input name="dl" class="ck" type="checkbox" {%if rc == '' %}checked{%endif%} value="">
+                  <span class="ck">不限</span>
+                </li></label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='jzzl'>
+              <div>介质种类</div>
+              <ul class="ms-list w100">
+                <label><li class="ms-elem-selectable {%if jzzl == '' %}bgcurrent{%endif%}">
+                  <input name="dl" class="ck" type="checkbox" {%if jzzl == '' %}checked{%endif%} value="">
+                  <span class="ck">不限</span>
+                </li></label>
+              </ul>
+          </td>
+          <td class="ver_al_t" type='bz'>
+              <div>包装</div>
+              <ul class="ms-list w100">
+                <label><li class="ms-elem-selectable {%if bz == '' %}bgcurrent{%endif%}">
+                  <input name="dl" class="ck" type="checkbox" {%if bz == '' %}checked{%endif%} value="">
+                  <span class="ck">不限</span>
+                </li></label>
+              </ul>
+          </td>
+        </tr>
+      </table>
+      <input type="hidden" name="type" value="dr">
+    </form>
+    <div class="btndiv">
+      <input style="background:#cc0000;color:#fff" class="btn marR25" type="button" value="查询" onclick="document.forms['dr'].submit()">
+      <input class="btn" type="button" value="重置" onclick="clearAll(1)">
+    </div>
+    <div class="picking_border">
+        <table>
+            <tr>
+                <th>制造商</th>
+                <th>产品名称</th>
+                <th style="min-width:135px">型号</th>
+                <th style="line-height:20px"><p>外壳代码</p><p>(英制单位)</p></th>
+                <th>介质种类</th>
+                <th>容量</th>
+                <th>容量误差</th>
+                <th>额定电压</th>
+                <th>端头材料</th>
+                <th>包装数量</th>
+                <th>最小起订量</th>
+                <th>倍数</th>
+                <th>包装</th>
+            </tr>
+            {% if count_C > 0%}
+              {% for result in C.results %}
+            <tr>
+                <td>风华高科</td>
+                <td>{{result.cpmc}}</td>
+                <td><a class="rc" href="{% url 'search:search' %}?partno={{result.partno}}">{{result.partno}}</a></td>
+                <td>{{result.cc}}</td>
+                <td>{{result.jzzl}}</td>
+                <td>{{result.bcrl}}</td>
+                <td>{{result.rlwc}}</td>
+                <td>{{result.eddy}}</td>
+                <td>{{result.dtcl}}</td>
+                <td>{{result.bzsl}}</td>
+                <td>{{result.zxqd}}</td>
+                <td>{{result.bs}}</td>
+                <td>{{result.packing}}</td>
+             </tr>
+             {% endfor %}
+            {% else %}
+            <tr><td colspan="11" class="tc" style="color:#CC0000;font-size:18px">没有与您的搜索条件匹配的数据</td></tr>
+            {% endif %}
+        </table>
+    </div>
+    <div class="pagination"></div>
+    </div>
+{% endblock %}
+{% block other %}
+
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+<script type="text/javascript">
+  $(function(){
+    //直接显示刚刚搜索的选项卡
+    var type = String(location.href.match(/type=\w+/)).substring(5);
+    if(type == 'dr')
+    {
+      $("#select_box").find("li:last").click();
+    }
+    showPage('{{pagecount}}','{{page}}',0);
+    showPage('{{pagecount_C}}','{{page_C}}',1);
+    $('.picking_border table tr:not(:first):odd').addClass('odd');
+    var edgl = '{{edgl}}'.split('_'),                          //额定功率
+        fzcc = '{{fzcc}}'.split('_'),                         //封装尺寸
+        dzwd = '{{dzwd}}'.split('_'),                          //电阻温度
+        dz = '{{dz}}'.split('_'),                              //电阻
+        dzwc = '{{dzwc}}'.split('_'),                          //电阻误差
+        packing = '{{packing}}'.split('_'),                    //包装
+        /*电容部分*/
+        drlx = '{{drlx}}'.split('_'),                          //电容类型
+        wkdm = '{{wkdm}}'.split('_'),                          //外壳代码
+        dr = '{{dr}}'.split('_'),                              //电容
+        eddy = '{{eddy}}'.split('_'),                          //额定电压
+        rc = '{{rc}}'.split('_'),                              //容差
+        jzzl = '{{jzzl}}'.split('_'),                          //介质种类
+        bz = '{{bz}}'.split('_'),                              //包装
+        obj = {'edgl':edgl,'fzcc':fzcc,'dzwd':dzwd,'dz':dz,'dzwc':dzwc,'packing':packing
+               ,'drlx':drlx,'wkdm':wkdm,'dr':dr,'eddy':eddy,'rc':rc,'jzzl':jzzl,'bz':bz};
+
+    $("td .ms-list").each(function(){
+        $(this).find("li").each(function(i){
+            $(this).on('click',function(){
+                  if($(this).find("input[type='checkbox']").is(":checked"))
+                  {
+                    //如果点击li之后复选框是选中状态
+                    $(this).addClass('bgcurrent')
+                    if(i==0)
+                    {
+                      //如果刚刚选中的是“不限”,取消当前列表的其余选项，并改变背景色
+                      $(this).parents(".ms-list").find("li:not(:first)").each(function(){
+                        $(this).find("input[type='checkbox']").attr("checked",false);
+                        $(this).removeClass('bgcurrent')
+                      })
+                    }
+                    else{
+                      $(this).parents(".ms-list").find("li:first").find("input[type='checkbox']").attr("checked",false);
+                      $(this).parents(".ms-list").find("li:first").removeClass('bgcurrent');
+                    }
+                  }
+                  else{
+                    //如果点击li之后复选框不是选中状态
+                    $(this).removeClass('bgcurrent');
+                  }
+              })
+          })
+    })
+    //刷新界面后所有选中记录勾选
+    for(var one in obj)
+    {
+      checked_history(one,obj[one])
+    }
+    function checked_history(name,array){
+      $('.ver_al_t ul li input[name='+name+']').each(function(index){
+          flag = false;
+          for(var i=0;i<array.length;i++){
+            if(array[i] == $(this).val()){
+              flag = true;
+              $(this).prop('checked',true);
+              $(this).parent().addClass('bgcurrent');
+            }
+          }
+          if(!flag){
+            $(this).prop('checked',false);
+          }
+      });
+    }
+  });
+  //点击清楚所有选择按钮清除所有选项
+  function clearAll(i){
+    $('.section').eq(i).find('.ms-list').each(function(){
+      var ckb;
+      $(this).find('li').each(function(index){
+        if(index == 0){
+            ckb = $(this).find('input[type="checkbox"]');
+        }
+        $(this).find('input[type="checkbox"]').removeAttr('checked').parent().removeClass('bgcurrent');
+      })
+      ckb.prop('checked',true).parent().addClass('bgcurrent')
+    });
+  }
+
+  function showPage(pagecount,page,num){              //分页列表
+    var pagecount = pagecount   //总页数
+    var page = page             //当前页数
+    if(pagecount == 0){
+      return;
+    }
+    var str = '';
+    if(page == 1){
+        str += '<a class="disabled" href="javascript:void(0)">‹‹ 上一页</a>'
+    }else{
+        str += "<a class='prev' onclick='prevpage(this,"+num+")'>‹‹ 上一页</a>"
+    }
+
+    if(pagecount < 5){
+      for(var i=1;i<=pagecount;i++){
+        if(i == page){
+          str += "<a class='numpage current' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }else{
+          str += "<a class='numpage' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }
+      }
+    }else if(page >= pagecount - 4){
+      for(var i=pagecount - 4;i<=pagecount;i++){
+        if(i == page){
+          str += "<a class='numpage current' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }else{
+          str += "<a class='numpage' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }
+      }
+    }else if(page >=1 && page <3){
+      for(var i=1;i<=5;i++){
+        if(i == page){
+          str += "<a class='numpage current' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }else{
+          str += "<a class='numpage' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }
+      }
+    }else{
+      for(var i=page - 2;i <= parseInt(page) + 2;i++){
+        if(i == page){
+          str += "<a class='numpage current' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }else{
+          str += "<a class='numpage' onclick='numpage(this,"+num+")'>"+i+"</a>"
+        }
+      }
+    }
+    if(page == pagecount){
+      str += '<a class="disabled" href="javascript:void(0)">下一页 ››</a>'
+    }else{
+      str += "<a class='next' onclick='nextpage(this,"+num+")'>下一页 ››</a>"
+    }
+
+    if(num==0)
+    {
+      count = {{count}}
+    }
+    else{
+      count = {{count_C}}
+    }
+    str += '共<a class="numpage" style="border:0;color:#cc0000">'+pagecount+'</a>页，';
+    str += '<a class="numpage" style="border:0;color:#cc0000">'+count+'</a>条';
+    $(".pagination").eq(num).html(str);
+  }
+
+  function numpage(obj,num){                  //点击分页栏数字
+    var page = $(obj).text().trim();
+    pagecommon(page,num)
+  }
+
+  function nextpage(obj,num){                 //点击下一页
+    if(num==0)
+    {
+      page = {{page}}
+    }
+    else{
+      page ={{page_C}}
+    }
+    page ++;
+    pagecommon(page,num)
+  }
+
+  function prevpage(obj,num){                 //点击上一页
+    if(num==0)
+    {
+      page = {{page}}
+    }
+    else{
+      page ={{page_C}}
+    }
+    page --;
+    pagecommon(page,num)
+  }
+
+  function pagecommon(page,num){              //替换地址栏page参数后跳转
+    var url = window.location.href
+    if(num==0)
+    {
+      pageType='page'
+    }
+    else{
+      pageType='page_C'
+    }
+    if(url.indexOf(pageType+'=') == -1){
+      if(url.indexOf('?')==-1){
+        url = url + '?'+pageType+'=1';
+      }
+      else{
+        url = url +'&'+pageType+'=1';
+      }
+    }
+    if(pageType=='page')
+    {
+      pageNum={{page}}
+    }
+    else{
+      pageNum={{page_C}}
+    }
+    url = url.replace(pageType+"="+pageNum,pageType+"="+page);
+    //根据用户之前点的地方，显示对应的选项卡
+    if(num==1)
+    {
+      url = showTab(url,'dr')
+    }
+    else{
+      url = showTab(url,'dz')
+    }
+    window.location.href = url;
+  }
+  function showTab(url,type){
+    if(url.indexOf('&type=') != -1)
+    {
+      if(url.indexOf('&type='+type) == -1)
+      {
+        url = url.replace(/&type=\w{2}/,'&type='+type);
+      }
+    }
+    else{
+      url += '&type='+type;
+    }
+    return url;
+  }
+  //选项卡
+  $("#select_box").find("li").each(function(i){
+      $(this).on('click',function(){
+          if(!$(this).hasClass("hover"))
+          {
+              $("#select_box").find(".hover").removeClass("hover");
+              $(this).addClass("hover");
+              $("div .section:visible").hide();
+              $("div .section").eq(i).show();
+          }
+      })
+  })
+  //初始化电容筛选
+  var dr_new = bubbleSort(dr),//电容排序
+      array_C = {'制造商':zzs,'电容类型':drlx,'外壳代码(英制单位)':wkdm,'电容':dr_new,'额定电压':eddy,'容差':rc,'介质种类':jzzl,'包装':bz},
+      title = '',
+      type = '',
+      $td_section2 = $("div .section").eq(1).find('.ver_al_t:not(:eq(0))'); //电容部分所有筛选列表
+  $td_section2.each(function(){
+      type = $(this).attr("type");
+      title = $(this).find('div').text();
+      for(var i=0;i<array_C[title].length;i++)
+      {
+        $(this).find('.ms-list').append(
+          "<label><li class='ms-elem-selectable'><input name='"+type+"' class='ck' type='checkbox' value='"+array_C[title][i]+"'><span class='ck'>"+array_C[title][i]+"</span></li></label>"
+        )
+      }
+  })
+  function bubbleSort(arr) {
+    var i = arr.length, j;
+    var tempExchangVal;
+    while (i > 0) {
+        for (j = 0; j < i - 1; j++) {
+            if (parseFloat(arr[j]) > parseFloat(arr[j + 1])) {
+                tempExchangVal = arr[j];
+                arr[j] = arr[j + 1];
+                arr[j + 1] = tempExchangVal;
+            }
+        }
+        i--;
+    }
+    return arr;
+  }
+</script>
+{% endblock %}

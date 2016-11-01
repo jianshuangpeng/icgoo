@@ -1,0 +1,225 @@
+{% load staticfiles %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>
+        {% block titlename %}{% endblock %}--ICGOO
+    </title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <link rel="stylesheet" href="{% url 'fuckspider' %}">
+    <link rel="shortcut icon" href="{% static "img/favicon.ico" %}" />
+    <link rel="bookmark" href="{% static "img/favicon.ico" %}" type="image/x-icon"　/>
+    <link rel="stylesheet" href="{% static "css/zoombox.css" %}">
+    <meta charset="UTF-8">
+    {% block style %}
+    {% endblock %}
+    {% block mustStyle %}
+    {% endblock %}
+    <!--[if IE 6]>
+    <style type="text/css">
+        * html,* html body{background-image:url(about:blank);background-attachment:fixed}
+        *html #tbox{position:absolute;top:expression(documentElement.scrollTop + "px");margin:500px 0 0 0;}
+        *html #search_float{position:absolute;top:expression(documentElement.scrollTop + "px");margin:0px 0 0 -595px;}
+        *html .left_filter{position:absolute;top:expression(documentElement.scrollTop + "px");margin:200px 0 0 0;}
+    </style>
+    <![endif]-->
+</head>
+<body>
+
+    <div class="topmenu">
+        <div class="menu">
+           {% if user.is_authenticated %}
+            <p style="line-height:29px;margin:0;">欢迎回来，{{ user.username }} <a href="{% url 'accounts:user_information' %}">用户中心</a>
+            <a href="{% url 'accounts:user_logout' %}" onclick="ajax_loginout()">退出登录</a></p>
+            {% else %}
+            <p style="line-height:29px;margin:0;">您好，欢迎来到ICGOO，这里是国内领先的专业级电子元器件直购网站!
+                <a href="{% url 'accounts:user_login' %}">登录</a> 或 <a href="{% url 'accounts:user_register' %}">注册</a>
+            </p>
+            {% endif %}
+            <ul>
+                <li>
+                    <a href="{% url 'help:howto_faq' %}">客户服务<!--<img id="triangle" src="{% static '/statics/img/u192.png' %}">--></a>
+                </li>
+                <!-- <li><a href="javascript:window.external.AddFavorite('http://icgoo.net','ICGOO')">收藏ICGOO</a></li> -->
+                <li><a rel="sidebar" title="ICGOO" onclick="window.external.addFavorite(this.href,this.title);return false;" href="{% url 'mainpage' %}"><!--<img id="star" src="{% static '/statics/img/u190.png' %}">-->收藏ICGOO</a></li>
+                <div class="clear"></div>
+            </ul>
+        </div>
+    </div>
+    {% block topadv%}
+        {#顶部广告通知位置#}
+    {%endblock%}
+
+    {% block searchfloat %}
+    {% endblock %}
+    <div class="header">
+        <h3 class="logo">
+            <a href="/" title="回到首页" style="position:relative; display:block">
+                <img src="{% static 'img/logo.png' %}" alt="电子原件">
+                {% block mainlogo %}
+                {% if logo %}
+                <div class="mainlogo">
+                    <img width="230" src="{{ logo.imgpath }}" alt="电子原件">
+                </div>
+                {% endif %}
+                {% endblock %}
+            </a>
+        </h3>
+        {% block searchbox %}
+        {# 内页顶部搜索 #}
+        {% endblock%}
+        <div class="server">
+            <ul>
+                <li>全国销售热线：<span>{{hot_line.content}}</span></li>
+                <li>售后服务电话：<span>{{service_phone.content}}</span></li>
+            </ul>
+        </div>
+        <div class="clear"></div>
+        <div class="nav">
+            {% block menu %}
+                <!-- <li class="active"><a href="/">首页</a></li> -->
+                <!-- <li><a href="#">BOM询价</a></li> -->
+                {# 导航设置 #}
+            {% endblock %}
+        </div>
+    </div>
+    <!--end of header-->
+    <!--container start-->
+    <div class="container">
+        {% block container %}
+            {#主要内容#}
+        {% endblock %}
+    </div>
+    <!--end of container -->
+    <!--footer start-->
+    <div class="footer">
+        <p>
+            {#<a href="#">分类索引</a> #}
+            <a href="{% url 'help:howto_faq' %}">客户服务</a>
+            <a href="{% url 'help:contact-us' %}">联系我们</a>
+            <a href="{% url 'help:about-us' %}">关于ICGOO</a>
+            {#<a href="#">站点地图</a>#}
+            {#<a href="#">友情连接</a>#}
+            <a href="http://www.ic.net.cn/" target="_blank">IC交易网</a>
+            <a href="http://www.etime.net.cn/" target="_blank">Etime资讯</a>
+            <a class="last" href="http://www.iczhaopin.com/" target="_blank">IC招聘网</a>
+        </p>
+        <ul>
+            <li><a href="#"><img src="{% static "img/iso.jpg" %}" alt=""></a></li>
+            <li><a href="#"><img src="{% static "img/anab.jpg" %}" alt=""></a></li>
+            <li><a href="#"><img src="{% static "img/iaf.jpg" %}" alt=""></a></li>
+            <li><a href="#"><img src="{% static "img/cnas.jpg" %}" alt=""></a></li>
+            <li>
+                <span>全国销售热线：<b>{{hot_line.content}}</b>   售后服务电话：<b>{{service_phone.content}}</b></span><br>
+                <span>版权所有 ©北京创新在线网络技术有限公司 京ICP备05069643号-8</span>
+            </li>
+            <!-- <li><a href="http://weibo.com/icgoo/"><img src="{% static "img/sina.jpg" %}" alt=""></a></li>
+            <li class="last"><a href="http://e.t.qq.com/icgoo-net/"><img src="{% static "img/tencent.jpg" %}" alt=""></a></li> -->
+        </ul>
+    </div>
+    <!--end of footer-->
+
+<!--server-->
+<div class="tbox" id="tbox">
+    <ul>
+        <li>
+            <a id="server" class="url_1" target="_blank">
+                <img src="{% static 'img/server.png' %}" alt="">
+            </a>
+            <ul>
+                <li>
+                    <p>
+                        <span class="name_1"></span>
+                        <a class="url_1" target="_blank"><img src="{% static 'img/qq.gif' %}" alt=""></a>
+                    </p>
+                    <p class="phone_1"></p>
+                </li>
+                <li>
+                    <p>
+                        <span class="name_2"></span>
+                        <a class="url_2" target="_blank"><img src="{% static 'img/qq.gif' %}" alt=""></a>
+                    </p>
+                    <p class="phone_2"></p>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0)" id="tel">
+                <img src="{% static 'img/tel.png' %}" alt="">
+            </a>
+            <ul>
+                <li>全国销售热线：</li>
+                <li><span>{{hot_line.content}}</span></li>
+                <li>售后服务电话：</li>
+                <li><span>{{service_phone.content}}</span></li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0)" id="wechat">
+                <img src="{% static 'img/wechat.png' %}" alt="">
+            </a>
+            <ul>
+                <li>
+                    <img src="{% static 'img/icgoo-weixin-big.jpg' %}" alt="">
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:void(0)" id="gotop">
+                <img src="{% static 'img/top.png' %}" alt="" title="返回顶部">
+            </a>
+        </li>
+    </ul>
+</div>
+{% block other%}
+{% endblock %}
+
+{% block shade %}
+{% endblock %}
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+{% block btncolor %}
+{% endblock %}
+{% block getAccountsInfo %}
+<!--调用显示物流中心订单条目的接口和子菜单变色-->
+{% endblock %}
+<script src="{% static 'js/jquery.cookie.js' %}"></script>
+<script src="{% static 'js/home.js' %}"></script>
+<script src="{% static 'js/banner.js' %}"></script>
+<script src="{% static 'js/server.js' %}"></script>
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<![endif]-->
+<script>
+function ajax_loginout(){
+  if($.cookie("ajax_login")!=null)
+  {
+    $.cookie("ajax_login",null,{path: '/' })
+  }
+}
+$(function(){
+    $.ajax({
+        url:"{% url 'accounts:sale_info' %}",
+        type:'get',
+        success:function(result){
+            var first_people = result.data[0],
+                second_people = result.data[1];
+                url_head = 'http://wpa.qq.com/msgrd?v=3&uin=';
+                url_foot = '&site=www.icgoo.net&menu=yes';
+            setInfo(1,first_people);
+            setInfo(2,second_people);
+        }
+    })
+    function setInfo(num,list){
+      $(".name_"+num).text(list.name);
+      $(".url_"+num).attr('href',url_head+list.qq+url_foot);
+      $(".phone_"+num).text(list.phone);
+    }
+})
+</script>
+<!-- <script src="http://libs.baidu.com/jquery/1.8.3/jquery.min.js"></script> -->
+{% block footerjs%}
+{# footer的js引入 #}
+{% endblock %}
+</body>
+</html>

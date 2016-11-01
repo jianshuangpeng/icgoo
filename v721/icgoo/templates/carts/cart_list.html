@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block body %}
+<p>
+    this is mainpage,{% url 'mainpage' %}
+</p>
+<form class="" action="/carts/del/" method="post">
+{% for one in result %}
+<tr>
+    <td>
+    <input type="checkbox" value="{{ one.id }}" name="check_id" checked="">
+    </td>
+    <td>{{ one.partno }}</td>
+    <td>{{ one.mfr }}</td>
+    <td>{{ one.supplier }}</td>
+    <td>{{ one.qty }}</td>
+    <td>{% if one.is_available %}可用{%else%}刷新{% endif %}</td>
+</tr>
+{% endfor %}
+{%csrf_token%}
+<button type="submit" class="btn btn-danger">删除所选项</button>
+<button type="button" class="btn btn-success" onclick="check_submit('submit')">提交订单</button>
+</form>
+{% endblock %}

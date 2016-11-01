@@ -1,0 +1,168 @@
+{% extends "normal_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/detail.css" %}">
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    {{ protno|title }}信息-搜索
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if data.partno %}{{data.partno}}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+        <p>
+            <!-- <a href="#">ADIS16251ACCZ</a>
+            <a href="#">STY130NF20D</a>
+            <a href="#">MK-AOB3202405N</a> -->
+            <input type="checkbox" name="for_all" id="for_all" onclick="for_filter('{{data.partno}}', '{{data.min_qty}}', this)">
+            <label for="for_all">精确匹配</label>
+            <input type="checkbox" name="for_stock" id="for_stock" onclick="for_filter('{{data.partno}}', '{{data.min_qty}}', this)">
+            <label for="for_stock">满足库存</label>
+        </p>
+    </div>
+{% endblock%}
+
+{% block container %}
+    <div class="breadlink">
+        <p>
+            <a href="{% url 'mainpage' %}">首页</a> <span class="line">></span>
+            <a href="javascript:void(0)">搜索</a> <span class="line">></span>
+            <span>{{protno}}</span><span class="line">></span>
+            <span>{{supplier}}</span>
+        </p>
+    </div>
+    <div class="detail">
+        <div class="pro_img">
+            <span><img src="{% static 'img/no_img.jpg'%}" alt=""></span>
+            <div class="jian">
+                {% if data.limit.2 == 1 %}
+                <img src="{% static 'img/ccc/jian.jpg' %}" alt="">
+                {% endif %}
+                {% if data.limit.2 == 5 %}
+                <img src="{% static 'img/ccc/ccc.jpg' %}" alt="">
+                {% endif %}
+                {% if data.limit.2 == 6 %}
+                <img src="{% static 'img/ccc/jyun.jpg' %}" alt="">
+                {% endif %}
+                {% if data.limit.2 == 4 %}
+                <img src="{% static 'img/ccc/xheshi.jpg' %}" alt="">
+                {% endif %}
+                {% if data.limit.2 == 3 %}
+                <img src="{% static 'img/ccc/xheshi.jpg' %}" alt="">
+                {% endif %}
+            </div>
+            {% if data.rohs == 'Y' %}
+            <div class="rohs">
+                <img src="{% static 'img/ccc/rohs.jpg'%}" alt="环保无铅" title="环保无铅">
+            </div>
+            {% endif %}
+        </div>
+        <div class="pro_args">
+            <table width="100%">
+                <tr>
+                    <td width="50%">型号： <span>{{data.partno}}</span></td>
+                    <td width="50%">当前供应商： <strong>{{supplier}}</strong></td>
+                </tr>
+                <tr>
+                    <td>制造商： {{data.mfr}}</td>
+                    <td>交货地：
+                        <input type="radio" name="location" value="hk" id="location_hk">
+                        <label for="location_hk">香港</label>
+                        <input type="radio" name="location" value="dl" id="location_dl" checked>
+                        <label for="location_dl">内地</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        库存： {{data.stock}}
+                        <span class="warning" id="stock_warning">库存不足</span>
+                    </td>
+                    <td>
+                        单价：<span id="unit_price">￥0.0</span>
+                        <span class="warning">暂无价格信息</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>最小订购： {{data.min_qty}}    倍数： {{data.mult}}</td>
+                    <td>交货日期：预计<span id="delivery_day">10-15</span>工作日</td>
+                </tr>
+                <tr>
+                    <td>
+                        <span class="qty_label">购买数量：</span>
+                        <div class="qty_box">
+                            <!-- <a href="javascript:void(0)" id="buy_qty_down" onclick="qty_dowm('{{data.min_qty}}', '{{data.stock}}','{{data.mult}}', this, 'true')" >-</a> -->
+                            <input type="text" name="buy_qty_d" value="{% if qty %}{{qty}}{% else %}1{% endif %}" onchange="check_qty('{{data.min_qty}}','{{data.stock}}','{{data.mult}}', this)">
+                            <!-- <a href="javascript:void(0)" id="buy_qty_up" onclick="qty_up('{{data.min_qty}}','{{data.stock}}','{{data.mult}}', this, 'true')">+</a> -->
+                        </div>
+                    </td>
+                    <td>总价：<span id="total_price">￥2383.5</span></td>
+                </tr>
+                <tr>
+                    <td>
+                        <!-- <a href="javascript:void(0)" class="dsheet">Datasheet下载</a> -->
+                    </td>
+                    <td>
+                        <input type="button" value="购买" id="buy_btn" class="buy_btn">
+                    </td>
+                </tr>
+            </table>
+            <input type="hidden" name="all_price" value='{{data.new_price_calc}}'>
+            <input type="hidden" name="delvery_hk" value="{{data.delvery_hk}}">
+            <input type="hidden" name="delvery_dl" value="{{data.delvery_dl}}">
+            <input type="hidden" name="stock_qty" value="{{data.stock}}">
+            <input type="hidden" name="min_qty" value="{{data.min_qty}}">
+            <input type="hidden" name="supplier" value="{{data.sup}}">
+            <input type="hidden" name="cur_partno" value="{{data.partno}}">
+        </div>
+        <div class="pro_other">
+            <h3>您的采购量:<span id="goodprice_qty">{{qty}}</span></h3>
+            <table>
+                <tr>
+                    <td width="40%">推荐供应商</td>
+                    <td width="30%">香港交货</td>
+                    <td width="30%">国内含税</td>
+                </tr>
+                <tbody id="goodprice">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="other_sups">
+        <h3 class="other_sups_tit">推荐供应商</h3>
+        <div class="other_results" id="topcontainer">
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static "js/server.min.js" %}"></script>
+<script type="text/javascript" src="{% static "js/search.js" %}"></script>
+<script type="text/javascript" src="{% static "js/detail.js" %}"></script>
+<script type="text/javascript">
+    $(function() {
+        var partno = '{{data.partno}}';
+        var qty = '{{qty}}' || 1;
+        var sups = '{{ sups }}';
+        var $pro_args_height=$("div .pro_args").height();//型号详情部分高度
+        var $pro_other_height=$("div .pro_other").height();//采购量部分高度
+        sups = sups.split(',');
+        for (var i in sups) {
+            url = "/search/getdata/?sup=" + sups[i] + "&partno=" + partno + '&qty=' + qty;
+            getdata(url);
+        }
+        if($pro_args_height>$pro_other_height)
+        {
+            $("div .pro_other").height($pro_args_height+'px');
+            $("div .pro_img").height($pro_args_height+20+'px');
+        }
+    });
+</script>
+{% endblock %}

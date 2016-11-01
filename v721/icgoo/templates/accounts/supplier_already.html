@@ -1,0 +1,314 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    供应商已发货--物流中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn" type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    {{block.super}}
+    <div class="account_con">
+        {% if user.jyinfo.jy_partner_id %}
+        <div class="picking">
+            <form action="." method="GET" style="position:relative">
+                <div class="marchDiv"><ul></ul></div>
+                <label for="">输入型号查询:</label>
+                <input type="text" name="partnoitem" autocomplete="off" id="partno" onkeyup="marchpartno()" value="{{partnoitem}}">
+                <label for="">按日期查询：</label>
+                <input type="text" class="laydate-icon" id="demo" name="date" value="{{date}}">
+                <label for="deliverycity">交货地：</label>
+                <select name="deliverycity" id="deliverycity">
+                    <option value="">显示全部</option>
+                    <option value="hk" {%if request.GET.deliverycity == 'hk' %}selected{%endif%}>香港</option>
+                    <option value="sz" {%if request.GET.deliverycity == 'sz' %}selected{%endif%}>深圳</option>
+                    <option value="bj" {%if request.GET.deliverycity == 'bj' %}selected{%endif%}>北京</option>
+                </select>
+                <label for="carriertype">收货方式：</label>
+                <select name="carriertype" id="carriertype">
+                    <option value="">显示全部</option>
+                    <option value="self" {%if request.GET.carriertype == 'self' %}selected{%endif%}>自提</option>
+                    <option value="express" {%if request.GET.carriertype == 'express' %}selected{%endif%}>邮寄</option>
+                </select>
+                <input type="submit" class="btn_smt" value="查询" onclick="showMessage()">
+            </form>
+        </div>
+        <div class="picking_result">
+
+        </div>
+        <div class="pagewrap"></div>
+        {% else %}
+            您未绑定！
+        {% endif %}
+    </div>
+    <div class='shade' style='display:none;z-index:2'></div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/laydate/laydate.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datecommon.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/logistical.js' %}"></script>
+<script>
+    $(function(){
+      $('.picking_result table tr:last').css('border',0);
+      $('.shade').click(function(){
+        $(this).css('display','none');
+        removetracegoods();
+      });
+      initPage();
+      setTimeout(function(){
+        $("#demo").val("{{date}}")
+      },10);
+    });
+    //日期背景颜色变化
+    function marchDateColor(){
+      setTimeout(function(){
+        $('.laydate_body .laydate_table td').each(function(){
+          $(this).css('border',0)
+          var year = $('#laydate_y').val().substr(0,4);
+          var month = $('#laydate_m').val().substr(0,2);
+          data = '';
+          if(!$(this).hasClass('laydate_nothis')){
+            $(this).css({'background':'#fff','color':'#333'});
+            var day = $(this).text().trim();
+            if(day.length < 2){
+              day = '0' + day;
+            }
+            data = year + '-' + month + '-' + day;
+            {% if data %}
+            {% for picking in data %}
+              var time = "{{picking.confirm_date}}";
+              time = time.replace('/','-').replace('/','-');
+              var currentDate = time.substr(0,10);
+              if(currentDate == data){
+                if(!$(this).hasClass('laydate_nothis')){
+                    $(this).css({'background':'#FF9233','color':'#fff','border':'1px solid #fff'});
+                }
+              }
+            {% endfor %}
+            {% endif %}
+          }else{
+            $(this).css({'background':'#fff','color':'#999'});
+          }
+        });
+      },10);
+    }
+
+    //型号查询中，型号框值输入变化触发事件
+    function marchpartno(){
+      $("#partno").val($("#partno").val().trim().toUpperCase());
+      var marStr = new Array();
+      var str = '';
+      {% for order in data %}
+        {% for sol in order.sols %}
+          var flag = true; //表示型号还没有加入过
+          var partno = '{{sol.partno}}';
+          if($("#partno").val().trim() != '' && $("#partno").val().trim() != '0'){
+            if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+              for(var i=0;i<marStr.length;i++){
+                if(partno == marStr[i]){
+                  flag = false;
+                  break;
+                }
+              }
+              if(flag){
+                marStr.push(partno);
+                partno = partno.replace(new RegExp($("#partno").val(),'g'),'<font color="#6f6f6f" class="bold">'+$("#partno").val()+'</font>');
+                str += '<li onclick="partnoSearch(this)">'+ partno +'</li>';
+                flag = false;
+              }
+            }
+          }
+        {% endfor %}
+      {% endfor %}
+      if(str != ''){
+        $('.marchDiv').css('border-width','1px')
+      }else{
+        $('.marchDiv').css('border-width','0')
+      }
+      $(".marchDiv").show();
+      $(".marchDiv ul").html(str);
+    }
+
+    var totalrows = {{totalrows}}                 //获取一共有多少条数据
+    var currentpage = 1;                          //当前是第几页
+    var pagerows = 5;                             //一页显示多少条数据
+    var pagecount = 0;                            //一共有多少页
+    if(totalrows % pagerows == 0){
+      pagecount = Math.floor(totalrows / pagerows);
+    }else{
+      pagecount = Math.floor(totalrows / pagerows + 1);
+    }
+
+    function showMessage(){
+      var str = '';
+      if($('#partno').val() == '请输入产品型号'){
+         $("#partno").val('');
+      }
+      {% for order in data %}
+      var index = {{ forloop.counter }}
+      if(index > (currentpage-1)*pagerows && index <= currentpage*pagerows){
+        var carrier_type = '{{order.carrier_type}}';
+        if(carrier_type != '自提'){
+          carrier_type = '邮寄'
+        }
+
+        str += '<div class="picking_border">'
+            +'<p>'
+            +    '<span>订单号:<strong>{{order.so_name}}</strong></span>'
+            +    '<span>订单生效日期：{{order.confirm_date}}</span>'
+            +    '<span>条目数:{{order.sol_num}}</span>'
+            +    '<span>交货地:{{order.delivery_city}}</span>'
+            +'</p>'
+            +'<table border="1" class="content">'
+            +    '<tr>'
+            +        '<th width="15%">型号</th>'
+            +        '<th width="14%">厂家</th>'
+            +        '<th width="7%">供应商</th>'
+            +        '<th width="8%">单价</th>'
+            +        '<th width="8%">发货数量</th>'
+            +        '<th width="8%">小计</th>'
+            +        '<th width="18%">发货时间</th>'
+            +        '<th width="15%">发货运单号</th>'
+            +        '<th width="7%">操作</th>'
+            +    '</tr>'
+                {% for line in order.sols %}
+            +    '<tr id="{{line.sol_id}}">'
+            +        '<td><span class="cA31">{{line.partno}}</span></td>'
+            +        '<td>{{line.mfr}}</td>'
+            +        '<td>{{line.supplier|title}}</td>'
+            +        '<td>{{line.money_type}}{{line.sale_unit_price}}</td>'
+            +        '<td>'
+                      {% for o in line.latest_state %}
+                        {% if o.state = "供应商已发货" %}
+            +             '{{o.qty}}'
+                        {% endif %}
+                      {% endfor %}
+            +        '</td>'
+            +        '<td>{{line.money_type}}{{line.total}}</td>'
+            +        '<td>'
+                       {% for state in line.latest_state %}
+                          {% ifequal state.state '供应商已发货' %}
+            +               '{{ state.time }}<br/>'
+                          {% endifequal %}
+                       {% endfor %}
+            +        '</td>'
+            +        '<td class="tracking">'
+            +           '{{line.tracking_number}}'
+            +        '</td>'
+            +        '<td><span index="0" style="width:50px" class="bgF0F8FF" onclick="tracegoods(this)" style="position:relative">货运跟踪</span></td>'
+            +    '</tr>'
+                {% endfor %}
+            + '</table>'
+            + '</div>'
+      }
+        {% endfor %}
+        $(".picking_result").html(str);
+    }
+
+    var tracking = ''
+    function tracegoods(obj){
+        $('.shade').css('display','block');
+        removetracegoods()
+        var flag = $(obj).attr('index')
+        var sol_id = $(obj).parent().parent().attr('id');
+        var tracking_number = $(obj).parent().prev().text();
+        tracking = tracking_number.split(':')[0];
+        tracking = tracking.toUpperCase(tracking);
+            var curP = $(obj).offset()
+            if(tracking == 'FEDEX'){
+              leftP = curP.left - 492; //Fedex
+            }else if(tracking == "UPS"){
+              leftP = curP.left - 413;  //ups
+            }else{
+              leftP = curP.left - 540;  //dhl
+            }
+            topP = curP.top + 23;
+            inittracegoods(leftP,topP);
+            if(tracking != 'FEDEX' && tracking != 'UPS' && tracking != 'DHL'){
+              return;
+            }
+            $.ajax({
+                url: '{% url "accounts:user_tracegoods" %}',
+                type: 'GET',
+                // TODO NEED a sol_id add by lidong
+                data: {'tracking':tracking,'sol_id':sol_id,'tracking_number':tracking_number},
+                success: function(data){
+                    removetracegoods();
+                    $(".picking_result").append(data)
+                    $(".tracegoods_ups,.tracegoods_fedex,.tracegoods_DHL").css({
+                        'top': topP,
+                        'left': leftP
+                    });
+                    $(obj).attr('index', '1')
+                },
+                error: function(){}
+            })
+    }
+    function close_detail(obj, sol){
+      removetracegoods()
+    }
+    function removetracegoods(){
+      $(".tracegoods_ups").remove();
+      $(".tracegoods_fedex").remove();
+      $(".tracegoods_DHL").remove();
+    }
+    //显示正在加载中弹出框
+    function inittracegoods(leftP,topP){
+      trackingclass = '';
+      if(tracking == 'DHL'){
+        trackingclass = 'tracegoods_DHL'
+      }else if(tracking == 'UPS'){
+        trackingclass = 'tracegoods_ups'
+      }else if(tracking == 'FEDEX'){
+        trackingclass = 'tracegoods_fedex'
+      }else{
+        trackingclass = 'tracegoods_ups'
+      }
+      var str = '<div class="'+trackingclass+'" style="left:'+leftP+'px;top:'+topP+'px">'
+          +'<ul style="margin-bottom:0">'
+          +    '<li class="title" style="background:#F0F8FF">'
+          +        '<span class="ptdetail">'+tracking+'货件追踪详情</span>'
+          +        '<span class="close" onclick="close_detail()"></span>'
+          +    '</li>'
+                if(tracking == 'DHL'){
+      str +=        '<li style="border-bottom:1px dashed #e4e4e4;margin:0 20px">'
+          +          '<div class="time">时间</div>'
+          +          '<div class="action">活动</div>'
+          +        '</li>'
+                }else{
+      str +=       '<li style="border-bottom:1px dashed #e4e4e4;margin:0 20px">'
+          +         '<div class="time">时间</div>'
+          +         '<div class="action">活动</div>'
+          +         '<div class="location">地点</div>'
+          +       '</li>'
+                }
+                if(tracking == 'FEDEX' || tracking == 'UPS' || tracking == 'DHL'){
+      str +=    '<li class="isloading">'
+          +        '加载中，请稍后...'
+          +    '</li>'
+          +'</ul>'
+                }else{
+      str +=    '<li class="isloading">'
+          +        '没有跟踪到物流信息，请稍候再试...'
+          +    '</li>'
+          +'</ul>'
+                }
+          $(".picking_result").append(str)
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,128 @@
+@charset "utf-8";
+
+@import "base";
+
+.left{
+  float: left;
+  width: 210px;
+  padding: 10px 20px 0 20px;
+  position: relative;
+  border: 1px solid #CCC;
+  overflow: hidden;
+  margin-top: 20px;
+  h3{
+    .ft14_w();
+    color: #333;
+    height: 32px;
+    line-height: 32px;
+    border-bottom: 1px solid #ccc;
+    span{
+      height: 32px;
+      line-height: 32px;
+      display: inline-block;
+      border-bottom: 1px solid @ahover-color;
+    }
+  }
+  ul{
+    width: 100%;
+    overflow: hidden;
+    border-bottom: 1px dotted #ccc;
+    li{
+      width: 100%;
+      height: 35px;
+      line-height: 35px;
+      position: relative;
+      a{
+        .ft12_w();
+      }
+      a:hover{
+        color: @ahover-color;
+      }
+    }
+    .fz16{
+      font-size: 16px;
+      padding: 0px 2px;
+    }
+  }
+  ul.last{
+      border:none;
+    }
+}
+.right{
+  width: 860px;
+  float: right;
+  position: relative;
+  overflow: hidden;
+  margin-top: 20px;
+  padding: 10px 30px;
+  .ft14_nw();
+  h3{
+    .ft14_w();
+    color: #333;
+    height: 32px;
+    line-height: 32px;
+    border-bottom: 1px solid #ccc;
+    span{
+      height: 32px;
+      line-height: 32px;
+      display: inline-block;
+      border-bottom: 1px solid @ahover-color;
+    }
+  }
+  .helpcon{
+    margin-top: 20px;
+    color: #333;
+    line-height: 30px;
+  }
+}
+.helpcon{
+  table{
+      margin:0 20px;
+    }
+  table tbody tr th{
+      width: 70px;
+      text-align:center;
+  }
+  table tbody tr td{
+    margin-left: 3px;
+    text-align: left;
+    width: 300px;
+    }
+  table tbody tr th,  table tbody tr td{
+    border: 1px solid #EBC79E;
+    color: #444;
+   }
+  .invoice-system table tbody tr th{
+      width: 110px;
+      text-align:center;
+      border: 1px solid #EBC79E;
+      color: #444;
+  }
+  .invoice-system table tbody tr td{
+      margin-left: 3px;
+      text-align: left;
+      width: 735px;
+      border: 1px solid #EBC79E;
+      color: #444;
+  }
+  h3{
+      .ft14_w();
+      color: #333;
+      height: 32px;
+      line-height: 32px;
+      border-bottom: 1px solid #ccc;
+  }
+  .exprocess-img{
+  display:inline;
+  text-align:center;
+  }
+  }
+/*屏幕宽度小于1190px的时候*/
+@media screen and (max-width:1190px){
+    .left{
+        width:150px;
+    }
+    .right{
+        width: 706px;
+    }
+}

@@ -1,0 +1,33 @@
+body{overflow-y: scroll}/*垂直方向出现滚动条的时候不抖动页面*/
+.viewPic{
+    width:320px;
+    height:240px;
+    background:#fff;
+    z-index:1;
+    position:absolute;
+    left:-150px;
+    top:20px;
+    border: 2px solid #fc9;
+    display: none;
+}
+.tdColor{
+  background: blue;
+}
+
+.marchDiv{
+  width:152px;
+  height:auto;
+  position:absolute;
+  left:78px;
+  top:21px;
+  z-index:1;
+  background:#fff;
+  border:1px solid #eee;
+  border-top:0;
+}
+.marchDiv li{
+  padding:2px 5px;
+}
+.marchDiv li:hover{
+  background: #eee;
+}

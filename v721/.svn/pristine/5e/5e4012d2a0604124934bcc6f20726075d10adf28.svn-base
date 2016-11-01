@@ -1,0 +1,448 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+<link rel="stylesheet" href="{% static "css/information.css" %}">
+<!--[if IE]>
+<style type="text/css">
+#prompt_change{
+  background:transparent;
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#88333333,endColorstr=#88333333);
+}
+</style>
+<![endif]-->
+{% endblock %}
+
+{% block titlename %}
+    用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    {{ block.super }}<!--引用父模板的内容-->
+    <div class="main">
+        <div id="left">
+            {% if not notLogin %}
+            <div class="left tab">
+                <h6 class="active" index='0'>基本资料</h6> <h6 index='1'>修改资料</h6> <h6 index='2'>修改密码</h6>
+                <div class="line_gray"><div id="underline" class="line_red"></div></div>
+                    <ul>
+                        <li>
+                            <div class="item">账号:</div>
+                            <div class="content"><span>{{ user.username }}</span>
+                            <div class="clear"></div>
+                            {% if data.credit_limit %}<div id="indicatorContainer"><div id="center">剩余月结额度<p></p></div></div>{% endif %}
+                        </li>
+                        <li>
+                            <div class="item">邮箱:</div>
+                            <div class="content">{{data.email|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">固定电话:</div>
+                            <div class="content">{{data.phone|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">公司名称:</div>
+                            <div class="content">{{data.company_name|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">详细地址:</div>
+                            <div class="content">{{data.address|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+                    <ul class="hide">
+                      <form id="change_info" action="/accounts/information/" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <li>
+                            <div class="item">手机:</div>
+                            <div class="content">{{ user.username }}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">邮箱:</div>
+                            <div class="content"><input type="text" name="email" autocomplete="off" value="{{data.email}}"></div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">固定电话:</div>
+                            <div class="content">
+                                <input class="small_text" type="text" name="area_code" placeholder="区号" autocomplete="off"><span class="word">—</span>
+                                <input id="tel" class="small_text" name="telephone" type="text" placeholder="座机" autocomplete="off"><span class="word">转</span>
+                                <input class="small_text" type="text" name="extensionnumber" autocomplete="off">
+                                {% if type == 'personal' %}<a id="upgrade" href="javascript:void(0)">升级为企业类型</a>{% endif %}
+                            </div>
+                            <div class="clear"></div>
+                        </li>
+                        {% if type != 'personal' %}
+                        <li>
+                            <div class="item">公司名称:</div>
+                            <div id="change_company" class="content"><input class="hide" type="text" autocomplete="off" name="company" value="{{data.company_name}}"><span>{{data.company_name}}</span><a href="javascript:void(0)">修改公司名称</a></div>
+                            <div class="clear"></div>
+                        </li>
+                        <li class="upload hide">
+                            <div class="item">上传营业执照:</div>
+                            <div class="content"><div class="border"><input type="text" autocomplete="off" readonly name="file"><span id="btn_file">选择文件</span></div><input type="file" autocomplete="off" name="upload" class="hide"></div>
+                            <div class="clear"></div>
+                        </li>
+                        {% else %}
+                        <li class="upgrade hide">
+                            <div class="item">公司名称:</div>
+                            <div id="change_company" class="content"><input type="text" autocomplete="off" name="company" value=""></div>
+                            <div class="clear"></div>
+                        </li>
+                        <li class="upgrade hide">
+                            <div class="item">上传营业执照:</div>
+                            <div class="content"><div class="border"><input type="text" autocomplete="off" readonly name="file"><span id="btn_file">选择文件</span></div><input type="file" autocomplete="off" name="upload" class="hide"></div>
+                            <div class="clear"></div>
+                        </li>
+                        {% endif %}
+                        <li><input type="submit"  value="提交"/></li>
+                      </form>
+                    </ul>
+                    <ul class="hide">
+                        <li>
+                            <div class="item">手机:</div>
+                            <div id="phone" class="content">{{ user.username }}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">验证码:</div>
+                            <div class="content"><div id="validate_border"><input name="code" type="text"><span id="btn_get">获取验证码</span></div><div id="des"><b>60</b>秒后可再获取</div></div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">旧密码:</div>
+                            <div class="content"><input class="pwd" type="password" name="pwd"><i></i></div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">请输入新密码:</div>
+                            <div class="content"><input class="pwd" type="password" name="password"><i></i></div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">确认新密码:</div>
+                            <div class="content"><input class="pwd" type="password" name="password_again"><i></i></div>
+                            <div class="clear"></div>
+                        </li>
+                        <input id="change_pwd" type="submit" value="确认">
+                    </ul>
+            </div>
+            <div class="left">
+                    <h6 class="active">开票资料</h6>
+                    <div class="line_gray"><div class="line_red"></div></div>
+                    <ul>
+                        <li>
+                            <div class="item">公司名称(抬头):</div>
+                            <div class="content">{{data.zp_company_name|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">税号:</div>
+                            <div class="content">{{data.zp_tax_number|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">电话:</div>
+                            <div class="content">{{data.zp_mobile|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">银行名称:</div>
+                            <div class="content">{{data.zp_bank|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">开户地址:</div>
+                            <div class="content">{{data.zp_owner_name|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                        <li>
+                            <div class="item">银行账号:</div>
+                            <div class="content">{{data.zp_account_number|default:"暂无此信息"}}</div>
+                            <div class="clear"></div>
+                        </li>
+                    </ul>
+            </div>
+            {% else %}
+            <div id="already_reg"><i></i><span>为了保障您的权益，您的注册信息正在进行审核，还请您耐心等待。</span></div>
+            {% endif %}
+        </div>
+        <div class="right">
+            <div class="service_info">
+                <p><i></i><span>我的专属客服</span></p>
+                {% if not notLogin %}
+                <p><label>客服:</label><span>{{sale.name}}</span></p>
+                <p><label>QQ:</label><span>{{sale.qq}}</span><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={{sale.qq}}&site=www.icgoo.net&menu=yes"></a></p>
+                <p><label>座机:</label><span>{{sale.phone}}</span></p>
+                <p><label>手机:</label><span>{{sale.mobile}}</span></p>
+                <p><label>邮箱:</label><span>{{sale.email}}</span></p>
+                {% else %}
+                <p><label>暂无</label></p>
+                <p><label style="width:156px">审核通过后将为您开通</label></p>
+                {% endif %}
+            </div>
+            <div class="banner">
+                <ul id="big" class="big">
+                    <li index='1' class="active">
+                        <a href="">
+                            <img src="../../statics/img/banner/small/rad1.png" alt="" />
+                        </a>
+                    </li>
+                    <li index='2' >
+                        <a href="">
+                            <img src="../../statics/img/banner/small/rad2.png" alt="" />
+                        </a>
+                    </li>
+                </ul>
+                <div id="icon" class="icon">
+                    <a index='1' href="javascript:void(0)" class="active"></a>
+                    <a index='2' href="javascript:void(0)" ></a>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div id="prompt_change">  <!--表单提交提示框-->
+      <div class="content">
+          <i></i>
+          <div></div>
+      </div>
+  </div>
+{% endblock %}
+
+{% block footerjs%}
+{% if not notLogin %} <!--没有登录的时候(注册成功后)，没必要加载这些js-->
+<script src="{% static 'js/validate.js' %}"></script>
+<script src="{% static 'js/jquery-form.js' %}"></script>
+<script>
+$(function(){
+    /*　营业执照点击选择文件　*/
+    $("#btn_file").on('click',function(){
+        $("input[name='upload']").click();
+    })
+    /*  选择文件的时候  */
+    $("input[name='upload']").on('change',function(){
+        var $file = $("input[name='file']");
+        $("input[name='file']").val($(this).val());
+    })
+    /*　tab特效  */
+    var $offset = parseInt($("h6").css('margin-right')),
+        $width = $("h6").width(),
+        $line_red = $(".tab .line_red"),
+        $index = $(".tab .active").attr('index');
+    $(".tab").find("h6").each(function(i){
+        $(this).on('click',function(){
+            if(i!=$index)
+            {
+                $(".tab ul").eq($index).hide();
+                $(".tab ul").eq(i).show();
+                if(i==0)
+                {
+                    $line_red.animate({left:0}, 300);
+                }
+                else if(i==1)
+                {
+                    $line_red.animate({left:$width+$offset+6+'px'}, 300);
+                }
+                else{
+                    $line_red.animate({left:2*($width+$offset+6)+'px'}, 300);
+                }
+                $index = i;
+                $(".tab .active").removeClass('active');
+                $(".tab h6").eq(i).addClass('active');
+            }
+        })
+    })
+    /* 升级为企业类型 */
+    $("#upgrade").on('click',function(){
+        if($(this).text()=='升级为企业类型')
+        {
+            $("#change_info .upgrade").show();
+            $(this).text('取消升级');
+        }
+        else{
+          $("#change_info .upgrade").hide();
+          $(this).text('升级为企业类型');
+        }
+    })
+    /* 修改公司名称　*/
+    var $company = $("#change_company");
+    $company.find("a").on('click',function(){
+        if($(this).text()=='修改公司名称')
+        {
+            //点击修改公司名的时候
+            $(this).text("取消修改");
+            $company.find("input").show().end().find("span").hide();
+            $(".upload").show();
+        }
+        else{
+            //取消修改的时候
+            $(this).text("修改公司名称");
+            if($company.find("input").hasClass("change"))
+            {
+                $company.find("input").removeClass("change");
+            }
+            $company.find("input").hide().val("{{data.company_name}}").end().find("span").show();
+            $("input[name='file']").val("");
+            $(".upload").hide();
+        }
+    });
+    /* 修改资料的内容修改的时候为该内容添加类，好在提交的时候判断是否有改动 */
+    $("#change_info").find("input[type='text']").each(function(){
+        $(this).on('change',function(){
+            $(this).addClass("change");
+        })
+    })
+    /* ajax提交修改资料 */
+    $("#change_info").submit(function(){
+        var flag = is_company();
+        if(flag)
+        {
+          $(this).ajaxSubmit({
+            success:function(res){  //提交成功
+                if(res)
+                {
+                    $("#prompt_change").show().find(".content div").html("<p>尊敬的用户您好，为了更好地保护您的权益,</p><p>所有的信息更改我们都需要重新进行审核(一个工作日内),</p><p>给您带来的不变敬请谅解!</p>");
+                }
+                else{
+                    $("#prompt_change").show().find(".content div").html("<h3>上传的营业执照不能大于4MB!</h3>");
+                }
+            }
+          });
+        }
+        return false; //阻止表单默认提交
+    })
+    /* 验证动作　*/
+    $(".pwd").each(function(){
+        $(this).on('focus',function(){
+            check_status($(this));
+        });
+        $(this).on('blur',function(){
+            validate($(this),'forgetpwd');
+        })
+    });
+    /*解决post请求的csrf的问题*/
+    $.ajaxSetup({
+      beforeSend: function(xhr, settings){
+          var csrftoken = $.cookie('csrftoken');
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
+      }
+    });
+    /* 点击修改密码的“确认” */
+    $("#change_pwd").on('click',function(){
+        var $pwd = validate("input[name='pwd']",'forgetpwd'),
+            $password = validate("input[name='password']",'forgetpwd'),
+            $password_again = validate("input[name='password_again']",'forgetpwd');
+        if($pwd && $password && $password_again)
+        {
+            $.ajax({
+                url:'{% url "accounts:user_resetpassword" %}',
+                type:'post',
+                data:{
+                    'pwd':$("input[name='pwd']").val(),'password':$("input[name='password']").val(),'code':$("input[name='code']").val()
+                },
+                success:function(res){
+                    if(res)
+                    {
+                        $("#prompt_change").show().find(".content div").html("<h3><span class='success'>密码修改成功！</span><span id='second'>3</span>秒后请重新登录。</h3>");
+                        var skip = setInterval(function(){
+                            var second = parseInt($("#second").text());
+                            if(second > 0)
+                            {
+                                second--;
+                                $("#second").text(second);
+                            }
+                            else{
+                                clearInterval(skip);
+                                location.href='{% url "accounts:user_logout" %}';
+                            }
+                        },1000)
+                    }
+                    else{
+                        $("#prompt_change").show().find(".content div").html("<h3>验证码或密码不正确!</h3>");
+                    }
+                },
+                error:function(){
+                    alert('服务器错误!');
+                }
+            })
+        }
+    })
+    /* 关闭修改资料的提示框 */
+    $("#prompt_change i").on('click',function(){
+        $("#prompt_change").hide();
+    })
+})
+/* 提交修改资料的时候　*/
+function is_company()
+{
+    var flag = false;
+    $("#change_info").find("input[type='text']").each(function(){
+        if($(this).hasClass("change"))
+        {
+            flag = true;
+        }
+    })
+    //先判断表单是否有改动
+    if(flag || $("input[name='file']").val())
+    {
+        //表单有改动，公司名称是否有改动
+        if($("input[name='company']").hasClass("change"))
+        {
+            //公司名称有改动，是否上传文件
+            if($("input[name='file']").val())
+            {
+                return true;
+            }
+            else{
+                $("#prompt_change").show().find(".content div").html("<h3>修改公司名称需上传您的营业执照!</h3>");
+                return false;
+            }
+        }
+        else{
+            return true;
+        }
+    }
+    else{
+        $("#prompt_change").show().find(".content div").html("<h3>您并没有作任何修改!</h3>");
+        return false;
+    }
+}
+</script>
+<!--[if lte IE 8]><script>var surplus = {{data.credit_limit}}-{{data.total_ys}};$("#center p").text("￥"+parseInt(surplus)).show();</script><![endif]-->
+<script src="{% static 'js/radialIndicator.js' %}"></script>
+<script>
+  $(function(){
+    var totle = '{{data.credit_limit}}',  //总额度
+        now = '{{data.total_ys}}',        //当前使用额度
+        surplus = totle-now;              //剩余使用额度
+    //$("#center p").text("￥"+0);
+    $('#indicatorContainer').radialIndicator({
+        radius: 60,
+        barColor:'#ffd2d2',
+        minValue: 0,
+        maxValue: totle,
+        format: '￥ ##,##,###',
+        displayNumber: true   //不显示原本的初始值
+    });
+    var radialObj = $('#indicatorContainer').data('radialIndicator');
+    radialObj.animate(surplus);
+  })
+</script>
+{% endif %}
+{% endblock %}

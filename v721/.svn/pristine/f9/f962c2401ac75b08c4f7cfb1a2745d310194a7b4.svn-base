@@ -1,0 +1,19 @@
+{% extends "help_base.html" %}
+
+{% block title %}
+  <title>客户服务--IC购商城</title>
+{% endblock %}
+
+{% block navbar %}
+  <label>客户服务</label>
+{% endblock %}
+
+{% block helpcontent %}
+  <div class="Divdashed Font12">
+    <div class="title">
+       <p>如果您在帮助的主题中找不到您要解决的问题，请通过“在线客服”，
+          或者致电<font color="#c1282d">400-660-6568</font>， 我们将竭诚为您提供服务。
+       </p>
+    </div>
+  </div>
+{% endblock %}

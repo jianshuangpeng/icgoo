@@ -1,0 +1,38 @@
+{% extends "about_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/home.css" %}">
+<link rel="stylesheet" href="{% static "css/rochintroduce.css" %}">
+{% endblock %}
+
+{% block titlename %}
+ Rochester公司简介
+{% endblock %}
+
+{% block container %}
+<div class="roch_main">
+    <h3>Rochester（罗彻斯特电子）公司简介：</h3>
+    <br>
+    <div class="roch_img">
+        <img src="{% static 'img/supplier/introduce_roch.jpg' %}" alt="" style="border:1px solid #ccc;">
+    </div>
+    <div class="roch_text">
+        <h3 class="roch_title_blue">停产半导体解决方案</h3>
+        <p>半导体技术在不断发展和革新，产品相比过去速度更快，体积更小，功能更加强大。我们可以预见，50年后，摩尔定律仍将持续。</p>
+        <p>与此同时，产品的进化也将带来挑战性的问题……</p>
+        <br>
+        <h3 class="roch_title_red">产品短缺和停产</h3>
+        <p>在过去的35年，罗彻斯特电子已经与全球领先的半导体制造商建立了强有力的合作关系和项目，为主要的供应问题提供持续解决方案。</p>
+        <br>
+        <h3 class="roch_title_blue">全球最大的半导体库存供应</h3>
+        <p>罗彻斯特电子拥有超过120亿片的现货库存，产品100%经原厂授权有质量保障。</p>
+        <br>
+        <h3 class="roch_title_blue">持续生产和供应制造商停产的产品</h3>
+        <p>罗彻斯特电子完全经原始制造商授权，获得产品设计和原材料，罗彻斯特已经持续生产数千种严格依照原始制造商的产品规格的产品。</p>
+        <br>
+        <h3 class="roch_title_blue">原始制造商的分销授权和产品许可</h3>
+        <p>罗彻斯特电子是全球唯一一家与Analog Devices, Altera, Atmel, Cypress, Fairchild, Infineon, Intel, Intersil, Microchip, NXP, On Semi, Texas Instruments等众多原始制造商有如此深度供应合作的公司。</p>
+    </div>
+</div>
+{% endblock %}

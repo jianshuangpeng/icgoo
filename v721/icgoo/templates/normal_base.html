@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block menu %}
+<ul class="nav_menu">
+    <li class="link"><a href="/">首页</a></li>
+    {% if user.is_authenticated %}
+    <li class="link"><a href="{% url 'accounts:user_information' %}">用户中心</a></li>
+    {% endif %}
+    <li id='search' class="batch_query link"><a href="{% url 'search:mult_index' %}">批量查询</a></li>
+    <li id="homemarket" class="link"><a href="{% url 'homemarket:user_homemarket' %}">国产元器件</a><div class="icon"></div></li>
+    <!-- <li><a href="#">BOM询价</a></li> -->
+    <!--
+    <li class="home_icgoo">
+        <a href="{#% url 'accounts:user_home' %#}">用户中心&nbsp;<span class="btn_myicgoo"></span></a>
+        <ul>
+            <li><a href="{% url 'accounts:user_saleorderlist' %}">当前订单</a></li>
+            <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+            {% comment %}
+            <li><a href="{% url 'accounts:user_stockpicking'%}">未发货</a></li>
+            <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+            <li><a href="{% url 'accounts:user_stockpicking_self' %}">未自提</a></li>
+            <li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已自提</a></li>
+            {% endcomment %}
+            <li><a href="{% url 'accounts:user_resetpassword' %}">修改密码</a></li>
+            <li></li>
+            <li class="login_li">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:user_logout' %}">退出登录</a></p>
+                {% else %}
+                    <a href="{% url 'accounts:user_login' %}">登录/注册</a>
+                {% endif %}
+            </li>
+        </ul>
+    </li>
+  -->
+</ul>
+{% endblock %}
+
+{% block btncolor %}
+<script>
+$(function(){
+  var url = window.location.href,
+      res = /\/search\//.exec(url);
+  if (res && !/\/search\/\?/.exec(url)){
+      $(".nav_menu").find("#search").addClass("active").removeClass('link');
+  }
+  else if(/\/homemarket\//.exec(url)){
+      $(".nav_menu").find("#homemarket").addClass("active").removeClass('link');
+  }
+  else{
+      $(".nav_menu").find("li").eq(0).addClass("active").removeClass('link');
+  }
+})
+</script>
+{% endblock %}

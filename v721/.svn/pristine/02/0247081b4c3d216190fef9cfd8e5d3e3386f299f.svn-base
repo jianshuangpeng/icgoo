@@ -1,0 +1,35 @@
+{% load account_tags %}
+
+<div class="detail_state">
+    <ul>
+        <li class="title" style="background:#{{bgcolor}}">
+            <span class="ptdetail">型号详情</span>
+            <span class="close" onclick="close_detail(this, '{{sol_id}}')"></span>
+        </li>
+        {% if data %}
+            {% for one in data %}
+            {% if not forloop.last %}
+              <li style="position:relative">
+                  <span class="span_f">{{one.state }}</span>
+                  <div class="state_radius"></div>
+                  <div class="state_b"></div>
+                  <span class="span_t">{{one.time}}</span>
+              </li>
+            {% else %}
+            <li style="position:relative">
+                <span class="span_f c_D63031">{{one.state }}</span>
+                <div class="state_radius" style="background:#CC0001"></div>
+                <span class="span_t">{{one.time}}</span>
+            </li>
+            {% endif %}
+            {% endfor %}
+        {% else %}
+        <li>
+            暂无信息，请稍后查询
+        </li>
+        {% endif %}
+    </ul>
+</div>
+<script type="text/javascript">
+
+</script>

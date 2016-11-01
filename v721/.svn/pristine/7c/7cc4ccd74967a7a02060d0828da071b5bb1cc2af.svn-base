@@ -1,0 +1,39 @@
+@media screen and (max-width: 1190px) {
+  /*头部和底部的公共部分*/
+  .topmenu .menu,
+  .header,
+  .footer {
+    width: 960px;
+  }
+  .header .logo img {
+    width: 261px;
+    height: 46.28px;
+  }
+  .header .logo .mainlogo {
+    left: 150px;
+    top: 0px;
+  }
+  .header .logo .mainlogo img {
+    width: 140px;
+    height: auto;
+  }
+  .header .search_box {
+    width: 386px;
+    margin: 29px auto auto 36px;
+  }
+  .header .search_box form {
+    width: 386px;
+  }
+  .header .search_box .partno {
+    width: 171px;
+  }
+  .header .search_box .qty {
+    width: 69px;
+  }
+  .header .search_box .server li {
+    font-size: 12px;
+  }
+  .container {
+    width: 960px;
+  }
+}

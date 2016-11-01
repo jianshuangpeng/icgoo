@@ -1,0 +1,323 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+<style type="text/css">
+.picking_result .picking_border{border: 1px solid #ccc}
+/*.picking_result .picking_border:hover{border: 1px solid #ccc;box-shadow: none}*/
+.picking_result table{margin:0;width: 100%;}
+.picking_result .title tr{background-color: #fff;height: 50px;line-height: 50px;}
+.picking_result .title td{line-height: 50px;}
+.picking_result table td span{cursor: auto;}
+.picking_result .title i{display: inline-block;width: 7px;height: 4px;background-image:url("{% static 'img/down_black.png' %}");position: relative;bottom:2px;right:3px;*vertical-align: sub}
+.picking_result .title strong{font-family:arial}
+.picking_res{border-top:1px #ccc dotted}
+.picking_border .content{display: none}
+.prompt{width:334px;height: 46px;cursor: auto;padding:10px 18px;border:1px solid #e0dc9f;line-height: 23px;position: absolute;top:-68px;right:-10px;background-color: #fffeec;color:#444;text-align: left;font-size: 12px}
+.prompt .phone{color:#c00}
+.prompt em{display: inline-block;width:13px;height: 14px;background-image: url({% static 'img/yellow_cornor.png' %});position: absolute;top:66px;right:38px;}
+.prompt .close{display: inline-block;width: 16px;height: 16px;background: url('{% static "img/cha2.png" %}') no-repeat;position: absolute;top:7px;right:0px;cursor: pointer}
+</style>
+{% endblock %}
+
+{% block titlename %}
+    历史订单--订单中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    {{block.super}}
+    <div class="account_con">
+        {% if user.jyinfo.jy_partner_id %}
+        <div class="picking">
+            <form action="." method="GET" style="position:relative">
+                <div class="marchDiv"><ul></ul></div>
+                <label for="">按型号查询:</label>
+                <input type="text" name="partnoitem" autocomplete="off" onkeyup="marchpartno()" id="partno" value="{{partnoitem}}">
+                <label for="">按日期查询：</label>
+                <input class="laydate-icon dateinput" id="demo" name="date_begin" value="{{date_begin}}">至
+                <input type="text" class="laydate-icon dateinput" onclick="laydate()" name="date_end" value="{{date_end}}">
+                <label for="deliverycity">交货地：</label>
+                <select name="deliverycity" id="deliverycity">
+                    <option value="">显示全部</option>
+                    <option value="hk" {% if request.GET.deliverycity == 'hk' %}selected{% endif %}>香港</option>
+                    <option value="sz" {% if request.GET.deliverycity == 'sz' %}selected{% endif %}>深圳</option>
+                    <option value="bj" {% if request.GET.deliverycity == 'bj' %}selected{% endif %}>北京</option>
+                </select>
+                <label for="carriertype">收货方式：</label>
+                <select name="carriertype" id="carriertype">
+                    <option value="">显示全部</option>
+                    <option value="self" {% if request.GET.carriertype == 'self' %}selected{% endif %}>自提</option>
+                    <option value="express" {% if request.GET.carriertype == 'express' %}selected{% endif %}>邮寄</option>
+                </select>
+                <input type="submit" class="btn_smt" value="查询" onclick="showMessage()">
+            </form>
+        </div>
+        <div class="picking_top">
+            <table>
+              <tbody>
+                <tr>
+                  <td width="15%">订单号</td>
+                  <td width="20%">生效时间</td>
+                  <td width="10%">交货地</td>
+                  <td width="8%">条目数</td>
+                  <td width="10%">总额</td>
+                  <td width="12%">合同下载</td>
+                  <td width="13%">收获方式</td>
+                  <td width="12%">售后服务</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+        <div class="picking_result"></div>
+        <div class="pagewrap"></div>
+        {% else %}
+            您未绑定！
+        {% endif %}
+    </div>
+    <div class="shade" style="display:none;z-index:2"></div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/laydate/laydate.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/datecommon.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/logistical.js' %}"></script>
+<script>
+    $(function(){
+      //遮罩层点击隐藏弹出窗
+      $('.shade').click(function(){
+        $(this).css('display','none');
+        $('.detail_state').remove();
+      });
+      initPage();
+      setTimeout(function(){
+        $("#demo").val("{{date_begin}}")
+      },10);
+    })
+
+    //日期背景颜色变化
+    function marchDateColor(){
+      setTimeout(function(){
+        $('.laydate_body .laydate_table td').each(function(){
+          $(this).css('border',0)
+          var year = $('#laydate_y').val().substr(0,4);
+          var month = $('#laydate_m').val().substr(0,2);
+          data = '';
+          if(!$(this).hasClass('laydate_nothis')){
+            $(this).css({'background':'#fff','color':'#333'});
+            var day = $.trim($(this).text());
+            if(day.length < 2){
+              day = '0' + day;
+            }
+            data = year + '-' + month + '-' + day;
+            {% if data %}
+            {% for picking in data %}
+              var time = "{{picking.confirm_date}}";
+              time = time.replace('/','-').replace('/','-');
+              var currentDate = time.substr(0,10);
+              if(currentDate == data){
+                if(!$(this).hasClass('laydate_nothis')){
+                    $(this).css({'background':'#FF9233','color':'#fff','border':'1px solid #fff'});
+                    $(this).parent().parent().css('border','1px solid #CCC');
+                }
+              }
+            {% endfor %}
+            {% endif %}
+          }else{
+            $(this).css({'background':'#fff','color':'#999'});
+          }
+        });
+      },10);
+    }
+
+    var totalrows = {{totalrows}}  //获取一共有多少条数据
+    var currentpage = 1;           //当前是第几页
+    var pagerows = 5;              //一页显示多少条数据
+    var pagecount = 0;             //一共有多少页
+    if(totalrows % pagerows == 0){
+      pagecount = Math.floor(totalrows / pagerows);
+    }else{
+      pagecount = Math.floor(totalrows / pagerows + 1);
+    }
+
+    function showMessage(){
+      var str = '';
+      if($('#partno').val() == '请输入产品型号'){
+         $("#partno").val('');
+      }
+      var carrier_type = '{{order.carrier_type}}';
+      if(carrier_type != '自提'){
+        carrier_type = '邮寄'
+      }
+      {% for order in data %}
+      var index = {{ forloop.counter }}
+      if(index > (currentpage-1)*pagerows && index <= currentpage*pagerows){
+          str += '<div class="picking_border">'
+              +'<table class="title">'
+              +   '<tr>'
+              +    '<td width="15%" style="cursor:pointer" state="off" class="toggle" onclick="btn_toggle(this.parentNode.parentNode.parentNode.parentNode)"><i></i><strong>{{order.so_name}}</strong></td>'
+              +    '<td width="20%"><span>{{order.confirm_date}}</span></td>'
+              +    '<td width="10%"><span>{{order.delivery_city}}</span></td>'
+              +    '<td width="8%"><span>{{order.sol_num}}</span></td>'
+              +    '<td width="10%"><span>{% if order.delivery_city == "香港" %}${% else %}￥{% endif %}{{order.total_sale_unit_price}}</span></td>'
+              +    '<td width="12%"><span><img src="{% static "img/sign_pdf.png" %}">[<a href="javascript:void(0)">下载</a>]</span></td>'
+              +    '<td width="13%"><span>'+carrier_type+'</span></td>'
+              +    '<td width="12%"><span style="color:#0088d9;cursor:pointer;position:relative" onclick="showPrompt(this)">申请售后<div style="display:inline"></div></span></td>'
+              +   '</tr>'
+              +'</table>'
+              +'<table border="1" class="content">'
+              +    '<tr style="line-height:40px;background-color: rgb(243,243,243);border-top: 1px solid #ccc;">'
+              +        '<th width="14%">型号</th>'
+              +        '<th width="23%">厂家</th>'
+              +        '<th width="10%">供货商</th>'
+              +        '<th width="8%">单价</th>'
+              +        '<th width="8%">订货数量</th>'
+              +        '<th width="8%">发货数量</th>'
+              +        '<th width="8%">货期(工作日)</th>'
+              +        '<th width="8%">小计</th>'
+              +        '<th width="13%">备注</th>'
+              +    '</tr>'
+                  {% for line in order.sols %}
+              +    '<tr class="picking_res">'
+              +        '<td><span class="rc">{{line.partno}}</span></td>'
+              +        '<td>{{line.mfr}}</td>'
+              +        '<td>{{line.supplier|title}}</td>'
+              +        '<td>{{line.money_type}}{{line.sale_unit_price}}</td>'
+              +        '<td>{{line.product_qty}}</td>'
+              +        '<td {% if line.product_qty != line.out_qty %}style="color:#c00"{% endif %}>{{line.out_qty}}</td>'
+              +        '<td>{{line.delivery_date}}</td>'
+              +        '<td>{{line.money_type}}{{line.total}}</td>'
+              +        '<td rowspan="{{order.sols|length}}">{{line.note}}</td>'
+              +    '</tr>'
+                  {% endfor %}
+              +'</table>'
+              +'</div>'
+      }
+      {% endfor %}
+      $(".picking_result").html(str);
+    }
+
+    function show_status(rid, obj){
+        $('.shade').css('display','block');
+        var flag = $(obj).attr('index');
+        var bgcolor = $(obj).attr('class').substr(2);
+            var curP = $(obj).offset()
+            leftP = curP.left - 90;
+            topP = curP.top + 25;
+            $.ajax({
+                url: '{% url "accounts:user_saleorderlineroute" %}',
+                type: 'GET',
+                data: {'rid': rid,'bgcolor':bgcolor},
+                success: function(data){
+                    $(".picking_result").append(data)
+                    $(".picking_result .detail_state").css({
+                        'top': topP,
+                        'left': leftP
+                    });
+                    $(obj).attr('index', '1')
+                },
+                error: function(){}
+            })
+    }
+
+    //型号查询中，型号框值输入变化触发事件
+    function marchpartno(){
+      $("#partno").val($.trim($("#partno").val()).toUpperCase());
+      var marStr = new Array();
+      var str = '';
+      {% for order in data %}
+        {% for sol in order.sols %}
+          var flag = true; //表示型号还没有加入过
+          var partno = '{{sol.partno}}';
+          if($.trim($("#partno").val()) != '' && $.trim($("#partno").val()) != '0'){
+            if(partno.indexOf($.trim($("#partno").val()))>=0 || partno.indexOf($.trim($("#partno").val()).toUpperCase())>=0){
+              for(var i=0;i<marStr.length;i++){
+                if(partno == marStr[i]){
+                  flag = false;
+                  break;
+                }
+              }
+              if(flag){
+                marStr.push(partno);
+                partno = partno.replace(new RegExp($("#partno").val(),'g'),'<font color="#6f6f6f" class="bold">'+$("#partno").val()+'</font>');
+                str += '<li onclick="partnoSearch(this)">'+ partno +'</li>';
+                flag = false;
+              }
+            }
+          }
+        {% endfor %}
+      {% endfor %}
+      $(".marchDiv").show();
+      $(".marchDiv ul").html(str);
+    }
+
+    function close_detail(obj, sol){
+        $('.shade').css('display','none');
+        $(".detail_state").remove();
+        $("." + sol).attr('index', '0')
+    }
+    function toggle(obj){
+        $(obj).find(".content").slideToggle("fast",function(obj){
+            $(obj).find("table i").css("background-image","url({% static 'img/down_black.png' %})");
+        }
+      );
+    }
+    /*显示消息提示*/
+    function showPrompt(obj){
+        if(!$(obj).find("div").html())
+        {
+            $(obj).find("div").html("<div class='prompt'>尊敬的用户，售后功能目前正在完善，给您带来不便还请见谅。如有需要，请拨<span class='phone'>0316-5126630</span>或联系您的专属客服<em></em><span class='close' onclick='closePrompt(this.parentNode,event)'></span></div>");
+        }
+    }
+    function closePrompt(obj,event){
+      $(obj).hide().remove();
+      if(document.all)
+      {  //只有ie识别
+          event.cancelBubble=true;
+      }
+      else{
+          event.stopPropagation();
+      }
+    }
+    $(function(){
+        /*固定标题栏*/
+        $(window).scroll(function(){
+            var $width = $(".account_con").width();
+            if($(document).scrollTop()>246)
+            {
+                $(".picking_top").css({"position":"fixed","width":$width,"top":"0px"})
+            }
+            else{
+                $(".picking_top").css("position","relative")
+            }
+        })
+        btn_toggle();
+    })
+    /*点击切换按钮拉伸/收缩型号列表*/
+    function btn_toggle(obj){
+        $(obj).find(".content").slideToggle("fast");
+        $toggle = $(obj).find(".toggle");
+        if($toggle.attr("state") == "off")
+        {
+            $toggle.attr("state","on");
+            $toggle.find("i").css("background-image","url('{% static 'img/up_black.png' %}')");
+        }
+        else{
+            $toggle.attr("state","off");
+            $toggle.find("i").css("background-image","url('{% static 'img/down_black.png' %}')");
+        }
+    }
+
+</script>
+{% endblock %}

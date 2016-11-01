@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block mustStyle %}
+<link rel="stylesheet" href="{% static "css/public_section.css" %}">
+{% endblock %}
+
+{% block menu %}
+<ul class="nav_menu">
+    <li class="link"><a href="/">首页</a></li>
+    <li class="active"><a href="{% url 'accounts:user_information' %}">用户中心</a></li>
+    <!--<li class="dropmenu">
+      <a href="javascript:void(0)">个人主页</a>
+      <ul>
+            <span></span>
+            <li class="main_option">用户信息</li>
+            <li class="main_option">安全设置</li>
+            <li><a href="{% url 'accounts:user_information' %}">基本资料</a></li>
+            <li><a href="{% url 'accounts:user_resetpassword' %}">修改登录密码</a></li>
+            <li><a href="{% url 'accounts:user_invoice_info' %}">开票资料</a></li>
+        </ul>
+    </li>-->
+    <li class="link"><a href="{% url 'search:mult_index' %}">批量查询</a></li>
+    <li id="homemarket" class="link"><a href="{% url 'homemarket:user_homemarket' %}">国产元器件</a><div class="icon"></div></li>
+</ul>
+{% endblock %}
+
+{% block container %}
+<div class="account_menu">
+    <ul class="menu_f">
+        <li><div id="iconDd" class="icon"></div><div class="menu_title">订单中心</div>
+            <ul class="second_ul">
+                <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=quote">报价单</a></li>
+                <li><a href="{% url 'accounts:user_saleorderlist' %}?orderflag=order">当前订单</a></li>
+                <li><a href="{% url 'accounts:user_saleorderlist_al' %}">历史订单</a></li>
+            </ul>
+        </li>
+        <li><div id="iconWl" class="icon"></div><div class="menu_title">物流中心</div>
+          <ul>
+            <li><a href="{% url 'accounts:user_supplier_already'%}">供应商已发货</a></li>
+            <li><a href="{% url 'accounts:user_goodsarriveport'%}">货已到港</a></li>
+            <li><a href="{% url 'accounts:user_customer_finish'%}">报关完成</a></li>
+            <li><a href="{% url 'accounts:user_already_instorage' %}">已入库</a></li>
+            <li><a href="{% url 'accounts:user_alreadyinstorage_preparegoods' %}">正在备货</a></li>
+            <li><a href="{% url 'accounts:user_stockpicking_al' %}">已发货</a></li>
+            <!--<li><a href="{% url 'accounts:user_stockpicking_self_finished' %}">已签收</a></li>-->
+          </ul>
+        </li>
+    </ul>
+</div>
+{% endblock %}
+
+{% block shade %}
+<div id="shade"></div>
+{% endblock %}
+
+{% block getAccountsInfo %}
+<script>
+    $(function(){
+        /*当前页面对应的子菜单变红*/
+        var url_main = ['orderflag=quote','orderflag=order','saleorderlist/al','supplier_already','goodsarriveport','customer_finish','already_instorage','alreadyinstorage','stockpicking/al'],
+            url = location.href,
+            index = -1; //当前链接对应的子菜单的索引,-1代表用户中心里非以上链接
+        for(var i=0;i<url_main.length;i++)
+        {
+            if(url.search(url_main[i])!=-1)
+            {
+                index = i;
+                break;
+            }
+        }
+        if(index >= 0)
+        {
+            $(".menu_f>li").find("li").eq(index).addClass("active");
+        }
+
+        /*解决post请求的csrf的问题*/
+        $.ajaxSetup({
+          beforeSend: function(xhr, settings){
+              var csrftoken = $.cookie('csrftoken');
+              xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        });
+        /*请求加载物流中心里各项的订单数*/
+        $.ajax({
+            url:'{% url "accounts:user_get_order_num" %}',
+            type:'post',
+            success:function(result){
+                if(result['po_checked']) //如果接口没有返回数据就不显示
+                {
+                  var title = ['po_checked','po_done','custom_done','st_in_done','is_printed','st_out_done'];
+                  $(".menu_f").find("ul:eq(1)>li").each(function(i){
+                      $(this).append("（<span>"+result[title[i]]+"</span>）");
+                      if (!$.support.leadingWhitespace) //是否为IE９以下
+                      {
+                          $(this).find("span").css({'font-size':'12px','color':'#c00','font-weight':'bold','line-height':'12px'})
+                      }
+                  })
+                }
+            }
+        })
+    })
+</script>
+{% endblock %}

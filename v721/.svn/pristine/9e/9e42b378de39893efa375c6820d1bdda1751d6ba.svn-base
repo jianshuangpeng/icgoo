@@ -1,0 +1,237 @@
+{% extends "account_base.html" %}
+{% load staticfiles %}
+
+{% block style %}
+<link rel="stylesheet" href="{% static "css/account.css" %}">
+{% endblock %}
+
+{% block titlename %}
+    已入库--物流中心--用户中心
+{% endblock %}
+
+{% block searchbox %}
+    <div class="search_box">
+        <form action="{% url 'search:search' %}">
+            <input class="partno" type="text" name="partno" value="{% if partno_view %}{{ partno_view }}{% else %}请输入产品型号{% endif %}">
+            <input class="qty" type="text" name="qty" value="{% if qty %}{{qty}}{% else %}采购数量{% endif %}">
+            <input class="submit_btn"type="submit" value="搜索">
+        </form>
+    </div>
+{% endblock%}
+
+{% block container %}
+    {{block.super}}
+    <div class="account_con">
+        {% if user.jyinfo.jy_partner_id %}
+        <div class="picking">
+            <form action="." style="position:relative">
+                <div class="marchDiv"><ul></ul></div>
+                <label for="">输入型号查询:</label>
+                <input type="text" name="partnoitem" autocomplete="off" onkeyup="marchpartno()" id="partno" value='{{partnoitem}}'>
+                <label for="">交货地：</label>
+                <select name="deliverycity" id="location">
+                    <option value="">显示全部</option>
+                    <option value="hk" {%if deliverycity == 'hk' %}selected{%endif%}>香港</option>
+                    <option value="sz" {%if deliverycity == 'sz' %}selected{%endif%}>深圳</option>
+                    <option value="bj" {%if deliverycity == 'bj' %}selected{%endif%}>北京</option>
+                </select>
+
+                <label for="">收货方式：</label>
+                <select name="carrier_type" id="carrier_type">
+                    <option value="">显示全部</option>
+                    <option value="self" {%if carrier_type == 'self' %}selected{%endif%}>自提</option>
+                    <option value="express" {%if carrier_type == 'express' %}selected{%endif%}>邮寄</option>
+                </select>
+                <input type="submit" class="btn_smt" value="查询">
+            </form>
+        </div>
+        <div class="picking_result">
+
+        </div>
+        <div class="pagewrap"></div>
+        {% else %}
+            您未绑定！
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block footerjs%}
+<script type="text/javascript" src="{% static 'js/server.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/logistical.js' %}"></script>
+<script type="text/javascript">
+    $(function(){
+      $('.picking_result table tr:last').css('border',0);
+      setTimeout(function(){
+        $("#demo").val("{{date}}")
+      },10);
+      initPage();
+    });
+
+    //型号查询中，型号框值输入变化触发事件
+    function marchpartno(){
+      $("#partno").val($("#partno").val().trim().toUpperCase());
+      var marStr = new Array();
+      var str = '';
+      {% for picking in data %}
+        {% if picking.lines_count > 0 %}
+        {% for key,values in picking.lines.items %}
+          {% for value in values %}
+          var flag = true;                          //表示型号还没有加入过
+          var partno = '{{value.name}}';
+          if($("#partno").val().trim() != '' && $("#partno").val().trim() != '0'){
+            if(partno.indexOf($("#partno").val().trim())>=0 || partno.indexOf($("#partno").val().trim().toUpperCase())>=0){
+              for(var i=0;i<marStr.length;i++){
+                if(partno == marStr[i]){
+                  flag = false;
+                  break;
+                }
+              }
+              if(flag){
+                marStr.push(partno);
+                partno = partno.replace(new RegExp($("#partno").val(),'g'),'<font color="#6f6f6f" class="bold">'+$("#partno").val()+'</font>');
+                str += '<li onclick="partnoSearch(this)">'+ partno +'</li>';
+                flag = false;
+              }
+            }
+          }
+            {% endfor %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+      $(".marchDiv").show();
+      $(".marchDiv ul").html(str);
+    }
+
+    var totalrows = {{totalrows}}                 //获取一共有多少条数据
+    var currentpage = 1;                          //当前是第几页
+    var pagerows = 5;                             //一页显示多少条数据
+    var pagecount = 0;                            //一共有多少页
+    if(totalrows % pagerows == 0){
+      pagecount = Math.floor(totalrows / pagerows);
+    }else{
+      pagecount = Math.floor(totalrows / pagerows + 1);
+    }
+
+    function showMessage(){
+      var str = '';
+      {% if data %}
+      {% for picking in data %}
+      var index = {{ forloop.counter }}
+      if(index > (currentpage-1)*pagerows && index <= currentpage*pagerows){
+
+      str += '<div class="picking_border">'
+            +'<table class="title"><tr>'
+            +'<td>发货单号:<strong>{{picking.name}}</strong></span></td>'
+            +'<td>订单生效时间:{{picking.so_confirmed_time}}</td>'
+            +'<td>条目数:{{picking.lines_count}}</span></td>'
+            +'<td>库房:{{picking.location}}</span></td>'
+            +'<td>交货地:{{picking.location|slice:"2"}}</span></td>'
+            +'<td>收货方式：<font class="cA31">'
+                  {% if picking.carrier_type != '自提' %}
+            +       '邮寄'
+                  {% else %}
+            +       '{{picking.carrier_type}}'
+                  {% endif %}
+            +     '</font></td>'
+            +'</tr></table>'
+            +'<table border="1" class="content">'
+            +    '<tr>'
+            +        '<th width="10%">订单号</th>'
+            +        '<th width="16%">型号</th>'
+            +        '<th width="14%">厂家</th>'
+            +        '<th width="10%">供应商</th>'
+            +        '<th width="8%">单价</th>'
+            +        '<th width="7%">采购数量</th>'
+            +        '<th width="7%">入库数量</th>'
+            +        '<th width="15%">入库时间</th>'
+            +        '<th width="13%">说明</th>'
+            +    '</tr>'
+            {% for so, lines in picking.lines.items %}
+            {% with forloop as forloop_one %}
+            {% for one in lines %}
+            +    '<tr>'
+                    {% if forloop.first %}
+            +        '<td rowspan="{{lines|length}}" class="bgf2">{{so}}</td>'
+                    {% endif %}
+            +        '<td>'
+            +            '<span class="cA31">{{one.name}}</span>'
+            +        '</td>'
+            +        '<td>{{one.mfr}}</td>'
+            +        '<td>{{one.supplier|title}}</td>'
+            +        '<td>{{one.price}}</td>'
+            +        '<td>{{one.order_qty}}</td>'
+            /*+        '<td {% if one.order_qty != one.ins|first|first %}style="color:#c00"{% endif %}>'
+                        {% for o in one.ins %}
+            +             '{{o.0}}<br/>'
+                        {% endfor %}
+            +        '</td>'*/
+            +        '<td {% if one.order_qty != one.in_qty %}style="color:#c00"{% endif %}>{{one.in_qty}}</td>'
+            /*+        '<td>'
+                        {% for o in one.ins %}
+            +             '{{o.2}}<br/>'
+                        {% endfor %}
+            +        '</td>'*/
+            +        '<td>{{one.in_time}}</td>'
+                      {% if forloop.first %}
+            +        '<td rowspan="{{picking.lines_count}}">'
+                        {% if not picking.account_flag %}
+            +             '<span class="cA31">未付款</span>'
+                        {% elif picking.notarrivenum != 0 %}
+            +             '<span class="cA31">货未到齐</span><br/>'
+            +             '<span style="color:#E8B9C0">未到条目:' + {{picking.notarrivenum}} + '</span>'
+                        {% else %}
+                          {% if picking.carrier_type == '自提' %}
+            +                 '<span>等待打印出库单</span>'
+                        {% else %}
+            +             '<span>等待打印出库单</span>'
+                        {% endif %}
+                      {% endif %}
+            +        '</td>'
+                      {% endif %}
+            +    '</tr>'
+                {% endfor %}
+                {% endwith %}
+                {% endfor %}
+            +    '</table>'
+            +    '</div>'
+        }
+        {% endfor %}
+        {% else %}
+        +    '<p align="center">暂无订单信息</p>'
+                {% endif %}
+          $(".picking_result").html(str);
+    }
+
+    function show_status(sol, obj){
+        var flag = $(obj).attr('index');
+        var bgcolor = $(obj).attr('class').substr(2);
+        if(flag == '0'){
+            var curP = $(obj).offset()
+            leftP = curP.left - 90;
+            topP = curP.top + 20;
+            $(".detail_state").remove();
+            $.ajax({
+                url: '{% url "accounts:user_saleorderlineroute" %}',
+                type: 'GET',
+                data: {'sol': sol,'bgcolor':bgcolor},
+                success: function(data){
+                    $(".picking_result").append(data)
+                    $(".picking_result .detail_state").css({
+                        'top': topP,
+                        'left': leftP
+                    });
+                    $(obj).attr('index', '1')
+                },
+                error: function(){}
+            })
+        }else{
+            $(".detail_state").remove();
+            $(obj).attr('index', '0')
+        }
+    }
+    function close_detail(obj, sol){
+        $(".detail_state").remove();
+        $("." + sol).attr('index', '0')
+    }
+</script>
+{% endblock %}
